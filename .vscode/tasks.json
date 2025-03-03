@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "dev",
+			"path": "HOME_FRONT_END",
+			"problemMatcher": [],
+			"label": "npm: dev - HOME_FRONT_END",
+			"detail": "vite"
+		}
+	]
+}
