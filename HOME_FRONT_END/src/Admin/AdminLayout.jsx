@@ -1,5 +1,5 @@
-import {Layout, Menu} from 'antd';
-import classname from 'classnames/bind'
+import { Layout, Menu } from "antd";
+import classname from "classnames/bind";
 import {
     AppstoreOutlined,
     BarChartOutlined,
@@ -9,58 +9,46 @@ import {
     UploadOutlined,
     UserOutlined,
     VideoCameraOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 
-import style from '../Admin/AdminLayout.module.scss'
-import React from 'react';
+import style from "../Admin/AdminLayout.module.scss";
+import React from "react";
 
-const {Header, Content, Sider} = Layout
-const cx = classname.bind(style)
-const items = [
-    UserOutlined,
-    VideoCameraOutlined,
-    UploadOutlined,
-    BarChartOutlined,
-    CloudOutlined,
-    AppstoreOutlined,
-    TeamOutlined,
-    ShopOutlined,
-  ].map((icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: `nav ${index + 1}`,
-  }));
+const { Header, Content, Sider } = Layout;
+const cx = classname.bind(style);
 
-function AdminLayout(){
-    return(
+function AdminLayout() {
+    return (
         <Layout hasSider>
-            <Sider className={cx('sider')}>Sider</Sider>
+            <Sider className={cx("sider")}>Sider</Sider>
             <Layout>
-                <Header className={cx('header')}>
-                    <div className={cx('header-children')}>Header</div>
+                <Header className={cx("header")}>
+                    <div className={cx("header-children")}>Header</div>
                 </Header>
-                <Content className={cx('content')}>
-                    <div className={cx('content-children')}>
+                <Content className={cx("content")}>
+                    <div className={cx("content-children")}>
                         <p>long content</p>
                         {
-                        // indicates very long content
-                        Array.from(
-                            {
-                            length: 100,
-                            },
-                            (_, index) => (
-                            <React.Fragment key={index}>
-                                {index % 20 === 0 && index ? 'more' : '...'}
-                                <br />
-                            </React.Fragment>
-                            ),
-                        )
+                            // indicates very long content
+                            Array.from(
+                                {
+                                    length: 100,
+                                },
+                                (_, index) => (
+                                    <React.Fragment key={index}>
+                                        {index % 20 === 0 && index
+                                            ? "more"
+                                            : "..."}
+                                        <br />
+                                    </React.Fragment>
+                                )
+                            )
                         }
                     </div>
                 </Content>
             </Layout>
         </Layout>
-    )
+    );
 }
 
-export default  AdminLayout;
+export default AdminLayout;
