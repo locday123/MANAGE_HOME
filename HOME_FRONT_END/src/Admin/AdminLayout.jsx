@@ -17,7 +17,7 @@ import React from "react";
 const { Header, Content, Sider } = Layout;
 const cx = classname.bind(style);
 
-function AdminLayout() {
+function AdminLayout(children) {
     return (
         <Layout hasSider>
             <Sider className={cx("sider")}>Sider</Sider>
@@ -26,25 +26,7 @@ function AdminLayout() {
                     <div className={cx("header-children")}>Header</div>
                 </Header>
                 <Content className={cx("content")}>
-                    <div className={cx("content-children")}>
-                        <p>long content</p>
-                        {
-                            // indicates very long content
-                            Array.from(
-                                {
-                                    length: 100,
-                                },
-                                (_, index) => (
-                                    <React.Fragment key={index}>
-                                        {index % 20 === 0 && index
-                                            ? "more"
-                                            : "..."}
-                                        <br />
-                                    </React.Fragment>
-                                )
-                            )
-                        }
-                    </div>
+                    <div className={cx("content-children")}>{children}</div>
                 </Content>
             </Layout>
         </Layout>
