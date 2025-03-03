@@ -1,0 +1,169 @@
+CREATE DATABASE MANAGE_HOME;
+USE MANAGE_HOME;
+
+CREATE TABLE BANK(
+	bank_ID VARCHAR(20),
+    bank_Abbreviated  VARCHAR(10),
+    bank_Name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    date_Add DATE DEFAULT (CURRENT_DATE),
+	CONSTRAINT PRIMARY_KEY_BANK PRIMARY KEY(bank_ID)
+);
+
+CREATE TABLE FINANCE(
+	bankAccount_ID VARCHAR(30),
+    bankAccount_Number VARCHAR(20), 
+    bankAccount_Name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    bank_ID VARCHAR(20),
+    total_Amount INTEGER DEFAULT(0),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+	CONSTRAINT PRIMARY_KEY_FINANCE PRIMARY KEY(bankAccount_ID),
+    CONSTRAINT FOREIGN_KEY_OF_FINANCE_TO_BANK FOREIGN KEY(bank_ID) REFERENCES BANK(bank_ID)
+);
+
+CREATE TABLE CUSTOMER(
+	customer_ID VARCHAR(30),
+    customer_Name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    customer_PhoneNumber VARCHAR(10),
+    customer_Address VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    customer_Date DATE,
+    customer_Status BOOLEAN DEFAULT(FALSE),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+	CONSTRAINT PRIMARY_KEY_CUSTOMER PRIMARY KEY(customer_ID)
+);
+
+CREATE TABLE HOME(
+	home_ID VARCHAR(20),
+    home_Address VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    home_RentalPrice INTEGER,
+    home_HostID VARCHAR(30),
+    home_HostName VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    home_HostPhoneNumber VARCHAR(10),
+    home_ContractFrom DATE,
+    home_ContractTo DATE,
+    home_HostSignature VARCHAR(20),
+    home_Condition BOOLEAN DEFAULT(FALSE),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_HOME PRIMARY KEY(home_ID)
+);
+
+CREATE TABLE FLOOR(
+	home_ID VARCHAR(20),
+    floor_ID VARCHAR(20),
+    floor_Name VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_FLOOR PRIMARY KEY(floor_ID, home_ID)
+);
+
+CREATE TABLE ROOM(
+	floor_ID VARCHAR(20),
+    room_ID VARCHAR(20),
+    room_Name VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    room_Area VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    room_Status BOOLEAN DEFAULT(FALSE),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_FLOOR PRIMARY KEY(room_ID),
+    CONSTRAINT FOREIGN_KEY_OF_FLOOR_TO_ROOM FOREIGN KEY(floor_ID) REFERENCES FLOOR(floor_ID)
+);
+
+CREATE TABLE PRODUCE(
+	produce_ID VARCHAR(20),
+    produce_Name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    produce_Series VARCHAR(20),
+    produce_Purchase DATE,
+    produce_Price INTEGER,
+    produce_Coverage DATE,
+    produce_Note VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    produce_Status BOOLEAN DEFAULT(FALSE),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_FLOOR PRIMARY KEY(produce_ID)
+);
+
+CREATE TABLE ASSET(
+	asset_ID INTEGER AUTO_INCREMENT,
+    room_ID VARCHAR(20),
+    produce_ID VARCHAR(20),
+    asset_Note VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    asset_Status BOOLEAN DEFAULT(FALSE),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_FLOOR PRIMARY KEY(asset_ID),
+	CONSTRAINT FOREIGN_KEY_OF_ROOM_TO_ASSET FOREIGN KEY(room_ID) REFERENCES ROOM(room_ID),
+    CONSTRAINT FOREIGN_KEY_OF_PRODUCE_TO_ASSET FOREIGN KEY(produce_ID) REFERENCES PRODUCE(produce_ID)
+);
+
+CREATE TABLE CONTRACT_RENT(
+	contract_rent_ID VARCHAR(20),
+    room_ID VARCHAR(20),
+    customer_ID VARCHAR(30),
+    contract_rent_Deposit INTEGER,
+    contract_rent_Payment INTEGER,
+    contract_rent_From DATE,
+    contract_rent_To DATE,
+    contract_rent_Signature VARCHAR(20),
+    contract_rent_Status BOOLEAN DEFAULT(FALSE),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_CONTRACT_RENT PRIMARY KEY(contract_rent_ID),
+	CONSTRAINT FOREIGN_KEY_OF_ROOM_TO_CONTRACT_RENT FOREIGN KEY(room_ID) REFERENCES ROOM(room_ID),
+    CONSTRAINT FOREIGN_KEY_OF_CUSTOMER_TO_CONTRACT_RENT FOREIGN KEY(customer_ID) REFERENCES CUSTOMER(customer_ID)
+);
+
+CREATE TABLE ROOM_MATE(
+	contract_rent_ID VARCHAR(20),
+    customer_ID VARCHAR(30),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_ROOM_MATE PRIMARY KEY(contract_rent_ID, customer_ID),
+    CONSTRAINT FOREIGN_KEY_OF_CUSTOMER_TO_ROOM_MATE FOREIGN KEY(customer_ID) REFERENCES CUSTOMER(customer_ID)
+);
+
+CREATE TABLE PAYMENT_SCHEDULE(
+	paymentSchedule_ID VARCHAR(30),
+    contract_rent_ID VARCHAR(20),
+    payment_Method VARCHAR(10),
+    bankAccount_ID VARCHAR(30),
+    payment_Amount INTEGER,
+    payment_Date DATE,
+    payment_Note VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    payment_Status BOOLEAN DEFAULT(FALSE),
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_PAYMENT_SCHEDULE PRIMARY KEY(paymentSchedule_ID),
+    CONSTRAINT FOREIGN_KEY_OF_CONTRACT_RENT_TO_PAYMENT_SCHEDULE FOREIGN KEY(contract_rent_ID) REFERENCES CONTRACT_RENT(contract_rent_ID),
+    CONSTRAINT FOREIGN_KEY_OF_FINANCE_TO_PAYMENT_SCHEDULE FOREIGN KEY(bankAccount_ID) REFERENCES FINANCE(bankAccount_ID)
+);
+
+CREATE TABLE EXPENSES(
+	expenses_ID INTEGER AUTO_INCREMENT,
+    paymentSchedule_ID VARCHAR(30),
+    expenses_Name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    expenses_Note VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    expenses_Quantity INTEGER,
+    expenses_totalAmount INTEGER,
+    date_Add DATE DEFAULT (CURRENT_DATE),
+    CONSTRAINT PRIMARY_KEY_ROOM_MATE PRIMARY KEY(expenses_ID),
+    CONSTRAINT FOREIGN_KEY_OF_PAYMENT_SCHEDULE_TO_EXPENSES FOREIGN KEY(paymentSchedule_ID) REFERENCES PAYMENT_SCHEDULE(paymentSchedule_ID)
+);
+
+CREATE TABLE REVENUE_EXPENDITURE_TYPE(
+	revenueExpenditureType_ID VARCHAR(10),
+    revenueExpenditureType_Name VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    dateAdd DATE DEFAULT (CURRENT_DATE),
+	CONSTRAINT PRIMARY_KEY_REVENUE_EXPENDITURE_TYPE PRIMARY KEY(revenueExpenditureType_ID)
+);
+
+CREATE TABLE REVENUE_EXPENDITURE(
+	revenueExpenditure_ID VARCHAR(30),
+    revenueExpenditure_Form VARCHAR(10),
+    revenueExpenditure_Method VARCHAR(10),
+    revenueExpenditureType_ID VARCHAR(10),
+    revenueExpenditure_Content VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    paymentSchedule_ID VARCHAR(30),
+    bankAccount_ID VARCHAR(30),
+    amountReceived_Amount INTEGER,
+    dateAdd DATE DEFAULT (CURRENT_DATE),
+	CONSTRAINT PRIMARY_KEY_REVENUE_EXPENDITURE PRIMARY KEY(revenueExpenditure_ID),
+    CONSTRAINT FOREIGN_KEY_OF_REVENUE_EXPENDITURE_TYPE_TO_REVENUE_EXPENDITURE FOREIGN KEY(revenueExpenditureType_ID) REFERENCES REVENUE_EXPENDITURE_TYPE(revenueExpenditureType_ID),
+    CONSTRAINT FOREIGN_KEY_OF_FINANCE_TO_REVENUE_EXPENDITURE FOREIGN KEY(bankAccount_ID) REFERENCES FINANCE(bankAccount_ID)
+);	
+
+
+
+
+
