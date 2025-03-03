@@ -17,7 +17,7 @@ import React from "react";
 const { Header, Content, Sider } = Layout;
 const cx = classname.bind(style);
 
-function AdminLayout(children) {
+function AdminLayout({ children }) {
     return (
         <Layout hasSider>
             <Sider className={cx("sider")}>Sider</Sider>
