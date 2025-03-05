@@ -1,15 +1,9 @@
-@media screen and (min-width: 1200px) and (max-width: 1300px) {
-    .sider {
-        width: 15rem !important;
-    }
-}
-@media screen and (min-width: 992px) {
-    .sider {
-        width: 4rem !important;
-    }
-}
+@use "./../assets//breakpoints" as *;
+
+
 
 .sider {
+    transition: 0.1slinear;
     height: 100vh;
     position: sticky;
     inset-inline-start: 0;
@@ -19,10 +13,7 @@
     scrollbar-gutter: stable;
     background-color: white;
     border-right: 1px solid rgba(0, 0, 0, 0.12);
-    flex: 0 0 auto !important;
-    width: 17.5rem !important;
-    max-width: none !important;
-    min-width: 0px !important;
+
     .sider-box {
         border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
@@ -74,6 +65,7 @@
 .content {
     margin: 20px 16px 0;
     overflow: initial;
+
     .content-children {
         padding: 24;
         text-align: center;
@@ -88,4 +80,19 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+@include breakpoint(xl) {
+    .sider {
+        flex: 0 0 15rem !important;
+        max-width: 15rem !important;
+        min-width: 15rem !important;
+        width: 15rem !important;
+    }
+}
+
+@include breakpoint(lg) {
+    :global('.ant-layout-sider-collapsed') {
+        width: 4rem !important;
+    }
 }
