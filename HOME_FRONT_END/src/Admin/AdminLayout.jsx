@@ -1,4 +1,4 @@
-import {Avatar, Dropdown, Layout, Space, theme, Grid} from "antd"
+import {Avatar, Dropdown, Layout, Space, theme, Grid, Flex} from "antd"
 import classname from "classnames/bind"
 import {
     DownOutlined,
@@ -40,6 +40,27 @@ function AdminLayout({children}) {
     return (
         <Layout className={cx("my-css")}>
             <Sider {...breakpoint.size} className={cx("sider")}>
+                <Dropdown menu={{items}} trigger={["click"]}>
+                    <a onClick={(e) => e.preventDefault()}>
+                        <div className={cx("user-info")} style={{}}>
+                            <Avatar size='large' icon={<UserOutlined />} />
+                            <div
+                                style={{
+                                    width: "calc(100% - 62px)",
+                                    marginLeft: "16px",
+                                    transition: "0.2s",
+                                }}
+                            >
+                                <Flex justify='space-between'>
+                                    <h3>Hoàng Xuân Lộc</h3>
+                                    <DownOutlined type='link' />
+                                </Flex>
+                                <span className={cx("text-chucvu")}>Quản lý</span>
+                            </div>
+                        </div>
+                    </a>
+                </Dropdown>
+
                 <MenuSider />
             </Sider>
             <Layout>
