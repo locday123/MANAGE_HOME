@@ -8,6 +8,33 @@
     border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
+.user-info {
+    display: flex;
+    align-items: center;
+    padding: "10px 20px";
+    border-bottom: "1px solid rgba(0, 0, 0, 0.12)";
+
+    .user-info-content {
+        display: flex;
+
+        padding: 5px;
+    }
+
+    .username-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+    }
+}
+
+.text-chucvu {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
 .header {
     background-color: white;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
