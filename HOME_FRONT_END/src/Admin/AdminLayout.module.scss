@@ -11,8 +11,8 @@
 .user-info {
     display: flex;
     align-items: center;
-    padding: "10px 20px";
-    border-bottom: "1px solid rgba(0, 0, 0, 0.12)";
+    padding: 12px 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
     .user-info-content {
         display: flex;
@@ -21,6 +21,7 @@
     }
 
     .username-info {
+        align-items: center;
         display: flex;
         justify-content: space-between;
         padding: 5px;

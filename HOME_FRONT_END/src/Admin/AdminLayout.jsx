@@ -28,31 +28,64 @@ function AdminLayout({children}) {
     const screens = useBreakpoint()
     const breakpoint = {
         size: screens.xxl
-            ? {breakpoint: "xxl", width: "17.5rem"}
+            ? {
+                  width: "17.5rem",
+                  collapsed: false,
+                  css: {
+                      width: "calc(100% - 62px)",
+                      marginLeft: "16px",
+                      transition: "0.2s",
+                  },
+              }
             : screens.xl
-            ? {breakpoint: "xl", width: "16rem"}
+            ? {
+                  width: "16rem",
+                  collapsed: false,
+                  css: {
+                      width: "calc(100% - 62px)",
+                      marginLeft: "16px",
+                      transition: "0.2s",
+                  },
+              }
             : screens.lg
-            ? {breakpoint: "xl", collapsedWidth: "4rem", width: "17.5rem"}
+            ? {
+                  breakpoint: "xl",
+                  collapsedWidth: "4rem",
+                  width: "17.5rem",
+                  trigger: true,
+                  css: {
+                      opacity: 0,
+                      visibility: "hidden",
+                      width: "0px",
+                      paddingLeft: "0px",
+                      paddingRight: "0px",
+                      marginLeft: "0px",
+                  },
+              }
             : screens.md || screens.sm || screens.xs
-            ? {breakpoint: "lg", collapsedWidth: "0", width: "17.5rem"}
+            ? {
+                  breakpoint: "lg",
+                  collapsedWidth: "0rem",
+                  width: "17.5rem",
+
+                  css: {
+                      width: "calc(100% - 62px)",
+                      marginLeft: "16px",
+                      transition: "0.2s",
+                  },
+              }
             : {},
     }
     return (
         <Layout className={cx("my-css")}>
             <Sider {...breakpoint.size} className={cx("sider")}>
-                <Dropdown menu={{items}} trigger={["click"]}>
+                <Dropdown menu={{items}} trigger={["click"]} ty>
                     <a onClick={(e) => e.preventDefault()}>
-                        <div className={cx("user-info")} style={{}}>
+                        <div className={cx("user-info")}>
                             <Avatar size='large' icon={<UserOutlined />} />
-                            <div
-                                style={{
-                                    width: "calc(100% - 62px)",
-                                    marginLeft: "16px",
-                                    transition: "0.2s",
-                                }}
-                            >
-                                <Flex justify='space-between'>
-                                    <h3>Hoàng Xuân Lộc</h3>
+                            <div style={{...breakpoint.size.css}}>
+                                <Flex justify='space-between' style={{lineHeight: "0"}}>
+                                    <h3 style={{fontSize: "16px"}}>Hoàng Xuân Lộc</h3>
                                     <DownOutlined type='link' />
                                 </Flex>
                                 <span className={cx("text-chucvu")}>Quản lý</span>
