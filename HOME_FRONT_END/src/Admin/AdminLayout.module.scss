@@ -37,6 +37,15 @@
 
 
 .header {
+    padding: 0px !important;
     background-color: white;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+    .header-children {
+        height: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+
+    }
 }

@@ -80,7 +80,7 @@ function AdminLayout({children}) {
         <Layout className={cx("my-css")}>
             <Sider {...breakpoint.size} className={cx("sider")}>
                 <Dropdown menu={{items}} trigger={["click"]} ty>
-                    <a onClick={(e) => e.preventDefault()}>
+                    <a onClick={(e) => e.preventDefault()} style={{color: "black"}}>
                         <div className={cx("user-info")}>
                             <Avatar size='large' icon={<UserOutlined />} />
                             <div style={{...breakpoint.size.css}}>
