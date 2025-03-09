@@ -34,10 +34,8 @@
     white-space: nowrap;
 }
 
-
-
 .header {
-    padding: 0px !important;
+    padding: 10px !important;
     background-color: white;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
 
@@ -45,9 +43,19 @@
         height: 100%;
         align-items: center;
         display: flex;
+        .header-logo {
+            display: flex;
+            flex-direction: row;
+            cursor: pointer;
+            -webkit-box-align: center;
+            align-items: center;
+            margin-left: 10px;
+            img {
+                height: 36px;
+                margin-right: 10px;
+            }
+        }
     }
-
-
 }
 
 .content {
