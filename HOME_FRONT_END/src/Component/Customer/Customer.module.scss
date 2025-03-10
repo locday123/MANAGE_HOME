@@ -1,16 +1,25 @@
 .tabs-customer {
+
+
     :global(.ant-tabs-content-holder) {
         background-color: white !important;
         margin-left: 20px !important;
+        padding: 20px 0px !important;
         border: 0;
         border-radius: 10px;
     }
+
     :global(.ant-tabs-nav) {
-        min-width: 200px;
+        min-width: 200px !important;
         background-color: rgb(255, 255, 255);
         border-radius: 16px;
         padding: 20px 0px;
+
+        @media screen and (min-width: 1200px) {
+            min-width: 280px !important;
+        }
     }
+
     :global(.ant-tabs-tab) {
         color: rgb(17, 24, 39);
         display: flex;
@@ -21,9 +30,11 @@
         margin-right: 20px !important;
         margin-top: 1px !important;
     }
+
     :global(.ant-tabs-ink-bar) {
         background: none !important;
     }
+
     :global(.ant-tabs-tab-active) {
         color: rgb(10, 143, 220);
         background-color: rgba(10, 143, 220, 0.1);
