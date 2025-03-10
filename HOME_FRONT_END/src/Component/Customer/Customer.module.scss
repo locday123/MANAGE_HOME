@@ -1,12 +1,25 @@
 .tabs-customer {
-
-
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    @media screen and (min-width: 576px) {
+        flex-direction: row;
+    }
     :global(.ant-tabs-content-holder) {
+        margin-top: 20px;
+        padding: 20px !important;
         background-color: white !important;
-        margin-left: 20px !important;
-        padding: 20px 0px !important;
         border: 0;
         border-radius: 10px;
+
+        @media screen and (min-width: 1200px) {
+            margin-left: 32px !important;
+        }
+
+        @media screen and (min-width: 576px) {
+            margin-left: 20px;
+            margin-top: 0px !important;
+        }
     }
 
     :global(.ant-tabs-nav) {
@@ -14,7 +27,6 @@
         background-color: rgb(255, 255, 255);
         border-radius: 16px;
         padding: 20px 0px;
-
         @media screen and (min-width: 1200px) {
             min-width: 280px !important;
         }
