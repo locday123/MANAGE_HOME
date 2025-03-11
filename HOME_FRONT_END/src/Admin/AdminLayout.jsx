@@ -1,6 +1,6 @@
 import {Avatar, Dropdown, Layout, Grid, Flex, Button} from "antd"
 import classname from "classnames/bind"
-import {ExtendedData} from "../assets/ExtendedData"
+import {AdminLayout_Data} from "../assets/ExtendedData"
 import {DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined} from "@ant-design/icons"
 import style from "../Admin/AdminLayout.module.scss"
 import React, {useEffect, useState} from "react"
@@ -21,7 +21,7 @@ function AdminLayout({children}) {
             setSiderElement({
                 element: {width: "17.5rem"},
                 trigger: false,
-                css: ExtendedData.AdminLayout.cssNameInfo.cssShow,
+                css: AdminLayout_Data.cssNameInfo.cssShow,
             })
         } else if (screen.xxl == false && screen.xl && screen.lg && screen.md & screen.sm) {
             console.log()
@@ -29,7 +29,7 @@ function AdminLayout({children}) {
             setSiderElement({
                 element: {width: "15.5rem"},
                 trigger: false,
-                css: ExtendedData.AdminLayout.cssNameInfo.cssShow,
+                css: AdminLayout_Data.cssNameInfo.cssShow,
             })
         } else if (
             screen.xxl == false &&
@@ -44,7 +44,7 @@ function AdminLayout({children}) {
                     width: "17.5rem",
                 },
                 trigger: true,
-                css: ExtendedData.AdminLayout.cssNameInfo.cssHidden,
+                css: AdminLayout_Data.cssNameInfo.cssHidden,
             })
             setCollapsed(false)
         } else if (screen.md || screens.sm || screen.xs) {
@@ -56,11 +56,12 @@ function AdminLayout({children}) {
                     width: "17.5rem",
                 },
                 trigger: true,
-                css: ExtendedData.AdminLayout.cssNameInfo.cssHidden,
+                css: AdminLayout_Data.cssNameInfo.cssHidden,
             })
         }
     }
     useEffect(() => {
+        console.log(AdminLayout_Data.items)
         breakPoint(screens)
     }, [screens])
     return (
@@ -71,7 +72,7 @@ function AdminLayout({children}) {
                 collapsed={!collapsed}
                 {...siderElement.element}
             >
-                <Dropdown menu={ExtendedData.AdminLayout.items} trigger={["click"]} ty>
+                <Dropdown menu={AdminLayout_Data.DropdownMenu} trigger={["click"]}>
                     <a onClick={(e) => e.preventDefault()} style={{color: "black"}}>
                         <div className={cx("user-info")}>
                             <Avatar size='large' icon={<UserOutlined />} />
@@ -99,8 +100,8 @@ function AdminLayout({children}) {
                                     setSiderElement({
                                         ...siderElement,
                                         css: !collapsed
-                                            ? ExtendedData.AdminLayout.cssNameInfo.cssShow
-                                            : ExtendedData.AdminLayout.cssNameInfo.cssHidden,
+                                            ? AdminLayout_Data.cssNameInfo.cssShow
+                                            : AdminLayout_Data.cssNameInfo.cssHidden,
                                     })
                                     setCollapsed(!collapsed)
                                     console.log(siderElement)

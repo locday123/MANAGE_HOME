@@ -1,21 +1,11 @@
-import {
-    Avatar,
-    Button,
-    Flex,
-    Form,
-    Col,
-    Input,
-    Space,
-    Upload,
-    Row,
-    DatePicker,
-} from "antd";
-import { UserOutlined, UploadOutlined, LockOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-dayjs.extend(customParseFormat);
+import {Avatar, Button, Flex, Form, Col, Input, Space, Upload, Row, DatePicker} from "antd"
+import {UserOutlined, UploadOutlined, LockOutlined} from "@ant-design/icons"
+import dayjs from "dayjs"
+import customParseFormat from "dayjs/plugin/customParseFormat"
+import {CustomerInfo_Data} from "../../../assets/ExtendedData"
+dayjs.extend(customParseFormat)
 
-const dateFormatList = ["DD/MM/YYYY"];
+const dateFormatList = ["DD/MM/YYYY"]
 
 function CustomerInfo() {
     return (
@@ -23,11 +13,7 @@ function CustomerInfo() {
             <Form>
                 <Form.Item>
                     <Flex align='center'>
-                        <Avatar
-                            size={60}
-                            icon={<UserOutlined />}
-                            style={{ marginRight: "16px" }}
-                        />
+                        <Avatar size={60} icon={<UserOutlined />} style={{marginRight: "16px"}} />
                         <div
                             style={{
                                 flex: "1 1 0%",
@@ -52,73 +38,26 @@ function CustomerInfo() {
                         </div>
                     </Flex>
                 </Form.Item>
-                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                    <Col xs={24} md={12}>
-                        <Form.Item
-                            name='fullname'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Vui lòng nhập họ và tên!",
-                                },
-                            ]}
-                        >
-                            <Input size='large' placeholder='Họ và tên' />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={24} md={12}>
-                        <Form.Item
-                            name='phone-number'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Vui lòng nhập số điện thoại!",
-                                },
-                            ]}
-                        >
-                            <Input
-                                size='large'
-                                type='phone'
-                                placeholder='Số điện thoại'
-                            />
-                        </Form.Item>
-                    </Col>
-
-                    <Col xs={24} md={12}>
-                        <Form.Item
-                            name='email'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Vui lòng nhập Email!",
-                                },
-                            ]}
-                        >
-                            <Input
-                                type='email'
-                                size='large'
-                                placeholder='Email'
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={24} md={12}>
-                        <Form.Item
-                            name='dia-chi'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Vui lòng nhập địa chỉ!",
-                                },
-                            ]}
-                        >
-                            <Input
-                                size='large'
-                                type='text'
-                                placeholder='Địa chỉ'
-                            />
-                        </Form.Item>
-                    </Col>
-
+                <Row gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
+                    {CustomerInfo_Data.map((value) => (
+                        <Col xs={24} md={12}>
+                            <Form.Item
+                                name={value.nameInput}
+                                rules={[
+                                    {
+                                        required: value.required,
+                                        message: value.message,
+                                    },
+                                ]}
+                            >
+                                <Input
+                                    size='large'
+                                    name={value.nameInput}
+                                    placeholder={value.placehoder}
+                                />
+                            </Form.Item>
+                        </Col>
+                    ))}
                     <Col xs={24} md={12}>
                         <Form.Item
                             name='date'
@@ -131,10 +70,7 @@ function CustomerInfo() {
                         >
                             <DatePicker
                                 size='large'
-                                defaultValue={dayjs(
-                                    "01/01/2015",
-                                    dateFormatList[0]
-                                )}
+                                showToday={true}
                                 format={dateFormatList}
                                 style={{
                                     width: "100%",
@@ -142,10 +78,20 @@ function CustomerInfo() {
                             />
                         </Form.Item>
                     </Col>
+                    <Col xs={24} md={12}>
+                        <Form.Item name='button-submit'>
+                            <Space>
+                                <Button type='primary' size='large' htmlType='submit'>
+                                    Submit
+                                </Button>
+                                <Button size='large'>Reset</Button>
+                            </Space>
+                        </Form.Item>
+                    </Col>
                 </Row>
             </Form>
         </div>
-    );
+    )
 }
 
-export default CustomerInfo;
+export default CustomerInfo
