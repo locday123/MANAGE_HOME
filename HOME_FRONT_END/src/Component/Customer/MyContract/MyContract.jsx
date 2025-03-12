@@ -4,7 +4,7 @@ import {ContractInfo} from "./ContractInfo"
 
 const contractData = {
     contractRent: {
-        contractInfo: [
+        contract_rentInfo: [
             {label: "Người thuê:", name: "Hoàng Xuân Lộc", key: "1"},
             {label: "CCCD", name: "197322197", key: "2"},
             {label: "Số điện thoại", name: "0374536393", key: "3"},
@@ -13,7 +13,19 @@ const contractData = {
         ],
     },
     homeRent: {
-        homerentInfo: [
+        home_rentInfo: [
+            {label: "Tòa nhà:", name: "672 Lê Hồng Phong", key: "1"},
+            {label: "Tầng", name: "4", key: "2"},
+            {label: "Phòng", name: "A401", key: "3"},
+            {label: "Phí thuê", name: "10.000.000", key: "4"},
+            {label: "Phí cọc", name: "10.000.000", key: "5"},
+            {label: "Phí điện", name: "4000 / chữ", key: "6"},
+            {label: "Phí nước", name: "100.000 / người", key: "7"},
+            {label: "Tình trạng", name: "ĐÃ KÍCH HOẠT", key: "8"},
+        ],
+    },
+    historyPay: {
+        history_payInfo: [
             {label: "Tòa nhà:", name: "672 Lê Hồng Phong", key: "1"},
             {label: "Tầng", name: "4", key: "2"},
             {label: "Phòng", name: "A401", key: "3"},
@@ -31,15 +43,20 @@ function MyContract() {
         {
             key: "1",
             label: <b style={{color: "white"}}>THÔNG TIN HỢP ĐỒNG</b>,
-            children: ContractInfo(contractData.contractRent.contractInfo),
+            children: ContractInfo(contractData.contractRent.contract_rentInfo),
         },
         {
             key: "2",
             label: <b style={{color: "white"}}>THÔNG TIN CĂN HỘ</b>,
-            children: ContractInfo(contractData.homeRent.homerentInfo),
+            children: ContractInfo(contractData.homeRent.home_rentInfo),
         },
         {
             key: "3",
+            label: <b style={{color: "white"}}>HÓA ĐƠN TIỀN NHÀ</b>,
+            children: "HÓA ĐƠN TIỀN NHÀ",
+        },
+        {
+            key: "4",
             label: <b style={{color: "white"}}>LỊCH SỬ THANH TOÁN</b>,
             children: "LỊCH SỬ THANH TOÁN",
         },
