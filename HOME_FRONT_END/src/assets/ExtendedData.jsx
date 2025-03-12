@@ -1,6 +1,7 @@
 import {UserOutlined, LogoutOutlined, ReconciliationOutlined, LockFilled} from "@ant-design/icons"
 import CustomerInfo from "../Component/Customer/CustomerInfo/CustomerInfo"
 import ChangPassword from "../Component/Customer/ChangPassword/ChangPassword"
+import MyContract from "../Component/Customer/MyContract/MyContract"
 
 const AdminLayout_Data = {
     cssNameInfo: {
@@ -42,8 +43,8 @@ const Customer_Data = [
         icon: <LockFilled />,
     },
     {
-        label: "Hợp đồng thuê nhà",
-        children: "Thông tin khác",
+        label: "Hợp đồng thuê",
+        children: <MyContract />,
         key: "3",
         icon: <ReconciliationOutlined />,
     },
