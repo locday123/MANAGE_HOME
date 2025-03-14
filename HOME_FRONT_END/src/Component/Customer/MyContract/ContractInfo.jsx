@@ -1,19 +1,19 @@
-import { Button, Card, Col, Collapse, Row, Table, Tag } from "antd";
-
+import {Button, Card, Col, Row, Table, Tag} from "antd"
+import {TransactionOutlined, FileTextFilled, PrinterFilled} from "@ant-design/icons"
 const ContractInfo = (info) => {
     return (
-        <Row gutter={40} style={{ rowGap: "10px" }}>
+        <Row gutter={40} style={{rowGap: "10px"}}>
             {info.map((value, key) => (
                 <Col xs={24} md={12} xl={12} xxl={8} key={key}>
-                    <Tag color='#108ee9' bordered style={{ fontSize: "16px" }}>
+                    <Tag color='#108ee9' bordered style={{fontSize: "16px"}}>
                         {value.label}
                     </Tag>
-                    {value.name}
+                    {value.name.toLocaleString("vi")}
                 </Col>
             ))}
         </Row>
-    );
-};
+    )
+}
 
 const ExpensesColumn = [
     {
@@ -46,45 +46,79 @@ const ExpensesColumn = [
         key: "total",
         align: "center",
         render: (_, value) =>
-            ((value.newIndex - value.oldIndex) * value.price).toLocaleString(
-                "vi"
-            ),
+            ((value.newIndex - value.oldIndex) * value.price).toLocaleString("vi"),
     },
-];
-
-const ExpensesTable = (children) => {
-    console.log(children.bill_Detail);
-    return (
-        <Table
-            pagination={false}
-            dataSource={children.bill_Detail}
-            columns={ExpensesColumn}
-            summary={(pagedata) => {
-                let total = 0;
-                pagedata.forEach(({ oldIndex, newIndex, price }) => {
-                    total += (newIndex - oldIndex) * price;
-                });
-
-                return (
-                    <Table.Summary.Row>
-                        <Table.Summary.Cell index={0}>
-                            <b>TỔNG TIỀN</b>
-                        </Table.Summary.Cell>
-                        <Table.Summary.Cell index={1}></Table.Summary.Cell>
-                        <Table.Summary.Cell index={2}></Table.Summary.Cell>
-                        <Table.Summary.Cell index={4}></Table.Summary.Cell>
-                        <Table.Summary.Cell
-                            index={5}
-                            align='center'
-                            colSpan={5}
-                        >
-                            <b>{total.toLocaleString("vi")}</b>
-                        </Table.Summary.Cell>
-                    </Table.Summary.Row>
-                );
-            }}
+]
+const actions = (children) => [
+    !children.statusBill ? (
+        <Button
+            type='span'
+            color='primary'
+            iconPosition={"start"}
+            icon={<TransactionOutlined />}
+            key='pay'
+            children='Thanh toán'
         />
-    );
-};
+    ) : (
+        <Button
+            type='span'
+            color='primary'
+            iconPosition={"start"}
+            icon={<TransactionOutlined />}
+            key='pay'
+            children='Đã thanh toán'
+        />
+    ),
+    <Button
+        type='span'
+        color='primary'
+        iconPosition={"start"}
+        icon={<PrinterFilled />}
+        key='print'
+        children='In hóa đơn'
+    />,
+    <Button
+        type='span'
+        color='primary'
+        iconPosition={"start"}
+        icon={<FileTextFilled />}
+        key='edit'
+        children='Khiếu nại'
+    />,
+]
+const ExpensesTable = (children) => {
+    return (
+        <Card bordered={false} actions={actions(children)}>
+            <Table
+                pagination={false}
+                dataSource={children.bill_Detail}
+                columns={ExpensesColumn}
+                scroll={{
+                    x: "max-content",
+                }}
+                summary={(pagedata) => {
+                    let total = 0
+                    pagedata.forEach(({oldIndex, newIndex, price}) => {
+                        total += (newIndex - oldIndex) * price
+                    })
 
-export { ContractInfo, ExpensesTable };
+                    return (
+                        <Table.Summary.Row>
+                            <Table.Summary.Cell index={0}>
+                                <b>TỔNG TIỀN</b>
+                            </Table.Summary.Cell>
+                            <Table.Summary.Cell index={1}></Table.Summary.Cell>
+                            <Table.Summary.Cell index={2}></Table.Summary.Cell>
+                            <Table.Summary.Cell index={4}></Table.Summary.Cell>
+                            <Table.Summary.Cell index={5} align='center' colSpan={5}>
+                                <b>{total.toLocaleString("vi")}</b>
+                            </Table.Summary.Cell>
+                        </Table.Summary.Row>
+                    )
+                }}
+            />
+        </Card>
+    )
+}
+
+export {ContractInfo, ExpensesTable}
