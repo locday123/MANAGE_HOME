@@ -12,7 +12,7 @@ const ContractInfo = (info) => {
                     <Tag color='#108ee9' bordered style={{ fontSize: "16px" }}>
                         {value.label}
                     </Tag>
-                    {value.name.toLocaleString("en")}
+                    {value.name.toLocaleString("vi")}
                 </Col>
             ))}
         </Row>
