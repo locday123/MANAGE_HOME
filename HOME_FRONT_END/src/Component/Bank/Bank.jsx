@@ -1,11 +1,23 @@
-import {Avatar, Button, Col, Form, Image, Input, Row, Table, Tag} from "antd"
-import {useEffect, useState} from "react"
-import classnames from "classnames/bind"
-import style from "../Bank/Bank.module.scss"
+import {
+    Avatar,
+    Button,
+    Card,
+    Col,
+    Form,
+    Image,
+    Input,
+    Pagination,
+    Row,
+    Table,
+    Tag,
+} from "antd";
+import { useEffect, useState } from "react";
+import classnames from "classnames/bind";
+import style from "../Bank/Bank.module.scss";
 
-import {getAllBank} from "../../Service/Bank/BankService"
+import { getAllBank } from "../../Service/Bank/BankService";
 
-const cx = classnames.bind(style)
+const cx = classnames.bind(style);
 
 const columns = [
     {
@@ -23,11 +35,11 @@ const columns = [
                 <Image
                     width={"100px"}
                     preview={false}
-                    style={{marginRight: "10px"}}
+                    style={{ marginRight: "10px" }}
                     size={50}
                     src={value.bank_Logo}
                 />
-                <Tag color='blue-inverse' style={{fontSize: "13px"}}>
+                <Tag color='blue-inverse' style={{ fontSize: "13px" }}>
                     {value.bank_shortName}
                 </Tag>
             </>
@@ -38,43 +50,74 @@ const columns = [
         title: "Tên ngân hàng",
         dataIndex: "bankName",
     },
-]
+];
+
+const addBank = (
+    <Row gutter={(0, 20)}>
+        <Col xl={9} md={24}>
+            <Form.Item
+                name='bankAbbreviated'
+                rules={[
+                    {
+                        required: true,
+                        message: "Vui lòng nhập tên viết tắt!",
+                    },
+                ]}
+            >
+                <Input
+                    size='large'
+                    placeholder='Mã ngân hàng'
+                    name='bankAbbreviated'
+                />
+            </Form.Item>
+        </Col>
+        <Col xl={9} md={24}>
+            <Form.Item
+                name='bankName'
+                rules={[
+                    {
+                        required: true,
+                        message: "Vui lòng nhập tên ngân hàng!",
+                    },
+                ]}
+            >
+                <Input
+                    placeholder='Tên ngân hàng'
+                    size='large'
+                    style={{ width: "100%" }}
+                    name='bankName'
+                />
+            </Form.Item>
+        </Col>
+        <Col xl={6} md={24}>
+            <Button
+                style={{ width: "100%" }}
+                type='primary'
+                size='large'
+                children='THÊM'
+            />
+        </Col>
+    </Row>
+);
 
 function Bank() {
-    const [data, setData] = useState([])
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         getAllBank().then((value) => {
-            setData(value)
-        })
-    }, [data != null])
+            setData(value);
+        });
+    }, [data != null]);
 
     return (
-        <Row gutter={20} className={cx("div-bank")}>
-            <Col xl={8} md={24}>
-                <Form.Item
-                    name='bankAbbreviated'
-                    rules={[{required: true, message: "Vui lòng nhập tên viết tắt!"}]}
-                >
-                    <Input size='large' name='bankAbbreviated' />
-                </Form.Item>
-            </Col>
-            <Col xl={8} md={24}>
-                <Form.Item
-                    name='bankName'
-                    rules={[{required: true, message: "Vui lòng nhập tên ngân hàng!"}]}
-                >
-                    <Input prefix='đá' size='large' name='bankName' />
-                </Form.Item>
-            </Col>
-            <Col xl={8} md={24}>
-                <Button type='primary' size='large' children='THÊM' />
-            </Col>
-            <Col span='24'>
-                <Table bordered={true} dataSource={data} pagination={false} columns={columns} />
-            </Col>
-        </Row>
-    )
+        <Card title={addBank} className={cx("div-bank")}>
+            <Table
+                dataSource={data}
+                pagination={{ position: ["topRight"] }}
+                columns={columns}
+            />
+        </Card>
+    );
 }
 
-export default Bank
+export default Bank;
