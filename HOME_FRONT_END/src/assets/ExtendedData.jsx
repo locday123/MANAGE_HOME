@@ -2,6 +2,7 @@ import {UserOutlined, LogoutOutlined, ReconciliationOutlined, LockFilled} from "
 import CustomerInfo from "../Component/Customer/CustomerInfo/CustomerInfo"
 import ChangPassword from "../Component/Customer/ChangPassword/ChangPassword"
 import MyContract from "../Component/Customer/MyContract/MyContract"
+import {Link} from "react-router-dom"
 
 const AdminLayout_Data = {
     cssNameInfo: {
@@ -22,9 +23,12 @@ const AdminLayout_Data = {
 
     DropdownMenu: {
         items: [
-            {label: "Tài khoản của tôi", key: "0", icon: <UserOutlined />},
-            {label: "Đổi mật khẩu", key: "1", icon: <LockFilled />},
-            {label: "Đăng xuất", key: "2", icon: <LogoutOutlined />},
+            {
+                label: <Link to={"/my-profile"}> Tài khoản của tôi</Link>,
+                key: "0",
+                icon: <UserOutlined />,
+            },
+            {label: "Đăng xuất", key: "21", icon: <LogoutOutlined />},
         ],
     },
 }

@@ -61,7 +61,6 @@ function AdminLayout({children}) {
         }
     }
     useEffect(() => {
-        console.log(AdminLayout_Data.items)
         breakPoint(screens)
     }, [screens])
     return (
