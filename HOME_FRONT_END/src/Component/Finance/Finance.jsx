@@ -1,47 +1,61 @@
-import {Card, Carousel, Col, Row, Grid} from "antd"
-import Column from "antd/es/table/Column"
-import {useEffect, useState} from "react"
-import classnames from "classnames/bind"
-import style from "../Finance/Finance.module.scss"
+import { Card, Carousel, Col, Row, Grid } from "antd";
+import { useEffect, useState } from "react";
+import classnames from "classnames/bind";
+import style from "../Finance/Finance.module.scss";
 
-import {getAllBank} from "../../Service/Bank/BankService"
-import {getAllFinance} from "../../Service/Finance/FinanceService"
-import {slidesToShow} from "../../assets/ExtendedData"
+import { getAllBank, getBankID } from "../../Service/Bank/BankService";
+import {
+    getAllFinance,
+    getFinanceID,
+} from "../../Service/Finance/FinanceService";
+import { slidesToShow } from "../../assets/ExtendedData";
 
-const {useBreakpoint} = Grid
-const cx = classnames.bind(style)
+const { useBreakpoint } = Grid;
+const cx = classnames.bind(style);
 
 function Finance() {
-    const [finnance, setFinance] = useState([])
-    const screens = useBreakpoint()
-    console.log(screens)
+    const [finance, setFinance] = useState([]);
+    const [bank, setBank] = useState([]);
+    const screens = useBreakpoint();
+
+    const NewBank = (bank, code) => {
+        const newBank = getBankID(bank, code);
+        return newBank;
+    };
+
     useEffect(() => {
         getAllFinance().then((value) => {
-            setFinance(value)
-        })
-    }, [finnance != null])
+            setFinance(value);
+        });
+
+        getAllBank().then((value) => {
+            setBank(value);
+        });
+    }, [finance != null]);
 
     return (
         <Card className={cx("card-style")}>
             <Carousel arrows={true} {...slidesToShow(screens)} dots={false}>
-                {finnance.map((value) => (
+                {finance.map((value) => (
                     <Col span={23}>
                         <Card
                             variant={"borderless"}
                             style={{
+                                fontSize: "16px",
+                                fontWeight: "bolder",
                                 backgroundImage:
-                                    "linear-gradient(to top, #cc208e 0%, #6713d2 100%)",
+                                    "linear-gradient(to top,rgb(197, 152, 180) 0%,rgb(126, 87, 177) 100%)",
                                 height: "8rem",
                                 color: "white",
                             }}
                         >
-                            {value.bank_Code}
+                            {NewBank(bank, value.bank_Code).bankName}
                         </Card>
                     </Col>
                 ))}
             </Carousel>
         </Card>
-    )
+    );
 }
 
-export default Finance
+export default Finance;

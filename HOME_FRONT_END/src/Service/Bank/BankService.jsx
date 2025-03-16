@@ -1,21 +1,19 @@
-import {client} from "../Service"
+import { client } from "../Service";
 
-let linkApi = "https://mocki.io/v1/6c77b353-9f0a-4755-bc18-a7394dd00127"
+let linkApi = "https://mocki.io/v1/bb4052e3-1213-4057-9888-8cb40f2103ba";
 
 const getAllBank = async () => {
     try {
-        const response = await client.get(linkApi)
-        return await response.data
+        const response = await client.get(linkApi);
+        return await response.data;
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
-}
-const getBankID = async (bankCode) => {
-    return getAllBank().then((value) => {
-        return value.find((element) => {
-            return element.bank_Code === bankCode
-        })
-    })
-}
+};
+const getBankID = (bank, bankCode) => {
+    return bank.find(({ bank_Code }) => {
+        return bank_Code === bankCode;
+    });
+};
 
-export {getAllBank, getBankID}
+export { getAllBank, getBankID };

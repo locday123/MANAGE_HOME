@@ -1,11 +1,11 @@
-import {Button, Card, Col, Form, Image, Input, Row, Table, Tag} from "antd"
-import {useEffect, useState} from "react"
-import classnames from "classnames/bind"
-import style from "../Bank/Bank.module.scss"
+import { Button, Card, Col, Form, Image, Input, Row, Table, Tag } from "antd";
+import { useEffect, useState } from "react";
+import classnames from "classnames/bind";
+import style from "../Bank/Bank.module.scss";
 
-import {getAllBank} from "../../Service/Bank/BankService"
+import { getAllBank } from "../../Service/Bank/BankService";
 
-const cx = classnames.bind(style)
+const cx = classnames.bind(style);
 
 const columns = [
     {
@@ -23,11 +23,11 @@ const columns = [
                 <Image
                     width={"100px"}
                     preview={false}
-                    style={{marginRight: "10px"}}
+                    style={{ marginRight: "10px" }}
                     size={50}
                     src={value.bank_Logo}
                 />
-                <Tag color='blue-inverse' style={{fontSize: "13px"}}>
+                <Tag color='blue-inverse' style={{ fontSize: "13px" }}>
                     {value.bank_shortName}
                 </Tag>
             </>
@@ -38,7 +38,7 @@ const columns = [
         title: "Tên ngân hàng",
         dataIndex: "bankName",
     },
-]
+];
 
 const addBank = (
     <Row gutter={(0, 20)}>
@@ -52,7 +52,11 @@ const addBank = (
                     },
                 ]}
             >
-                <Input size='large' placeholder='Mã ngân hàng' name='bankAbbreviated' />
+                <Input
+                    size='large'
+                    placeholder='Mã ngân hàng'
+                    name='bankAbbreviated'
+                />
             </Form.Item>
         </Col>
         <Col xl={9} md={24}>
@@ -68,31 +72,40 @@ const addBank = (
                 <Input
                     placeholder='Tên ngân hàng'
                     size='large'
-                    style={{width: "100%"}}
+                    style={{ width: "100%" }}
                     name='bankName'
                 />
             </Form.Item>
         </Col>
         <Col xl={6} md={24}>
-            <Button style={{width: "100%"}} type='primary' size='large' children='THÊM' />
+            <Button
+                style={{ width: "100%" }}
+                type='primary'
+                size='large'
+                children='THÊM'
+            />
         </Col>
     </Row>
-)
+);
 
 function Bank() {
-    const [data, setData] = useState([])
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         getAllBank().then((value) => {
-            setData(value)
-        })
-    }, [data != null])
+            setData(value);
+        });
+    }, [data != null]);
 
     return (
         <Card title={addBank} className={cx("div-bank")}>
-            <Table dataSource={data} pagination={{position: ["topRight"]}} columns={columns} />
+            <Table
+                dataSource={data}
+                pagination={{ position: ["topRight"] }}
+                columns={columns}
+            />
         </Card>
-    )
+    );
 }
 
-export default Bank
+export default Bank;
