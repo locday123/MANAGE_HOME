@@ -81,4 +81,18 @@ const CustomerInfo_Data = [
     },
 ]
 
-export {AdminLayout_Data, CustomerInfo_Data, Customer_Data}
+const slidesToShow = (breakpoint) => {
+    return breakpoint.xxl
+        ? {
+              slidesToShow: 5,
+          }
+        : breakpoint.xl || breakpoint.lg
+        ? {slidesToShow: 4}
+        : breakpoint.md
+        ? {slidesToShow: 3}
+        : breakpoint.sm
+        ? {slidesToShow: 2}
+        : {slidesToShow: 1}
+}
+
+export {AdminLayout_Data, CustomerInfo_Data, Customer_Data, slidesToShow}

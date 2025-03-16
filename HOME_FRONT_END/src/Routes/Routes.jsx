@@ -14,7 +14,7 @@ const publicRoutes = [
     {
         path: "/finance",
         component: Finance,
-        label: "Tài chính",
+        label: <Link to={"/finance"}> Sổ quỹ</Link>,
         key: "/finance",
     },
     {

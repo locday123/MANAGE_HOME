@@ -10,10 +10,10 @@ const getAllBank = async () => {
         console.log(err)
     }
 }
-const getBankID = async (bankIDa) => {
+const getBankID = async (bankCode) => {
     return getAllBank().then((value) => {
         return value.find((element) => {
-            return element.bankID === bankIDa
+            return element.bank_Code === bankCode
         })
     })
 }
