@@ -1,3 +1,40 @@
 .card-style {
     box-shadow: rgba(0, 0, 0, 0.03) 0px 0px 5px 5px !important;
+    font-size: 12px;
+    font-weight: bolder;
+    background: #fff;
+    background-image: url(https://ipay.vietinbank.vn/static/image/icon/card-account-bg-2.svg);
+    background-repeat: no-repeat;
+    background-position: right 17px bottom 1px;
+    height: 9rem;
+    color: rgb(95, 90, 90);
+    padding: 10px;
+}
+
+.money-showhide {
+    display: flex !important;
+}
+
+:global(.slick-list) {
+    padding: 5px !important;
+}
+
+:global(.ant-card-head-wrapper) {
+    flex-direction: column !important;
+}
+
+.card-info {
+    display: flex;
+
+    justify-content: space-between;
+}
+
+:global(.slick-arrow.slick-prev) {
+
+    color: black
+}
+
+:global(.slick-arrow.slick-next) {
+
+    color: black;
 }
