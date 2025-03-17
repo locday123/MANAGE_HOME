@@ -100,6 +100,7 @@ function Bank() {
     return (
         <Card title={addBank} className={cx("div-bank")}>
             <Table
+                showHeader={false}
                 dataSource={data}
                 pagination={{ position: ["topRight"] }}
                 columns={columns}

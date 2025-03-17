@@ -1,19 +1,23 @@
-import {Button, Card, Col, Image, Row, Table, Tag} from "antd"
-import {TransactionOutlined, FileTextFilled, PrinterFilled} from "@ant-design/icons"
+import { Button, Card, Col, Image, Row, Table, Tag } from "antd";
+import {
+    TransactionOutlined,
+    FileTextFilled,
+    PrinterFilled,
+} from "@ant-design/icons";
 const ContractInfo = (info) => {
     return (
-        <Row gutter={40} style={{rowGap: "10px"}}>
+        <Row gutter={40} style={{ rowGap: "10px" }}>
             {info.map((value, key) => (
                 <Col xs={24} md={12} xl={12} xxl={8} key={key}>
-                    <Tag color='#108ee9' bordered style={{fontSize: "16px"}}>
+                    <Tag color='#108ee9' bordered style={{ fontSize: "13px" }}>
                         {value.label}
                     </Tag>
                     {value.name.toLocaleString("vi")}
                 </Col>
             ))}
         </Row>
-    )
-}
+    );
+};
 
 const ExpensesColumn = [
     {
@@ -46,9 +50,11 @@ const ExpensesColumn = [
         key: "total",
         align: "center",
         render: (_, value) =>
-            ((value.newIndex - value.oldIndex) * value.price).toLocaleString("vi"),
+            ((value.newIndex - value.oldIndex) * value.price).toLocaleString(
+                "vi"
+            ),
     },
-]
+];
 const actions = (children) => [
     !children.statusBill ? (
         <Button
@@ -85,7 +91,7 @@ const actions = (children) => [
         key='edit'
         children='Khiếu nại'
     />,
-]
+];
 const ExpensesTable = (children) => {
     return (
         <Card bordered={false} actions={actions(children)}>
@@ -97,10 +103,10 @@ const ExpensesTable = (children) => {
                     x: "max-content",
                 }}
                 summary={(pagedata) => {
-                    let total = 0
-                    pagedata.forEach(({oldIndex, newIndex, price}) => {
-                        total += (newIndex - oldIndex) * price
-                    })
+                    let total = 0;
+                    pagedata.forEach(({ oldIndex, newIndex, price }) => {
+                        total += (newIndex - oldIndex) * price;
+                    });
 
                     return (
                         <Table.Summary.Row>
@@ -108,7 +114,7 @@ const ExpensesTable = (children) => {
                                 <b>QUÉT QR để thanh toán</b>
                                 <Image
                                     width={"100px"}
-                                    style={{marginRight: "10px"}}
+                                    style={{ marginRight: "10px" }}
                                     size={50}
                                     src={
                                         " https://api.vietqr.io/image/970415-106867126672-gQtdFNb.jpg?accountName=HOANG%20XUAN%20LOC&amount=" +
@@ -125,11 +131,11 @@ const ExpensesTable = (children) => {
                                 <b>{total.toLocaleString("vi")}</b>
                             </Table.Summary.Cell>
                         </Table.Summary.Row>
-                    )
+                    );
                 }}
             />
         </Card>
-    )
-}
+    );
+};
 
-export {ContractInfo, ExpensesTable}
+export { ContractInfo, ExpensesTable };
