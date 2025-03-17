@@ -63,12 +63,15 @@ function Finance() {
                             </Col>
                             <Col span={24} style={{fontSize: "20px", color: "#0b5080"}}>
                                 <Flex justify='space-between' align='baseline'>
-                                    <span style={{alignItems: "center"}} key={"a"}>
+                                    <span style={{alignSelf: "center"}}>
                                         {showHide[value.bank_AccountNumber]
-                                            ? (1000000).toLocaleString("vi")
-                                            : "*******"}
+                                            ? (100000).toLocaleString("vi")
+                                            : "•••••••••"}
                                     </span>
-                                    <span onClick={() => MoneyShowHide(value.bank_AccountNumber)}>
+                                    <span
+                                        style={{alignSelf: "center"}}
+                                        onClick={() => MoneyShowHide(value.bank_AccountNumber)}
+                                    >
                                         {showHide[value.bank_AccountNumber] ? (
                                             <EyeOutlined />
                                         ) : (
