@@ -29,27 +29,24 @@ import RevenueExpenditure from "../RevenueExpenditure/RevenueExpenditure";
 
 const { useBreakpoint } = Grid;
 const cx = classnames.bind(style);
-const mockVal = (str, repeat = 1) => ({
-    value: str.repeat(repeat),
-});
 function Finance() {
-    const [form] = Form.useForm();
-
-    const [finance, setFinance] = useState([]);
     const [data, setData] = useState([]);
+    const [finance, setFinance] = useState([]);
     const [SearchValue, setSearchValue] = useState("");
     const [bank, setBank] = useState([]);
     const [showHide, setShowHide] = useState({});
     const screens = useBreakpoint();
 
     const onChange = (e) => {
-        setSearchValue(e.target.value);
-        if (!!SearchValue) {
-            setData(searchFinance(finance, SearchValue));
+        console.log(e.target.value);
+
+        if (!!e.target.value) {
+            setData(searchFinance(finance, e.target.value));
         }
         if (!e.target.value) {
             setData(finance);
         }
+        setSearchValue(e.target.value);
     };
     const MoneyShowHide = (value) => {
         setShowHide({ ...showHide, [value]: !showHide[value] });
@@ -77,6 +74,7 @@ function Finance() {
                     <Col span={8}>
                         <Input
                             value={SearchValue}
+                            onPaste={onChange}
                             style={{
                                 width: "100%",
                             }}
