@@ -1,9 +1,10 @@
-import Finance from "../Component/Finance/Finance"
-import Dashboards from "../Component/Dashboards/Dashboards"
-import Customer from "../Component/Customer/Customer"
-import Bank from "../Component/Bank/Bank"
-import {Link} from "react-router-dom"
-import Home from "../Component/Home/Home"
+import Finance from "../Component/Finance/Finance";
+import Dashboards from "../Component/Dashboards/Dashboards";
+import MyCustomer from "../Component/MyCustomer/MyCustomer";
+import Customer from "../Component/Customer/Customer";
+import Bank from "../Component/Bank/Bank";
+import { Link } from "react-router-dom";
+import Home from "../Component/Home/Home";
 
 const publicRoutes = [
     {
@@ -19,6 +20,12 @@ const publicRoutes = [
         key: "/finance",
     },
     {
+        path: "/customer",
+        component: Customer,
+        label: <Link to={"/customer"}> Khách hàng</Link>,
+        key: "/customer",
+    },
+    {
         path: "/home",
         component: Home,
         label: <Link to={"/home"}>Nhà</Link>,
@@ -32,10 +39,10 @@ const publicRoutes = [
     },
     {
         path: "/my-profile",
-        component: Customer,
+        component: MyCustomer,
         label: <Link to={"/my-profile"}> Nhân sự</Link>,
         key: "/my-profile",
     },
-]
+];
 
-export {publicRoutes}
+export { publicRoutes };

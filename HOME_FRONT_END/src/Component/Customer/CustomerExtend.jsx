@@ -1,53 +1,59 @@
-import CustomerInfo from "../Customer/CustomerInfo/CustomerInfo"
-import ChangPassword from "../Customer/ChangPassword/ChangPassword"
-import MyContract from "../Customer/MyContract/MyContract"
-import {UserOutlined, LockFilled, ReconciliationOutlined} from "@ant-design/icons"
-const Customer_Data = [
-    {
-        label: "Thông tin cá nhân",
-        children: <CustomerInfo />,
-        key: "1",
-        icon: <UserOutlined />,
-    },
-    {
-        label: "Thay đổi mật khẩu",
-        children: <ChangPassword />,
-        key: "2",
-        icon: <LockFilled />,
-    },
-    {
-        label: "Hợp đồng thuê",
-        children: <MyContract />,
-        key: "3",
-        icon: <ReconciliationOutlined />,
-    },
-]
+import { Tag } from "antd";
 
-const CustomerInfo_Data = [
+const columnsTable = [
     {
-        nameInput: "fullname",
-        required: true,
-        message: "Vui lòng nhập họ và tên!",
-        placehoder: "Họ và tên",
+        key: "customer_ID",
+        title: "CCCD | ID",
+        dataIndex: "customer_ID",
+        align: "center",
+        width: "1rem",
+        render: (value) => <Tag>{value}</Tag>,
     },
     {
-        nameInput: "phone-number",
-        required: true,
-        message: "Vui lòng nhập họ và tên!",
-        placehoder: "Số điện thoại",
+        key: "customer_Name",
+        title: "Tên khách hàng",
+        dataIndex: "customer_Name",
+        width: "12rem",
     },
     {
-        nameInput: "email",
-        required: true,
-        message: "Vui lòng nhập Email",
-        placehoder: "Email",
+        key: "customer_PhoneNumber",
+        title: "Số điện thoại",
+        dataIndex: "customer_PhoneNumber",
+        align: "center",
+        width: "9rem",
     },
     {
-        nameInput: "adress",
-        required: true,
-        message: "Vui lòng nhập địa chỉ",
-        placehoder: "Địa chỉ",
+        key: "customer_Address",
+        title: "Địa chỉ",
+        dataIndex: "customer_Address",
+        width: "12rem",
     },
-]
+    {
+        key: "customer_Date",
+        title: "Ngày sinh",
+        dataIndex: "customer_Date",
+        align: "center",
+        width: "6rem",
+    },
+    {
+        key: "customer_Status",
+        title: "Trạng thái",
+        dataIndex: "customer_Status",
+        align: "center",
+        width: "8rem",
+        render: (value) => (
+            <Tag color='success'>
+                {value ? "Đang hoạt động" : "Dừng hoạt động"}
+            </Tag>
+        ),
+    },
+    {
+        key: "date_Add",
+        title: "Ngày",
+        dataIndex: "date_Add",
+        align: "center",
+        width: "6rem",
+    },
+];
 
-export {CustomerInfo_Data, Customer_Data}
+export { columnsTable };

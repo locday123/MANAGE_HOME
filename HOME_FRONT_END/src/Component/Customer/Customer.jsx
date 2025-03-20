@@ -1,26 +1,25 @@
-import {Tabs} from "antd"
-import classname from "classnames/bind"
-import style from "../Customer/Customer.module.scss"
-import {Customer_Data} from "./CustomerExtend"
+import { Card, Table } from "antd";
+import { useEffect, useState } from "react";
 
-const cx = classname.bind(style)
+import { columnsTable } from "../Customer/CustomerExtend";
+import { getAllCustomer } from "../../Service/Customer/CustomerSerive";
+
 function Customer() {
-    return (
-        <>
-            <Tabs tabPosition={"left"} className={cx("tabs-customer")} type='line' size='large'>
-                {Customer_Data.map((tab) => (
-                    <Tabs.TabPane
-                        key={tab.key}
-                        tab={tab.label}
-                        icon={tab.icon}
-                        className={cx("tabs-panel")}
-                    >
-                        {tab.children}
-                    </Tabs.TabPane>
-                ))}
-            </Tabs>
-        </>
-    )
-}
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        getAllCustomer().then((value) => {
+            setData(value);
+        });
+    });
 
-export default Customer
+    return (
+        <Card>
+            <Table
+                columns={columnsTable}
+                dataSource={data}
+                pagination={false}
+            ></Table>
+        </Card>
+    );
+}
+export default Customer;

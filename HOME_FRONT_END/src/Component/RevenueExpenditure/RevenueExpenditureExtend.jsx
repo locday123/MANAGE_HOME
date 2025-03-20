@@ -1,5 +1,6 @@
-import {Checkbox, Col, DatePicker, Input, Row, Tag} from "antd"
-import dayjs from "dayjs"
+import { Checkbox, Col, DatePicker, Input, Row, Tag } from "antd";
+import dayjs from "dayjs";
+const { RangePicker } = DatePicker;
 const rangePresets = [
     {
         label: "7 ngày qua",
@@ -17,7 +18,7 @@ const rangePresets = [
         label: "90 ngày qua",
         value: [dayjs().add(-90, "d"), dayjs()],
     },
-]
+];
 const columnsTable = [
     {
         key: "revenueExpenditure_ID",
@@ -107,10 +108,15 @@ const columnsTable = [
         width: "10rem",
         fixed: "right",
     },
-]
+];
 
-const FormFilter = ({filters, handleSearchChange, handleFilterChange, handleDateChange}) => (
-    <Row gutter={[24, 24]} style={{rowGap: "10px"}}>
+const FormFilter = ({
+    filters,
+    handleSearchChange,
+    handleFilterChange,
+    handleDateChange,
+}) => (
+    <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
         <Col span={5}>
             <Input
                 onChange={handleSearchChange}
@@ -121,21 +127,29 @@ const FormFilter = ({filters, handleSearchChange, handleFilterChange, handleDate
                 placeholder='Tìm kiếm: Số tài khoản | Hợp đồng | Mã thu chi'
             />
         </Col>
-        <Col style={{border: "1px solid #d9d9d9", borderRadius: "5px", alignContent: "center"}}>
+        <Col
+            style={{
+                border: "1px solid #d9d9d9",
+                borderRadius: "5px",
+                alignContent: "center",
+            }}
+        >
             <Checkbox.Group
                 options={[
-                    {label: "Phiếu thu", value: "THU"},
-                    {label: "Phiếu chi", value: "CHI"},
+                    { label: "Phiếu thu", value: "THU" },
+                    { label: "Phiếu chi", value: "CHI" },
                 ]}
                 value={filters.filterType}
                 onChange={handleFilterChange}
             />
         </Col>
-        <Col span={5}>
-            <DatePicker
+        <Col span={8}>
+            <RangePicker
                 presets={rangePresets}
                 format='DD/MM/YYYY'
-                onChange={(dates, dateStrings) => handleDateChange(dates, dateStrings)}
+                onChange={(dates, dateStrings) =>
+                    handleDateChange(dates, dateStrings)
+                }
                 value={
                     filters.dateRange.length
                         ? [
@@ -148,6 +162,6 @@ const FormFilter = ({filters, handleSearchChange, handleFilterChange, handleDate
             />
         </Col>
     </Row>
-)
+);
 
-export {FormFilter, columnsTable}
+export { FormFilter, columnsTable };

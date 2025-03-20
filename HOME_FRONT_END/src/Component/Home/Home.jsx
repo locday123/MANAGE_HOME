@@ -1,19 +1,27 @@
-import {Card, Table} from "antd"
-import {useEffect, useState} from "react"
+import { Card, Collapse, Table } from "antd";
+import { useEffect, useState } from "react";
 
-import {getAllHome} from "../../Service/Home//HomeSerivce"
-import {columnsTable} from "./HomeExtend"
+import { getAllHome } from "../../Service/Home//HomeSerivce";
+import { columnsTable, FormFilter } from "./HomeExtend";
+import {
+    getAllFloor,
+    searchHomeInFloor,
+} from "../../Service/FLOOR/FloorService";
 
 function Home() {
-    const [home, setHome] = useState([])
+    const [home, setHome] = useState([]);
+    const [floor, setFloor] = useState([]);
+
     useEffect(() => {
         getAllHome().then((value) => {
-            setHome(value)
-        })
-    })
-
+            setHome(value);
+        });
+        getAllFloor().then((value) => {
+            setFloor(value);
+        });
+    }, [home != null && floor != null]);
     return (
-        <Card>
+        <Card title={<FormFilter />}>
             <Table
                 columns={columnsTable}
                 pagination={false}
@@ -22,8 +30,9 @@ function Home() {
                     y: 80 * 5,
                 }}
                 dataSource={home}
+                rowKey='home_ID'
             />
         </Card>
-    )
+    );
 }
-export default Home
+export default Home;
