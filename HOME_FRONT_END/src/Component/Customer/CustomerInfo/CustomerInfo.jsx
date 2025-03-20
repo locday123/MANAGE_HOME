@@ -1,8 +1,8 @@
 import {Avatar, Button, Flex, Form, Col, Input, Space, Upload, Row, DatePicker} from "antd"
-import {UserOutlined, UploadOutlined, LockOutlined} from "@ant-design/icons"
+import {UserOutlined} from "@ant-design/icons"
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
-import {CustomerInfo_Data} from "../../../assets/ExtendedData"
+import {CustomerInfo_Data} from "../CustomerExtend"
 dayjs.extend(customParseFormat)
 
 const dateFormatList = ["DD/MM/YYYY"]

@@ -1,150 +1,168 @@
-import {Card, Col, Input, Row, Table, Tag} from "antd"
+import {Card, Table, Tag} from "antd"
 import {useEffect, useState} from "react"
-import {CloseCircleOutlined} from "@ant-design/icons"
+import dayjs from "dayjs"
+
 import {getAllRevExpenditure} from "../../Service/RevenueExpenditure/RevenueExpenditureService"
+import {FormFilter} from "./RevenueExpenditureExtend"
 
-const FormSearch = () => {
-    return (
-        <Col span={5}>
-            <Input width={"100%"} placeholder='Tìm kiếm: Code | Tên ngắn | Tên ngân hàng' />
-        </Col>
-    )
-}
+const columns = [
+    {
+        key: "revenueExpenditure_ID",
+        title: "Mã thu chi",
+        dataIndex: "revenueExpenditure_ID",
+        align: "center",
+        width: "7rem",
+        fixed: "left",
+    },
+    {
+        key: "revenueExpenditureType_ID",
+        title: "Loại",
+        dataIndex: "revenueExpenditureType_ID",
+        align: "center",
+        width: "10rem",
+    },
+    {
+        key: "revenueExpenditure_Method",
+        title: "Phương thức",
+        dataIndex: "revenueExpenditure_Method",
+        align: "center",
+        width: "10rem",
+    },
+    {
+        key: "payment_ScheduleID",
+        title: "Hợp đồng",
+        dataIndex: "payment_ScheduleID",
+        align: "center",
+        width: "12rem",
+        render: (value) => <Tag color='#2179fc'>{value}</Tag>,
+    },
+    {
+        key: "bank_AccountID",
+        title: "Tài khoản",
+        dataIndex: "bank_AccountID",
+        align: "center",
+        width: "9rem",
 
-function RevenueExpenditure({value}) {
-    const [revExpenditure, setRevExpenditure] = useState([])
-    const [filter, setFilter] = useState([])
+        render: (value) => <Tag color='#3c5a97'>{value}</Tag>,
+    },
+    {
+        key: "THU",
+        title: "Thu",
+        dataIndex: "THU",
+        align: "center",
+        width: "10rem",
+        render: (_, value) => (
+            <b>
+                {value.revenueExpenditure_Form === "THU"
+                    ? Number(value.amountReceived_Amount).toLocaleString("vi")
+                    : 0}
+            </b>
+        ),
+    },
+    {
+        key: "CHI",
+        title: "Chi",
+        dataIndex: "CHI",
+        align: "center",
+        width: "10rem",
+        render: (_, value) => (
+            <b>
+                {value.revenueExpenditure_Form === "CHI"
+                    ? Number(value.amountReceived_Amount).toLocaleString("vi")
+                    : 0}
+            </b>
+        ),
+    },
+    {
+        key: "revenueExpenditure_Content",
+        title: "Ghi chú",
+        dataIndex: "revenueExpenditure_Content",
+        width: "12rem",
+    },
+    {
+        key: "date_Add",
+        title: "Ngày",
+        dataIndex: "date_Add",
+        align: "center",
+        width: "10rem",
+    },
+    {
+        key: "action",
+        title: "Action",
+        dataIndex: "action",
+        align: "center",
+        width: "10rem",
+        fixed: "right",
+    },
+]
+function RevenueExpenditure() {
+    const [data, setData] = useState([])
+    const [filters, setFilters] = useState({searchText: "", filterType: [], dateRange: []})
+    const dataFilter = data.filter((item) => {
+        const bank_Code = item.bank_AccountID
+            .toLowerCase()
+            .includes(filters.searchText.toLowerCase())
+        const revenueExpenditure_ID = item.revenueExpenditure_ID
+            .toLowerCase()
+            .includes(filters.searchText.toLowerCase())
+        const payment_ScheduleID = item.payment_ScheduleID
+            .toLowerCase()
+            .includes(filters.searchText.toLowerCase())
+        const revenueExpenditure_Form =
+            filters.filterType.length > 0
+                ? filters.filterType.includes(item.revenueExpenditure_Form)
+                : true
+        const matchesDate =
+            filters.dateRange.length === 2
+                ? dayjs(item.date_Add, "DD/MM/YYYY").isAfter(
+                      dayjs(filters.dateRange[0], "DD/MM/YYYY").subtract(1, "day")
+                  ) &&
+                  dayjs(item.date_Add, "DD/MM/YYYY").isBefore(
+                      dayjs(filters.dateRange[1], "DD/MM/YYYY").add(1, "day")
+                  )
+                : true
+        return (
+            (bank_Code || revenueExpenditure_ID || payment_ScheduleID) &&
+            revenueExpenditure_Form &&
+            matchesDate
+        )
+    })
+    const handleDateChange = (dates, dateStrings) => {
+        setFilters((prev) => ({
+            ...prev,
+            dateRange: dateStrings[0] && dateStrings[1] ? dateStrings : [],
+        }))
+    }
+    const handleSearchChange = (e) => {
+        setFilters((prev) => ({...prev, searchText: e.target.value}))
+    }
+    const handleFilterChange = (checkedValues) => {
+        setFilters((prev) => ({...prev, filterType: checkedValues}))
+    }
 
-    const columns = [
-        {
-            key: "revenueExpenditure_ID",
-            title: "Mã thu chi",
-            dataIndex: "revenueExpenditure_ID",
-            align: "center",
-            width: "7rem",
-            fixed: "left",
-        },
-        {
-            key: "revenueExpenditureType_ID",
-            title: "Loại",
-            dataIndex: "revenueExpenditureType_ID",
-            align: "center",
-            width: "10rem",
-        },
-        {
-            key: "revenueExpenditure_Method",
-            title: "Phương thức",
-            dataIndex: "revenueExpenditure_Method",
-            align: "center",
-            width: "10rem",
-        },
-        {
-            key: "payment_ScheduleID",
-            title: "Hợp đồng",
-            dataIndex: "payment_ScheduleID",
-            align: "center",
-            width: "12rem",
-            render: (value) => <Tag color='#2179fc'>{value}</Tag>,
-        },
-        {
-            key: "bank_AccountID",
-            title: "Tài khoản",
-            dataIndex: "bank_AccountID",
-            align: "center",
-            width: "9rem",
-            filterSearch: true,
-            filteredValue: [value ? value : ""],
-            onFilter: (value, record) => {
-                console.log(filter)
-
-                return record.bank_AccountID.includes(value)
-            },
-            render: (value) => <Tag color='#3c5a97'>{value}</Tag>,
-        },
-        {
-            key: "THU",
-            title: "Thu",
-            dataIndex: "THU",
-            align: "center",
-            width: "10rem",
-            render: (_, value) => (
-                <b>
-                    {value.revenueExpenditure_Form === "THU"
-                        ? Number(value.amountReceived_Amount).toLocaleString("vi")
-                        : 0}
-                </b>
-            ),
-        },
-        {
-            key: "CHI",
-            title: "Chi",
-            dataIndex: "CHI",
-            align: "center",
-            width: "10rem",
-            render: (_, value) => (
-                <b>
-                    {value.revenueExpenditure_Form === "CHI"
-                        ? Number(value.amountReceived_Amount).toLocaleString("vi")
-                        : 0}
-                </b>
-            ),
-        },
-        {
-            key: "revenueExpenditure_Content",
-            title: "Ghi chú",
-            dataIndex: "revenueExpenditure_Content",
-            width: "12rem",
-        },
-        {
-            key: "date_Add",
-            title: "Ngày",
-            dataIndex: "date_Add",
-            align: "center",
-            width: "10rem",
-        },
-        {
-            key: "action",
-            title: "Action",
-            dataIndex: "action",
-            align: "center",
-            width: "10rem",
-            fixed: "right",
-        },
-    ]
     useEffect(() => {
         getAllRevExpenditure().then((value) => {
-            setRevExpenditure(value)
+            setData(value)
         })
-    }, [revExpenditure != null])
+    }, [data != null])
 
     return (
         <Card
             title={
-                <>
-                    <Row gutter={8}>
-                        <FormSearch />
-                        {value.length ? (
-                            <Col
-                                style={{
-                                    alignContent: "center",
-                                    border: "1px solid #d9d9d9",
-                                    borderRadius: "5px",
-                                }}
-                            >
-                                Lọc theo: <Tag closeIcon={<CloseCircleOutlined />}>{"abc"}</Tag>
-                            </Col>
-                        ) : null}
-                    </Row>
-                </>
+                <FormFilter
+                    filters={filters}
+                    handleFilterChange={handleFilterChange}
+                    handleSearchChange={handleSearchChange}
+                    handleDateChange={handleDateChange}
+                />
             }
         >
             <Table
-                onChange={() => setFilter(value)}
                 scroll={{
                     x: "max-content",
                     y: 80 * 5,
                 }}
-                dataSource={revExpenditure}
+                dataSource={dataFilter}
                 columns={columns}
                 pagination={false}
                 summary={(pagedata) => {

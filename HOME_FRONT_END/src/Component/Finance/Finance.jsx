@@ -1,11 +1,11 @@
-import {Card, Carousel, Col, Row, Grid, Image, Flex, Input, Form, AutoComplete, Space} from "antd"
+import {Card, Carousel, Col, Row, Grid, Image, Flex, Input} from "antd"
 import {useEffect, useState} from "react"
 import classnames from "classnames/bind"
 import style from "../Finance/Finance.module.scss"
 import {EyeOutlined, EyeInvisibleOutlined, MoreOutlined} from "@ant-design/icons"
 import {getAllBank, getBankID} from "../../Service/Bank/BankService"
 import {getAllFinance, searchFinance} from "../../Service/Finance/FinanceService"
-import {slidesToShow} from "../../assets/ExtendedData"
+import {slidesToShow} from "./FinanceExtend"
 import RevenueExpenditure from "../RevenueExpenditure/RevenueExpenditure"
 
 const {useBreakpoint} = Grid
@@ -15,7 +15,7 @@ function Finance() {
     const [finance, setFinance] = useState([])
     const [SearchValue, setSearchValue] = useState("")
     const [bank, setBank] = useState([])
-    const [filter, setFilter] = useState([])
+
     const [moneyHide, seMoneyHide] = useState({})
     const screens = useBreakpoint()
 
@@ -53,13 +53,10 @@ function Finance() {
         <>
             <Card
                 title={
-                    <Col span={8}>
+                    <Col span={6}>
                         <Input
                             value={SearchValue}
                             onPaste={onChange}
-                            style={{
-                                width: "100%",
-                            }}
                             onChange={onChange}
                             placeholder='Tìm kiếm: Số tài khoản | Code ngân hàng'
                         />
@@ -157,7 +154,7 @@ function Finance() {
                     ))}
                 </Carousel>
             </Card>
-            <RevenueExpenditure value={filter} />
+            <RevenueExpenditure />
         </>
     )
 }

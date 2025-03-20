@@ -2,9 +2,8 @@ import {Card, Col, Collapse, Row, Tag} from "antd"
 import {CheckCircleFilled, SyncOutlined} from "@ant-design/icons"
 import {useEffect, useState} from "react"
 
-import {ContractInfo, ExpensesTable} from "./ContractInfo"
+import {ContractInfo, ExpensesTable} from "./MyContractExtend"
 import {client} from "../../../Service/Service"
-import {getBankID} from "../../../Service/Bank/BankService"
 
 const api_contractData = "https://mocki.io/v1/471c8fc8-51c3-4cb0-a721-d2f1f55541b4"
 

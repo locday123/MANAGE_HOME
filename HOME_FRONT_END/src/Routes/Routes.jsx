@@ -3,6 +3,7 @@ import Dashboards from "../Component/Dashboards/Dashboards"
 import Customer from "../Component/Customer/Customer"
 import Bank from "../Component/Bank/Bank"
 import {Link} from "react-router-dom"
+import Home from "../Component/Home/Home"
 
 const publicRoutes = [
     {
@@ -16,6 +17,12 @@ const publicRoutes = [
         component: Finance,
         label: <Link to={"/finance"}> Sổ quỹ</Link>,
         key: "/finance",
+    },
+    {
+        path: "/home",
+        component: Home,
+        label: <Link to={"/home"}>Nhà</Link>,
+        key: "/home",
     },
     {
         path: "/bank",

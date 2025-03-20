@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "axios": "^1.8.3"
+  },
+  "devDependencies": {
+    "dayjs": "^1.11.13"
   }
 }

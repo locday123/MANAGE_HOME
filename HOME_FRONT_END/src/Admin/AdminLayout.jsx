@@ -1,6 +1,6 @@
 import {Avatar, Dropdown, Layout, Grid, Flex, Button} from "antd"
 import classname from "classnames/bind"
-import {AdminLayout_Data} from "../assets/ExtendedData"
+import {AdminLayout_Data} from "./AdminLayoutExtend"
 import {DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined} from "@ant-design/icons"
 import style from "../Admin/AdminLayout.module.scss"
 import React, {useEffect, useState} from "react"

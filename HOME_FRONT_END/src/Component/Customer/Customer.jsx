@@ -1,7 +1,7 @@
 import {Tabs} from "antd"
 import classname from "classnames/bind"
 import style from "../Customer/Customer.module.scss"
-import {Customer_Data} from "../../assets/ExtendedData"
+import {Customer_Data} from "./CustomerExtend"
 
 const cx = classname.bind(style)
 function Customer() {
