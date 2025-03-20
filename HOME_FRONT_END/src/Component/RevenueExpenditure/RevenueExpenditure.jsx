@@ -3,98 +3,8 @@ import {useEffect, useState} from "react"
 import dayjs from "dayjs"
 
 import {getAllRevExpenditure} from "../../Service/RevenueExpenditure/RevenueExpenditureService"
-import {FormFilter} from "./RevenueExpenditureExtend"
+import {FormFilter, columnsTable} from "./RevenueExpenditureExtend"
 
-const columns = [
-    {
-        key: "revenueExpenditure_ID",
-        title: "Mã thu chi",
-        dataIndex: "revenueExpenditure_ID",
-        align: "center",
-        width: "7rem",
-        fixed: "left",
-    },
-    {
-        key: "revenueExpenditureType_ID",
-        title: "Loại",
-        dataIndex: "revenueExpenditureType_ID",
-        align: "center",
-        width: "10rem",
-    },
-    {
-        key: "revenueExpenditure_Method",
-        title: "Phương thức",
-        dataIndex: "revenueExpenditure_Method",
-        align: "center",
-        width: "10rem",
-    },
-    {
-        key: "payment_ScheduleID",
-        title: "Hợp đồng",
-        dataIndex: "payment_ScheduleID",
-        align: "center",
-        width: "12rem",
-        render: (value) => <Tag color='#2179fc'>{value}</Tag>,
-    },
-    {
-        key: "bank_AccountID",
-        title: "Tài khoản",
-        dataIndex: "bank_AccountID",
-        align: "center",
-        width: "9rem",
-
-        render: (value) => <Tag color='#3c5a97'>{value}</Tag>,
-    },
-    {
-        key: "THU",
-        title: "Thu",
-        dataIndex: "THU",
-        align: "center",
-        width: "10rem",
-        render: (_, value) => (
-            <b>
-                {value.revenueExpenditure_Form === "THU"
-                    ? Number(value.amountReceived_Amount).toLocaleString("vi")
-                    : 0}
-            </b>
-        ),
-    },
-    {
-        key: "CHI",
-        title: "Chi",
-        dataIndex: "CHI",
-        align: "center",
-        width: "10rem",
-        render: (_, value) => (
-            <b>
-                {value.revenueExpenditure_Form === "CHI"
-                    ? Number(value.amountReceived_Amount).toLocaleString("vi")
-                    : 0}
-            </b>
-        ),
-    },
-    {
-        key: "revenueExpenditure_Content",
-        title: "Ghi chú",
-        dataIndex: "revenueExpenditure_Content",
-        width: "12rem",
-    },
-    {
-        key: "date_Add",
-        title: "Ngày",
-        dataIndex: "date_Add",
-        align: "center",
-        width: "10rem",
-    },
-    {
-        key: "action",
-        title: "Action",
-        dataIndex: "action",
-        align: "center",
-        width: "10rem",
-        fixed: "right",
-    },
-]
 function RevenueExpenditure() {
     const [data, setData] = useState([])
     const [filters, setFilters] = useState({searchText: "", filterType: [], dateRange: []})
@@ -163,7 +73,7 @@ function RevenueExpenditure() {
                     y: 80 * 5,
                 }}
                 dataSource={dataFilter}
-                columns={columns}
+                columns={columnsTable}
                 pagination={false}
                 summary={(pagedata) => {
                     let totalThu = 0
