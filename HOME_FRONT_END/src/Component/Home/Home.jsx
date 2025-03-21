@@ -1,38 +1,71 @@
-import { Card, Collapse, Table } from "antd";
-import { useEffect, useState } from "react";
+import {Button, Card, Col, Collapse, Row, Table} from "antd"
+import {useEffect, useState} from "react"
+import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons"
 
-import { getAllHome } from "../../Service/Home//HomeSerivce";
-import { columnsTable, FormFilter } from "./HomeExtend";
-import {
-    getAllFloor,
-    searchHomeInFloor,
-} from "../../Service/FLOOR/FloorService";
+import {getAllHome} from "../../Service/Home//HomeSerivce"
+import {columnsTable, FormFilter} from "./HomeExtend"
+import {getAllFloor, searchHomeInFloor} from "../../Service/FLOOR/FloorService"
 
 function Home() {
-    const [home, setHome] = useState([]);
-    const [floor, setFloor] = useState([]);
-
+    const [home, setHome] = useState([])
+    const [searchText, setSearchText] = useState("")
+    const [isGridView, setIsGridView] = useState(false)
+    const filteredData = home.filter(
+        (item) =>
+            item.home_ID.toLowerCase().includes(searchText.toLowerCase()) ||
+            item.home_Address.toLowerCase().includes(searchText.toLowerCase())
+    )
+    const handleSearchChange = (e) => {
+        setSearchText(e.target.value)
+    }
     useEffect(() => {
         getAllHome().then((value) => {
-            setHome(value);
-        });
-        getAllFloor().then((value) => {
-            setFloor(value);
-        });
-    }, [home != null && floor != null]);
+            setHome(value)
+        })
+    }, [home != null])
     return (
-        <Card title={<FormFilter />}>
-            <Table
-                columns={columnsTable}
-                pagination={false}
-                scroll={{
-                    x: "max-content",
-                    y: 80 * 5,
-                }}
-                dataSource={home}
-                rowKey='home_ID'
-            />
+        <Card
+            title={<FormFilter searchText={searchText} onChange={handleSearchChange} />}
+            extra={
+                <Button onClick={() => setIsGridView(!isGridView)} style={{marginBottom: 20}}>
+                    {isGridView ? <UnorderedListOutlined /> : <AppstoreOutlined />} Toggle View
+                </Button>
+            }
+        >
+            {isGridView ? (
+                <Table
+                    columns={columnsTable}
+                    pagination={false}
+                    scroll={{
+                        x: "max-content",
+                        y: 80 * 5,
+                    }}
+                    dataSource={filteredData}
+                    rowKey='home_ID'
+                />
+            ) : (
+                <Row gutter={[10, 10]}>
+                    {filteredData.map((item) => (
+                        <Col xs={24} sm={12} md={8} lg={6} key={item.home_ID}>
+                            <Card title={item.home_ID}>
+                                <p>
+                                    <b>Địa chỉ:</b> {item.home_Address}
+                                </p>
+                                <p>
+                                    <b>Giá thuê:</b> {item.home_RentalPrice.toLocaleString()} VND
+                                </p>
+                                <p>
+                                    <b>Chủ nhà:</b> {item.home_HostName}
+                                </p>
+                                <p>
+                                    <b>SĐT:</b> {item.home_HostPhoneNumber}
+                                </p>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            )}
         </Card>
-    );
+    )
 }
-export default Home;
+export default Home

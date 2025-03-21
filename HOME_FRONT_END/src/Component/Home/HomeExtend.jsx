@@ -1,4 +1,4 @@
-import { Col, Input, Row, Tag } from "antd";
+import {Col, Input, Row, Tag} from "antd"
 const columnsTable = [
     {
         key: "home_ID",
@@ -46,8 +46,7 @@ const columnsTable = [
         dataIndex: "contract",
         align: "center",
         width: "12rem",
-        render: (_, value) =>
-            value.home_ContractFrom + " - " + value.home_ContractTo,
+        render: (_, value) => value.home_ContractFrom + " - " + value.home_ContractTo,
     },
 
     {
@@ -63,20 +62,24 @@ const columnsTable = [
         dataIndex: "date_Add",
         align: "center",
     },
-];
+]
 
-const FormFilter = () => (
-    <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
-        <Col xxl={4} xl={6} lg={8}>
-            <Input
-                allowClear
-                style={{
-                    width: "100%",
-                }}
-                placeholder='Tìm kiếm: ID | Địa chỉ'
-            />
-        </Col>
-    </Row>
-);
+const FormFilter = ({searchText, onChange}) => {
+    return (
+        <Row gutter={[24, 24]} style={{rowGap: "10px"}}>
+            <Col xxl={4} xl={6} lg={8}>
+                <Input
+                    allowClear
+                    onChange={onChange}
+                    value={searchText}
+                    style={{
+                        width: "100%",
+                    }}
+                    placeholder='Tìm kiếm: ID | Địa chỉ'
+                />
+            </Col>
+        </Row>
+    )
+}
 
-export { columnsTable, FormFilter };
+export {columnsTable, FormFilter}

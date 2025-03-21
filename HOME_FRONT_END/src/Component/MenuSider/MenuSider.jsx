@@ -11,7 +11,13 @@ function MenuSider() {
             className={cx("menu-sider")}
             defaultSelectedKeys={["1"]}
             mode='inline'
-            items={publicRoutes}
+            items={publicRoutes
+                .filter(({isMenu}) => isMenu)
+                .map(({path, label, icon}) => ({
+                    key: path,
+                    label,
+                    icon,
+                }))}
         />
     )
 }
