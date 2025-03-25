@@ -1,4 +1,5 @@
-import { Tag } from "antd";
+import {Input, Button, Tag, Space, Col} from "antd"
+import {SearchOutlined} from "@ant-design/icons"
 
 const columnsTable = [
     {
@@ -41,11 +42,7 @@ const columnsTable = [
         dataIndex: "customer_Status",
         align: "center",
         width: "8rem",
-        render: (value) => (
-            <Tag color='success'>
-                {value ? "Đang hoạt động" : "Dừng hoạt động"}
-            </Tag>
-        ),
+        render: (value) => <Tag color='success'>{value ? "Đang hoạt động" : "Dừng hoạt động"}</Tag>,
     },
     {
         key: "date_Add",
@@ -54,6 +51,23 @@ const columnsTable = [
         align: "center",
         width: "6rem",
     },
-];
+]
 
-export { columnsTable };
+const SearchBar = ({searchText, setSearchText}) => {
+    const handleSearch = (e) => {
+        setSearchText(e.target.value)
+    }
+
+    return (
+        <Col span={8}>
+            <Input
+                value={searchText}
+                placeholder='Tìm kiếm tên khách hàng | ID'
+                onChange={handleSearch}
+                style={{width: "100%", marginBottom: 8, display: "block"}}
+            />
+        </Col>
+    )
+}
+
+export {columnsTable, SearchBar}
