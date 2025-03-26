@@ -1,36 +1,45 @@
-import {Avatar, Dropdown, Layout, Grid, Flex, Button} from "antd"
-import classname from "classnames/bind"
-import {AdminLayout_Data} from "./AdminLayoutExtend"
-import {DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined} from "@ant-design/icons"
-import style from "../Admin/AdminLayout.module.scss"
-import React, {useEffect, useState} from "react"
-import MenuSider from "../Component/MenuSider/MenuSider"
+import { Avatar, Dropdown, Layout, Grid, Flex, Tag, Button } from "antd";
+import classname from "classnames/bind";
+import { AdminLayout_Data } from "./AdminLayoutExtend";
+import {
+    DownOutlined,
+    UserOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined,
+} from "@ant-design/icons";
+import style from "../Admin/AdminLayout.module.scss";
+import React, { useEffect, useState } from "react";
+import MenuSider from "../Component/MenuSider/MenuSider";
 
-const {useBreakpoint} = Grid
-const {Header, Content, Sider} = Layout
-const cx = classname.bind(style)
+const { useBreakpoint } = Grid;
+const { Header, Content, Sider } = Layout;
+const cx = classname.bind(style);
 
-function AdminLayout({children}) {
-    const [collapsed, setCollapsed] = useState(false)
-    const [siderElement, setSiderElement] = useState(false)
-    const screens = useBreakpoint()
+function AdminLayout({ children }) {
+    const [collapsed, setCollapsed] = useState(false);
+    const [siderElement, setSiderElement] = useState(false);
+    const screens = useBreakpoint();
 
     const breakPoint = (screen) => {
         if (screen.xxl && screen.xl && screen.lg && screen.md & screen.sm) {
-            setCollapsed(true)
+            setCollapsed(true);
             setSiderElement({
-                element: {width: "17.5rem"},
+                element: { width: "17.5rem" },
                 trigger: false,
                 css: AdminLayout_Data.cssNameInfo.cssShow,
-            })
-        } else if (screen.xxl == false && screen.xl && screen.lg && screen.md & screen.sm) {
-            console.log()
-            setCollapsed(true)
+            });
+        } else if (
+            screen.xxl == false &&
+            screen.xl &&
+            screen.lg &&
+            screen.md & screen.sm
+        ) {
+            setCollapsed(true);
             setSiderElement({
-                element: {width: "15.5rem"},
+                element: { width: "15.5rem" },
                 trigger: false,
                 css: AdminLayout_Data.cssNameInfo.cssShow,
-            })
+            });
         } else if (
             screen.xxl == false &&
             screen.xl == false &&
@@ -45,10 +54,10 @@ function AdminLayout({children}) {
                 },
                 trigger: true,
                 css: AdminLayout_Data.cssNameInfo.cssHidden,
-            })
-            setCollapsed(false)
+            });
+            setCollapsed(false);
         } else if (screen.md || screens.sm || screen.xs) {
-            setCollapsed(false)
+            setCollapsed(false);
             setSiderElement({
                 element: {
                     breakpoint: "lg",
@@ -57,12 +66,12 @@ function AdminLayout({children}) {
                 },
                 trigger: true,
                 css: AdminLayout_Data.cssNameInfo.cssHidden,
-            })
+            });
         }
-    }
+    };
     useEffect(() => {
-        breakPoint(screens)
-    }, [screens])
+        breakPoint(screens);
+    }, [screens]);
     return (
         <Layout className={cx("my-css")}>
             <Sider
@@ -71,16 +80,27 @@ function AdminLayout({children}) {
                 collapsed={!collapsed}
                 {...siderElement.element}
             >
-                <Dropdown menu={AdminLayout_Data.DropdownMenu} trigger={["click"]}>
-                    <a onClick={(e) => e.preventDefault()} style={{color: "black"}}>
+                <Dropdown
+                    menu={AdminLayout_Data.DropdownMenu}
+                    trigger={["click"]}
+                >
+                    <a
+                        onClick={(e) => e.preventDefault()}
+                        style={{ color: "black" }}
+                    >
                         <div className={cx("user-info")}>
                             <Avatar size='large' icon={<UserOutlined />} />
-                            <div style={{...siderElement.css}}>
-                                <Flex justify='space-between' style={{lineHeight: "0"}}>
-                                    <h3 style={{fontSize: "16px"}}>Hoàng Xuân Lộc</h3>
+                            <div style={{ ...siderElement.css }}>
+                                <Flex
+                                    justify='space-between'
+                                    style={{ lineHeight: "0" }}
+                                >
+                                    <h3 style={{ fontSize: "16px" }}>
+                                        Hoàng Xuân Lộc
+                                    </h3>
                                     <DownOutlined type='link' />
                                 </Flex>
-                                <span className={cx("text-chucvu")}>Quản lý</span>
+                                <Tag className={cx("text-chucvu")}>Quản lý</Tag>
                             </div>
                         </div>
                     </a>
@@ -89,21 +109,29 @@ function AdminLayout({children}) {
                 <MenuSider />
             </Sider>
             <Layout>
-                <Header style={{height: "76px"}} className={cx("header")}>
+                <Header style={{ height: "76px" }} className={cx("header")}>
                     <div className={cx("header-children")}>
                         {siderElement.trigger ? (
                             <Button
                                 type='text'
-                                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                                icon={
+                                    collapsed ? (
+                                        <MenuUnfoldOutlined />
+                                    ) : (
+                                        <MenuFoldOutlined />
+                                    )
+                                }
                                 onClick={() => {
                                     setSiderElement({
                                         ...siderElement,
                                         css: !collapsed
-                                            ? AdminLayout_Data.cssNameInfo.cssShow
-                                            : AdminLayout_Data.cssNameInfo.cssHidden,
-                                    })
-                                    setCollapsed(!collapsed)
-                                    console.log(siderElement)
+                                            ? AdminLayout_Data.cssNameInfo
+                                                  .cssShow
+                                            : AdminLayout_Data.cssNameInfo
+                                                  .cssHidden,
+                                    });
+                                    setCollapsed(!collapsed);
+                                    console.log(siderElement);
                                 }}
                                 style={{
                                     marginRight: "10px",
@@ -127,7 +155,7 @@ function AdminLayout({children}) {
                 </Content>
             </Layout>
         </Layout>
-    )
+    );
 }
 
-export default AdminLayout
+export default AdminLayout;

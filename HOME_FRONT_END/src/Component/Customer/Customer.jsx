@@ -1,4 +1,4 @@
-import { Card, Table, Statistic } from "antd";
+import { Card, Table, Form } from "antd";
 import { useEffect, useState } from "react";
 
 import {
@@ -11,6 +11,7 @@ import { getAllCustomer } from "../../Service/Customer/CustomerSerive";
 function Customer() {
     const [data, setData] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [customerData, setCustomerData] = useState({});
 
     const filteredData = data.filter((item) => {
         const filterName = item.customer_Name
