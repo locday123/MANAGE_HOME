@@ -13,7 +13,7 @@ import {
     Select,
     Dropdown,
     Space,
-} from "antd"
+} from "antd";
 import {
     UserOutlined,
     AntDesignOutlined,
@@ -21,32 +21,31 @@ import {
     InfoCircleTwoTone,
     MoreOutlined,
     DeleteTwoTone,
-} from "@ant-design/icons"
-import {addCustomer, deleteACustomer} from "../../Service/Customer/CustomerSerive"
-import {useState} from "react"
-import {useNotification} from "../../assets/NotificationProvider"
+} from "@ant-design/icons";
+import {
+    addCustomer,
+    deleteACustomer,
+} from "../../Service/Customer/CustomerSerive";
+import { useState } from "react";
+import { useNotification, notify } from "../../assets/NotificationProvider";
 
 const handleDelete = (customerID, setReload) => {
-    const notification = useNotification()
-
-    const openNotification = (message, description) => {
-        notification.success({
-            placement: "bottomRight",
-            message: message,
-            description: description,
-        })
-    }
     deleteACustomer(customerID)
         .then(() => {
-            openNotification("Thông báo hệ thống", "Xóa khách hàng thành công", "success")
-            setReload((prev) => !prev) // ✅ Đúng
+            setReload((prev) => !prev); // ✅ Đúng
+
+            notify(
+                "success",
+                "Xóa thành công",
+                `Đã xóa mục có ID: ${customerID}`
+            );
         })
         .catch((error) => {
-            openNotification("Thông báo hệ thống", "Có lỗi xảy ra", "error")
-        })
-}
+            console.log(error);
+        });
+};
 
-const ActionMenu = ({rowData, onDelete, setReload}) => {
+const ActionMenu = ({ rowData, onDelete, setReload }) => {
     const items = [
         {
             label: (
@@ -75,14 +74,14 @@ const ActionMenu = ({rowData, onDelete, setReload}) => {
             ),
             key: "2",
         },
-    ]
+    ];
 
     return (
-        <Dropdown menu={{items}} trigger={["click"]} placement='bottomLeft'>
-            <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
+        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
         </Dropdown>
-    )
-}
+    );
+};
 
 const columnsTable = (setReload) => [
     {
@@ -142,14 +141,18 @@ const columnsTable = (setReload) => [
         align: "center",
         width: "6rem",
         render: (_, rowData) => (
-            <ActionMenu rowData={rowData} onDelete={handleDelete} setReload={setReload} />
+            <ActionMenu
+                rowData={rowData}
+                onDelete={handleDelete}
+                setReload={setReload}
+            />
         ),
     },
-]
+];
 
-const NewUsersCard = ({data}) => {
+const NewUsersCard = ({ data }) => {
     return (
-        <Row gutter={16} style={{marginBottom: "16px"}}>
+        <Row gutter={16} style={{ marginBottom: "16px" }}>
             <Col span={8}>
                 <Card
                     style={{
@@ -160,13 +163,17 @@ const NewUsersCard = ({data}) => {
                         <Statistic
                             title='Khách hàng'
                             value={data.length}
-                            prefix={<UserOutlined style={{fontSize: "17px"}} />}
+                            prefix={
+                                <UserOutlined style={{ fontSize: "17px" }} />
+                            }
                         />
                         <Statistic
                             title='Hoạt động'
                             value={
-                                data.filter((customer) => customer.customer_Status === "ACTIVE")
-                                    .length
+                                data.filter(
+                                    (customer) =>
+                                        customer.customer_Status === "ACTIVE"
+                                ).length
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -181,8 +188,10 @@ const NewUsersCard = ({data}) => {
                         <Statistic
                             title='Rời đi'
                             value={
-                                data.filter((customer) => customer.customer_Status === "INACTIVE")
-                                    .length
+                                data.filter(
+                                    (customer) =>
+                                        customer.customer_Status === "INACTIVE"
+                                ).length
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -198,29 +207,26 @@ const NewUsersCard = ({data}) => {
                 </Card>
             </Col>
         </Row>
-    )
-} // Thẻ card thống kê
+    );
+}; // Thẻ card thống kê
 
-const SearchBar = ({searchText, setSearchText}) => {
-    const [visible, setVisible] = useState(false)
-    const [customerData, setCustomerData] = useState({})
-    const notification = useNotification()
+const SearchBar = ({ searchText, setSearchText }) => {
+    const [visible, setVisible] = useState(false);
+    const [customerData, setCustomerData] = useState({});
+    const { openNotification } = useNotification();
 
-    const openNotification = (message, description) => {
-        notification.success({
-            placement: "bottomRight",
-            message: message,
-            description: description,
-        })
-    }
     const handleSearch = (e) => {
-        setSearchText(e.target.value)
-    }
+        setSearchText(e.target.value);
+    };
     const handleOk = () => {
-        setVisible(false)
-        addCustomer(customerData)
-        openNotification("Thông báo hệ thống", "Thêm khách hàng thành công")
-    }
+        setVisible(false);
+        addCustomer(customerData);
+        openNotification(
+            "success",
+            "Tin nhắn hệ thống",
+            "Thêm khách hàng thành công"
+        );
+    };
 
     return (
         <>
@@ -230,7 +236,7 @@ const SearchBar = ({searchText, setSearchText}) => {
                         value={searchText}
                         placeholder='Tên khách hàng | ID (CCCD) | Số điện thoại'
                         onChange={handleSearch}
-                        style={{width: "100%", display: "block"}}
+                        style={{ width: "100%", display: "block" }}
                     />
                 </Col>
 
@@ -249,51 +255,79 @@ const SearchBar = ({searchText, setSearchText}) => {
                 <CustomerForm setCustomerData={setCustomerData} />
             </Modal>
         </>
-    )
-} // Form tìm kiếm + button thêm khách hàng
-const CustomerForm = ({setCustomerData}) => {
+    );
+}; // Form tìm kiếm + button thêm khách hàng
+const CustomerForm = ({ setCustomerData }) => {
     const handleChange = (key, value) => {
-        setCustomerData((prev) => ({...prev, [key]: value}))
-    }
+        setCustomerData((prev) => ({ ...prev, [key]: value }));
+    };
 
     return (
         <Form layout='vertical'>
             <Form.Item
                 label='Customer ID'
-                rules={[{required: true, message: "Please enter customer ID"}]}
+                rules={[
+                    { required: true, message: "Please enter customer ID" },
+                ]}
             >
-                <Input onChange={(e) => handleChange("customer_ID", e.target.value)} />
+                <Input
+                    onChange={(e) =>
+                        handleChange("customer_ID", e.target.value)
+                    }
+                />
             </Form.Item>
-            <Form.Item label='Name' rules={[{required: true, message: "Please enter name"}]}>
-                <Input onChange={(e) => handleChange("customer_Name", e.target.value)} />
+            <Form.Item
+                label='Name'
+                rules={[{ required: true, message: "Please enter name" }]}
+            >
+                <Input
+                    onChange={(e) =>
+                        handleChange("customer_Name", e.target.value)
+                    }
+                />
             </Form.Item>
             <Form.Item
                 label='Phone Number'
-                rules={[{required: true, message: "Please enter phone number"}]}
+                rules={[
+                    { required: true, message: "Please enter phone number" },
+                ]}
             >
-                <Input onChange={(e) => handleChange("customer_PhoneNumber", e.target.value)} />
+                <Input
+                    onChange={(e) =>
+                        handleChange("customer_PhoneNumber", e.target.value)
+                    }
+                />
             </Form.Item>
-            <Form.Item label='Address' rules={[{required: true, message: "Please enter address"}]}>
-                <Input onChange={(e) => handleChange("customer_Address", e.target.value)} />
+            <Form.Item
+                label='Address'
+                rules={[{ required: true, message: "Please enter address" }]}
+            >
+                <Input
+                    onChange={(e) =>
+                        handleChange("customer_Address", e.target.value)
+                    }
+                />
             </Form.Item>
             <Form.Item
                 label='Date of Birth'
-                rules={[{required: true, message: "Please select date"}]}
+                rules={[{ required: true, message: "Please select date" }]}
             >
                 <DatePicker
                     format='YYYY-MM-DD'
-                    style={{width: "100%"}}
+                    style={{ width: "100%" }}
                     onChange={(date) => handleChange("customer_Date", date)}
                 />
             </Form.Item>
             <Form.Item label='Status'>
-                <Select onChange={(value) => handleChange("customer_Status", value)}>
+                <Select
+                    onChange={(value) => handleChange("customer_Status", value)}
+                >
                     <Select.Option value='ACTIVE'>Active</Select.Option>
                     <Select.Option value='INACTIVE'>Inactive</Select.Option>
                 </Select>
             </Form.Item>
         </Form>
-    )
-} // Form thêm khách hàng
+    );
+}; // Form thêm khách hàng
 
-export {columnsTable, SearchBar, NewUsersCard}
+export { columnsTable, SearchBar, NewUsersCard };

@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import locale from "antd/es/locale/vi_VN";
 import App from "./App.jsx";
+import { NotificationProvider } from "./assets/NotificationProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
     <ConfigProvider
@@ -16,6 +17,8 @@ createRoot(document.getElementById("root")).render(
             },
         }}
     >
-        <App />
+        <NotificationProvider>
+            <App />
+        </NotificationProvider>
     </ConfigProvider>
 );
