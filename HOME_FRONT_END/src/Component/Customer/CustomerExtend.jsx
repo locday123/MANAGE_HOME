@@ -13,7 +13,7 @@ import {
     Select,
     Dropdown,
     Space,
-} from "antd";
+} from "antd"
 import {
     UserOutlined,
     AntDesignOutlined,
@@ -21,39 +21,26 @@ import {
     InfoCircleTwoTone,
     MoreOutlined,
     DeleteTwoTone,
-} from "@ant-design/icons";
-import {
-    addCustomer,
-    deleteACustomer,
-} from "../../Service/Customer/CustomerSerive";
-import {
-    getDistricts,
-    getProvinces,
-    getWards,
-} from "../../Service/Location/LocationSerivce";
-import { useEffect, useState } from "react";
-import { useNotification, notify } from "../../assets/NotificationProvider";
+} from "@ant-design/icons"
+import {addCustomer, deleteACustomer} from "../../Service/Customer/CustomerSerive"
+import {getDistricts, getProvinces, getWards} from "../../Service/Location/LocationSerivce"
+import {useEffect, useState} from "react"
+import {useNotification, notify} from "../../assets/NotificationProvider"
 
 const handleDelete = (customerID, setData) => {
     deleteACustomer(customerID)
         .then(() => {
             setData((prevData) =>
-                prevData.filter(
-                    (customer) => customer.customer_ID !== customerID
-                )
-            );
-            notify(
-                "success",
-                "Xóa thành công",
-                `Đã xóa mục có ID: ${customerID}`
-            );
+                prevData.filter((customer) => customer.customer_ID !== customerID)
+            )
+            notify("success", "Xóa thành công", `Đã xóa mục có ID: ${customerID}`)
         })
         .catch((error) => {
-            console.log(error);
-        });
-};
+            console.log(error)
+        })
+}
 
-const ActionMenu = ({ rowData, onDelete, setData }) => {
+const ActionMenu = ({rowData, onDelete, setData}) => {
     const items = [
         {
             label: (
@@ -75,25 +62,21 @@ const ActionMenu = ({ rowData, onDelete, setData }) => {
         },
         {
             label: (
-                <Space
-                    onClick={() =>
-                        onDelete(rowData.customer_ID || rowData.id, setData)
-                    }
-                >
+                <Space onClick={() => onDelete(rowData.customer_ID || rowData.id, setData)}>
                     <DeleteTwoTone />
                     Xóa
                 </Space>
             ),
             key: "2",
         },
-    ];
+    ]
 
     return (
-        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
-            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+        <Dropdown menu={{items}} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
         </Dropdown>
-    );
-};
+    )
+}
 
 const columnsTable = (setData) => [
     {
@@ -153,18 +136,14 @@ const columnsTable = (setData) => [
         align: "center",
         width: "6rem",
         render: (_, rowData) => (
-            <ActionMenu
-                rowData={rowData}
-                onDelete={handleDelete}
-                setData={setData}
-            />
+            <ActionMenu rowData={rowData} onDelete={handleDelete} setData={setData} />
         ),
     },
-];
+]
 
-const NewUsersCard = ({ data }) => {
+const NewUsersCard = ({data}) => {
     return (
-        <Row gutter={16} style={{ marginBottom: "16px" }}>
+        <Row gutter={16} style={{marginBottom: "16px"}}>
             <Col span={8}>
                 <Card
                     style={{
@@ -175,17 +154,13 @@ const NewUsersCard = ({ data }) => {
                         <Statistic
                             title='Khách hàng'
                             value={data.length}
-                            prefix={
-                                <UserOutlined style={{ fontSize: "17px" }} />
-                            }
+                            prefix={<UserOutlined style={{fontSize: "17px"}} />}
                         />
                         <Statistic
                             title='Hoạt động'
                             value={
-                                data.filter(
-                                    (customer) =>
-                                        customer.customer_Status === "ACTIVE"
-                                ).length
+                                data.filter((customer) => customer.customer_Status === "ACTIVE")
+                                    .length
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -200,10 +175,8 @@ const NewUsersCard = ({ data }) => {
                         <Statistic
                             title='Rời đi'
                             value={
-                                data.filter(
-                                    (customer) =>
-                                        customer.customer_Status === "INACTIVE"
-                                ).length
+                                data.filter((customer) => customer.customer_Status === "INACTIVE")
+                                    .length
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -219,27 +192,23 @@ const NewUsersCard = ({ data }) => {
                 </Card>
             </Col>
         </Row>
-    );
-}; // Thẻ card thống kê
+    )
+} // Thẻ card thống kê
 
-const SearchBar = ({ searchText, setSearchText, setData }) => {
-    const [visible, setVisible] = useState(false);
-    const [customerData, setCustomerData] = useState({});
-    const { openNotification } = useNotification();
+const SearchBar = ({searchText, setSearchText, setData}) => {
+    const [visible, setVisible] = useState(false)
+    const [customerData, setCustomerData] = useState({})
+    const {openNotification} = useNotification()
 
     const handleSearch = (e) => {
-        setSearchText(e.target.value);
-    };
+        setSearchText(e.target.value)
+    }
     const handleOk = () => {
-        setVisible(false);
-        addCustomer(customerData);
-        setData((prevData) => [...prevData, customerData]);
-        openNotification(
-            "success",
-            "Tin nhắn hệ thống",
-            "Thêm khách hàng thành công"
-        );
-    };
+        setVisible(false)
+        addCustomer(customerData)
+        setData((prevData) => [...prevData, customerData])
+        openNotification("success", "Tin nhắn hệ thống", "Thêm khách hàng thành công")
+    }
 
     return (
         <>
@@ -249,7 +218,7 @@ const SearchBar = ({ searchText, setSearchText, setData }) => {
                         value={searchText}
                         placeholder='Tên khách hàng | ID (CCCD) | Số điện thoại'
                         onChange={handleSearch}
-                        style={{ width: "100%", display: "block" }}
+                        style={{width: "100%", display: "block"}}
                     />
                 </Col>
 
@@ -268,9 +237,9 @@ const SearchBar = ({ searchText, setSearchText, setData }) => {
                 <CustomerForm setCustomerData={setCustomerData} />
             </Modal>
         </>
-    );
-}; // Form tìm kiếm + button thêm khách hàng
-const CustomerForm = ({ setCustomerData }) => {
+    )
+} // Form tìm kiếm + button thêm khách hàng
+const CustomerForm = ({setCustomerData}) => {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -280,19 +249,17 @@ const CustomerForm = ({ setCustomerData }) => {
         selectedWard: null,
         customer_Address: "",
         loading: false,
-    });
+    })
 
     const handleChange = (key, value) => {
-        setCustomerData((prev) => ({ ...prev, [key]: value }));
-    };
+        setCustomerData((prev) => ({...prev, [key]: value}))
+    }
 
     useEffect(() => {
         getProvinces()
-            .then((value) =>
-                setLocationData((prev) => ({ ...prev, provinces: value.data }))
-            )
-            .catch((err) => console.error(err));
-    }, []);
+            .then((value) => setLocationData((prev) => ({...prev, provinces: value.data})))
+            .catch((err) => console.error(err))
+    }, [])
 
     const handleProvinceChange = (provinceId) => {
         setLocationData((prev) => ({
@@ -303,7 +270,7 @@ const CustomerForm = ({ setCustomerData }) => {
             districts: [],
             wards: [],
             loading: true,
-        }));
+        }))
         getDistricts(provinceId)
             .then((value) =>
                 setLocationData((prev) => ({
@@ -312,10 +279,8 @@ const CustomerForm = ({ setCustomerData }) => {
                     loading: false,
                 }))
             )
-            .catch(() =>
-                setLocationData((prev) => ({ ...prev, loading: false }))
-            );
-    };
+            .catch(() => setLocationData((prev) => ({...prev, loading: false})))
+    }
 
     const handleDistrictChange = (districtId) => {
         setLocationData((prev) => ({
@@ -324,7 +289,7 @@ const CustomerForm = ({ setCustomerData }) => {
             selectedWard: null,
             wards: [],
             loading: true,
-        }));
+        }))
         getWards(districtId)
             .then((value) =>
                 setLocationData((prev) => ({
@@ -333,134 +298,117 @@ const CustomerForm = ({ setCustomerData }) => {
                     loading: false,
                 }))
             )
-            .catch(() =>
-                setLocationData((prev) => ({ ...prev, loading: false }))
-            );
-    };
+            .catch(() => setLocationData((prev) => ({...prev, loading: false})))
+    }
 
     const handleAddressChange = (key, value) => {
-        setLocationData((prev) => ({ ...prev, [key]: value }));
+        setLocationData((prev) => ({...prev, [key]: value}))
 
-        const fullAddress = `${locationData.customer_Address}, ${
-            locationData.selectedWard || ""
-        }, ${locationData.selectedDistrict || ""}, ${
-            locationData.selectedProvince || ""
-        }`
+        const getFullName = (list, id) => list.find((item) => item.id === id)?.full_name || ""
+
+        const fullAddress = `${locationData.customer_Address}, ${getFullName(
+            locationData.wards,
+            locationData.selectedWard
+        )}, ${getFullName(locationData.districts, locationData.selectedDistrict)}
+        , ${getFullName(locationData.provinces, locationData.selectedProvince)}`
             .replace(/, ,/g, ",")
-            .trim();
-        handleChange("customer_Address", fullAddress);
-    };
+            .trim()
+        handleChange("customer_Address", fullAddress)
+    }
 
     return (
         <Form layout='vertical'>
             <Form.Item
                 label='Căn cước công dân'
-                rules={[
-                    { required: true, message: "Please enter customer ID" },
-                ]}
+                rules={[{required: true, message: "Please enter customer ID"}]}
             >
-                <Input.OTP
-                    length={12}
-                    onChange={(e) =>
-                        handleChange("customer_ID", e.target.value)
-                    }
-                />
+                <Input.OTP length={12} onChange={(value) => handleChange("customer_ID", value)} />
             </Form.Item>
-            <Form.Item
-                label='Họ tên'
-                rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-            >
-                <Input
-                    onChange={(e) =>
-                        handleChange("customer_Name", e.target.value)
-                    }
-                />
+            <Form.Item label='Họ tên' rules={[{required: true, message: "Vui lòng nhập họ tên"}]}>
+                <Input onChange={(e) => handleChange("customer_Name", e.target.value)} />
             </Form.Item>
             <Form.Item
                 label='Số điện thoại'
-                rules={[
-                    { required: true, message: "Vui lòng nhập số điện thoại" },
-                ]}
+                rules={[{required: true, message: "Vui lòng nhập số điện thoại"}]}
             >
                 <Input.OTP
                     length={10}
-                    onChange={(e) =>
-                        handleChange("customer_PhoneNumber", e.target.value)
-                    }
+                    onChange={(value) => handleChange("customer_PhoneNumber", value)}
                 />
             </Form.Item>
 
             <Form.Item label='Địa chỉ'>
-                <Space.Compact style={{ width: "100%", marginBottom: "16px" }}>
+                <Space direction='vertical' style={{width: "100%"}}>
                     <Select
                         showSearch
                         placeholder='Tỉnh - Thành phố'
-                        onChange={(value) =>
-                            handleAddressChange("selectedProvince", value)
-                        }
+                        loading={locationData.loading}
                         value={locationData.selectedProvince}
-                        options={locationData.provinces.map((item) => ({
-                            key: item.id,
-                            value: item.id,
-                            label: item.full_name,
+                        onChange={(value) => {
+                            handleProvinceChange(value)
+                        }}
+                        options={locationData.provinces.map(({id, full_name}) => ({
+                            key: id,
+                            value: id,
+                            label: full_name,
                         }))}
                     />
                     <Select
+                        showSearch
                         placeholder='Quận - Huyện'
                         disabled={!locationData.districts.length}
-                        onChange={(value) =>
-                            handleAddressChange("selectedDistrict", value)
-                        }
+                        loading={locationData.loading}
                         value={locationData.selectedDistrict}
-                        options={locationData.districts.map((item) => ({
-                            key: item.id,
-                            value: item.id,
-                            label: item.full_name,
+                        onChange={(value) => {
+                            handleDistrictChange(value)
+                        }}
+                        options={locationData.districts.map(({id, full_name}) => ({
+                            key: id,
+                            value: id,
+                            label: full_name,
                         }))}
                     />
                     <Select
+                        showSearch
                         placeholder='Phường - Xã'
                         disabled={!locationData.wards.length}
-                        onChange={(value) =>
-                            handleAddressChange("selectedWard", value)
-                        }
+                        loading={locationData.loading}
                         value={locationData.selectedWard}
-                        options={locationData.wards.map((item) => ({
-                            key: item.id,
-                            value: item.id,
-                            label: item.full_name,
+                        onChange={(value) => {
+                            handleAddressChange("selectedWard", value)
+                        }}
+                        options={locationData.wards.map(({id, full_name}) => ({
+                            key: id,
+                            value: id,
+                            label: full_name,
                         }))}
                     />
-                </Space.Compact>
-                <Input
-                    placeholder='Số nhà - Tên đường'
-                    onChange={(e) =>
-                        handleAddressChange("customer_Address", e.target.value)
-                    }
-                />
+                    <Input
+                        placeholder='Số nhà - Tên đường'
+                        onChange={(e) => handleAddressChange("customer_Address", e.target.value)}
+                    />
+                </Space>
             </Form.Item>
 
             <Form.Item
                 label='Ngày sinh'
-                rules={[{ required: true, message: "Vui lòng nhập ngày sinh" }]}
+                rules={[{required: true, message: "Vui lòng nhập ngày sinh"}]}
             >
                 <DatePicker
                     format='DD/MM/YYYY'
-                    style={{ width: "100%" }}
+                    style={{width: "100%"}}
                     onChange={(date) => handleChange("customer_Date", date)}
                 />
             </Form.Item>
 
             <Form.Item label='Tình trạng'>
-                <Select
-                    onChange={(value) => handleChange("customer_Status", value)}
-                >
+                <Select onChange={(value) => handleChange("customer_Status", value)}>
                     <Option value='ACTIVE'>Active</Option>
                     <Option value='INACTIVE'>Inactive</Option>
                 </Select>
             </Form.Item>
         </Form>
-    );
-};
+    )
+}
 
-export { columnsTable, SearchBar, NewUsersCard };
+export {columnsTable, SearchBar, NewUsersCard}
