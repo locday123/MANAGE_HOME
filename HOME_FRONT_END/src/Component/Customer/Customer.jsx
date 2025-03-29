@@ -72,73 +72,75 @@ function Customer() {
                 }
                 style={{
                     boxShadow: "rgba(0, 0, 0, 0.03) 0px 0px 5px 5px",
-                    maxHeight: "20rem",
-                    overflowY: "auto",
                 }}
             >
-                {isGridView ? (
-                    <div style={{ padding: "16px" }}>
-                        <Row gutter={[16, 16]}>
-                            {paginatedData.map((customer) => (
-                                <Col
-                                    xs={24}
-                                    sm={12}
-                                    md={8}
-                                    lg={8}
-                                    xl={8}
-                                    xxl={6}
-                                    key={customer.customer_ID}
-                                >
-                                    <div
-                                        style={{
-                                            border: "1px solid #ddd",
-                                            padding: "16px",
-                                            borderRadius: "8px",
-                                            backgroundColor: "#fff",
-                                            boxShadow:
-                                                "rgba(0, 0, 0, 0.03) 0px 0px 5px 5px",
-                                        }}
+                <div style={{ maxHeight: "20rem", overflowY: "auto" }}>
+                    {isGridView ? (
+                        <div style={{ padding: "16px" }}>
+                            <Row gutter={[16, 16]}>
+                                {paginatedData.map((customer) => (
+                                    <Col
+                                        xs={24}
+                                        sm={12}
+                                        md={8}
+                                        lg={8}
+                                        xl={8}
+                                        xxl={6}
+                                        key={customer.customer_ID}
                                     >
-                                        <p>
-                                            <strong>ID:</strong>{" "}
-                                            {customer.customer_ID}
-                                        </p>
-                                        <p>
-                                            <strong>Tên:</strong>{" "}
-                                            {customer.customer_Name}
-                                        </p>
-                                        <p>
-                                            <strong>Điện thoại:</strong>{" "}
-                                            <Tag color='success'>
-                                                {customer.customer_PhoneNumber}
-                                            </Tag>
-                                        </p>
-                                        <p>
-                                            <strong>Địa chỉ:</strong>{" "}
-                                            {customer.customer_Address}
-                                        </p>
-                                        <p>
-                                            <strong>Ngày sinh:</strong>{" "}
-                                            {new Date(
-                                                customer.customer_Date
-                                            ).toLocaleDateString("vi-VN")}
-                                        </p>
-                                        <p>
-                                            <strong>Trạng thái:</strong>{" "}
-                                            {customer.customer_Status}
-                                        </p>
-                                    </div>
-                                </Col>
-                            ))}
-                        </Row>
-                    </div>
-                ) : (
-                    <Table
-                        columns={columnsTable(setData)}
-                        dataSource={paginatedData}
-                        pagination={false} // Ẩn pagination mặc định
-                    />
-                )}
+                                        <div
+                                            style={{
+                                                border: "1px solid #ddd",
+                                                padding: "16px",
+                                                borderRadius: "8px",
+                                                backgroundColor: "#fff",
+                                                boxShadow:
+                                                    "rgba(0, 0, 0, 0.03) 0px 0px 5px 5px",
+                                            }}
+                                        >
+                                            <p>
+                                                <strong>ID:</strong>{" "}
+                                                {customer.customer_ID}
+                                            </p>
+                                            <p>
+                                                <strong>Tên:</strong>{" "}
+                                                {customer.customer_Name}
+                                            </p>
+                                            <p>
+                                                <strong>Điện thoại:</strong>{" "}
+                                                <Tag color='success'>
+                                                    {
+                                                        customer.customer_PhoneNumber
+                                                    }
+                                                </Tag>
+                                            </p>
+                                            <p>
+                                                <strong>Địa chỉ:</strong>{" "}
+                                                {customer.customer_Address}
+                                            </p>
+                                            <p>
+                                                <strong>Ngày sinh:</strong>{" "}
+                                                {new Date(
+                                                    customer.customer_Date
+                                                ).toLocaleDateString("vi-VN")}
+                                            </p>
+                                            <p>
+                                                <strong>Trạng thái:</strong>{" "}
+                                                {customer.customer_Status}
+                                            </p>
+                                        </div>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </div>
+                    ) : (
+                        <Table
+                            columns={columnsTable(setData)}
+                            dataSource={paginatedData}
+                            pagination={false} // Ẩn pagination mặc định
+                        />
+                    )}
+                </div>
             </Card>
         </>
     );
