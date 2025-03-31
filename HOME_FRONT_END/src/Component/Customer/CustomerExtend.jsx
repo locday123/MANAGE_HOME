@@ -13,7 +13,8 @@ import {
     Select,
     Dropdown,
     Space,
-} from "antd"
+    Avatar,
+} from "antd";
 import {
     UserAddOutlined,
     UserOutlined,
@@ -21,27 +22,44 @@ import {
     EditTwoTone,
     MoreOutlined,
     DeleteTwoTone,
-} from "@ant-design/icons"
-import {addCustomer, deleteACustomer, updatedCustomer} from "../../Service/Customer/CustomerSerive"
-import {getDistricts, getProvinces, getWards} from "../../Service/Location/LocationSerivce"
-import {useEffect, useState} from "react"
-import {useNotification, notify} from "../../assets/NotificationProvider"
-import dayjs from "dayjs"
+    EditOutlined,
+    SettingOutlined,
+    EllipsisOutlined,
+} from "@ant-design/icons";
+import {
+    addCustomer,
+    deleteACustomer,
+    updatedCustomer,
+} from "../../Service/Customer/CustomerSerive";
+import {
+    getDistricts,
+    getProvinces,
+    getWards,
+} from "../../Service/Location/LocationSerivce";
+import { useEffect, useState } from "react";
+import { useNotification, notify } from "../../assets/NotificationProvider";
+import dayjs from "dayjs";
 
 const handleDelete = (customerID, setData) => {
     deleteACustomer(customerID)
         .then(() => {
             setData((prevData) =>
-                prevData.filter((customer) => customer.customer_ID !== customerID)
-            )
-            notify("success", "Xóa thành công", `Đã xóa mục có ID: ${customerID}`)
+                prevData.filter(
+                    (customer) => customer.customer_ID !== customerID
+                )
+            );
+            notify(
+                "success",
+                "Xóa thành công",
+                `Đã xóa mục có ID: ${customerID}`
+            );
         })
         .catch((error) => {
-            console.log(error)
-        })
-}
+            console.log(error);
+        });
+};
 
-const ActionMenu = ({rowData, onDelete, setData, setVisible}) => {
+const ActionMenu = ({ rowData, onDelete, setData, setVisible }) => {
     const items = [
         {
             label: (
@@ -54,21 +72,31 @@ const ActionMenu = ({rowData, onDelete, setData, setVisible}) => {
         },
         {
             label: (
-                <Space onClick={() => onDelete(rowData.customer_ID || rowData.id, setData)}>
+                <Space
+                    onClick={() =>
+                        onDelete(rowData.customer_ID || rowData.id, setData)
+                    }
+                >
                     <DeleteTwoTone />
                     Xóa
                 </Space>
             ),
             key: "2",
         },
-    ]
+    ];
 
     return (
-        <Dropdown menu={{items}} trigger={["click"]} placement='bottomLeft'>
-            <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
+        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
         </Dropdown>
-    )
-}
+    );
+};
+const actionsCard = (setVisible) => (
+    <Space size={"middle"}>
+        <EditTwoTone key='edit' onClick={() => setVisible(true)} />
+        <DeleteTwoTone key='delete' />
+    </Space>
+);
 
 const columnsTable = (setData, setVisible) => [
     {
@@ -84,6 +112,12 @@ const columnsTable = (setData, setVisible) => [
         title: "Tên khách hàng",
         dataIndex: "customer_Name",
         width: "12rem",
+        render: (value) => (
+            <Space>
+                <Avatar icon={<UserOutlined />} />
+                {value}
+            </Space>
+        ),
     },
     {
         key: "customer_PhoneNumber",
@@ -130,11 +164,11 @@ const columnsTable = (setData, setVisible) => [
             />
         ),
     },
-]
+];
 
-const NewUsersCard = ({data}) => {
+const NewUsersCard = ({ data }) => {
     return (
-        <Row gutter={16} style={{marginBottom: "16px"}}>
+        <Row gutter={16} style={{ marginBottom: "16px" }}>
             <Col span={8}>
                 <Card
                     style={{
@@ -145,13 +179,17 @@ const NewUsersCard = ({data}) => {
                         <Statistic
                             title='Khách hàng'
                             value={data.length}
-                            prefix={<UserOutlined style={{fontSize: "17px"}} />}
+                            prefix={
+                                <UserOutlined style={{ fontSize: "17px" }} />
+                            }
                         />
                         <Statistic
                             title='Hoạt động'
                             value={
-                                data.filter((customer) => customer.customer_Status === "ACTIVE")
-                                    .length
+                                data.filter(
+                                    (customer) =>
+                                        customer.customer_Status === "ACTIVE"
+                                ).length
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -166,8 +204,10 @@ const NewUsersCard = ({data}) => {
                         <Statistic
                             title='Rời đi'
                             value={
-                                data.filter((customer) => customer.customer_Status === "INACTIVE")
-                                    .length
+                                data.filter(
+                                    (customer) =>
+                                        customer.customer_Status === "INACTIVE"
+                                ).length
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -183,8 +223,8 @@ const NewUsersCard = ({data}) => {
                 </Card>
             </Col>
         </Row>
-    )
-} // Thẻ card thống kê
+    );
+}; // Thẻ card thống kê
 
 const SearchBar = ({
     searchText,
@@ -195,38 +235,56 @@ const SearchBar = ({
     customerData,
     setCustomerData,
 }) => {
-    const {openNotification} = useNotification()
+    const { openNotification } = useNotification();
 
     const handleSearch = (e) => {
-        setSearchText(e.target.value)
-    }
+        setSearchText(e.target.value);
+    };
     const handleOk = () => {
         if (customerData?.id) {
             updatedCustomer(customerData.id, customerData)
                 .then(() => {
-                    setVisible(false)
+                    setVisible(false);
                     setData((prevData) =>
                         prevData.map((item) =>
-                            item.id === customerData.id ? {...item, ...customerData} : item
+                            item.id === customerData.id
+                                ? { ...item, ...customerData }
+                                : item
                         )
-                    )
+                    );
                     openNotification(
                         "success",
                         "Tin nhắn hệ thống",
                         "Cập nhật khách hàng thành công!"
-                    )
+                    );
                 })
-                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi cập nhật"))
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi cập nhật"
+                    )
+                );
         } else {
             addCustomer(customerData)
                 .then(() => {
-                    setVisible(false)
-                    setData((prevData) => [...prevData, customerData])
-                    openNotification("success", "Tin nhắn hệ thống", "Thêm khách hàng thành công")
+                    setVisible(false);
+                    setData((prevData) => [...prevData, customerData]);
+                    openNotification(
+                        "success",
+                        "Tin nhắn hệ thống",
+                        "Thêm khách hàng thành công"
+                    );
                 })
-                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi thêm mới"))
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi thêm mới"
+                    )
+                );
         }
-    }
+    };
 
     return (
         <>
@@ -236,12 +294,12 @@ const SearchBar = ({
                         value={searchText}
                         placeholder='Tên khách hàng | ID (CCCD) | Số điện thoại'
                         onChange={handleSearch}
-                        style={{width: "100%"}}
+                        style={{ width: "100%" }}
                     />
                 </Col>
                 <Col span={1}>
                     <Button
-                        icon={<UserAddOutlined style={{fontSize: "22px"}} />}
+                        icon={<UserAddOutlined style={{ fontSize: "22px" }} />}
                         type='primary'
                         onClick={() => setVisible(true)}
                     />
@@ -257,16 +315,19 @@ const SearchBar = ({
                 onOk={handleOk}
                 destroyOnClose={true}
                 onCancel={() => {
-                    setVisible(false)
-                    setCustomerData({})
+                    setVisible(false);
+                    setCustomerData({});
                 }}
             >
-                <CustomerForm setCustomerData={setCustomerData} customerData={customerData} />
+                <CustomerForm
+                    setCustomerData={setCustomerData}
+                    customerData={customerData}
+                />
             </Modal>
         </>
-    )
-} // Form tìm kiếm + button thêm khách hàng
-const CustomerForm = ({customerData, setCustomerData}) => {
+    );
+}; // Form tìm kiếm + button thêm khách hàng
+const CustomerForm = ({ customerData, setCustomerData }) => {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -277,7 +338,7 @@ const CustomerForm = ({customerData, setCustomerData}) => {
         loadingProvinces: true,
         loadingDistricts: false,
         loadingWards: false,
-    })
+    });
 
     useEffect(() => {
         getProvinces()
@@ -286,26 +347,31 @@ const CustomerForm = ({customerData, setCustomerData}) => {
                     ...prev,
                     provinces: value.data,
                     loadingProvinces: false,
-                }))
+                }));
             })
-            .catch(() => setLocationData((prev) => ({...prev, loadingProvinces: false})))
-    }, [])
+            .catch(() =>
+                setLocationData((prev) => ({
+                    ...prev,
+                    loadingProvinces: false,
+                }))
+            );
+    }, []);
 
     useEffect(() => {
         if (customerData?.customer_Province) {
-            handleProvinceChange(customerData.customer_Province, false)
+            handleProvinceChange(customerData.customer_Province, false);
         }
-    }, [customerData?.customer_Province])
+    }, [customerData?.customer_Province]);
 
     useEffect(() => {
         if (customerData?.customer_District) {
-            handleDistrictChange(customerData.customer_District, false)
+            handleDistrictChange(customerData.customer_District, false);
         }
-    }, [customerData?.customer_District])
+    }, [customerData?.customer_District]);
 
     const handleChange = (key, value) => {
-        setCustomerData((prev) => ({...prev, [key]: value}))
-    }
+        setCustomerData((prev) => ({ ...prev, [key]: value }));
+    };
 
     const handleProvinceChange = (provinceId, reset = true) => {
         setLocationData((prev) => ({
@@ -316,11 +382,11 @@ const CustomerForm = ({customerData, setCustomerData}) => {
             districts: reset ? [] : prev.districts,
             wards: reset ? [] : prev.wards,
             loadingDistricts: true,
-        }))
-        handleChange("customer_Province", provinceId)
+        }));
+        handleChange("customer_Province", provinceId);
         if (reset) {
-            handleChange("customer_District", null)
-            handleChange("customer_Ward", null)
+            handleChange("customer_District", null);
+            handleChange("customer_Ward", null);
         }
 
         getDistricts(provinceId)
@@ -331,8 +397,13 @@ const CustomerForm = ({customerData, setCustomerData}) => {
                     loadingDistricts: false,
                 }))
             )
-            .catch(() => setLocationData((prev) => ({...prev, loadingDistricts: false})))
-    }
+            .catch(() =>
+                setLocationData((prev) => ({
+                    ...prev,
+                    loadingDistricts: false,
+                }))
+            );
+    };
 
     const handleDistrictChange = async (districtId) => {
         setLocationData((prev) => ({
@@ -341,34 +412,36 @@ const CustomerForm = ({customerData, setCustomerData}) => {
             selectedWard: null,
             wards: [],
             loadingWards: true,
-        }))
+        }));
 
-        handleChange("customer_District", districtId)
-        handleChange("customer_Ward", null)
+        handleChange("customer_District", districtId);
+        handleChange("customer_Ward", null);
 
         try {
-            const {data} = await getWards(districtId)
+            const { data } = await getWards(districtId);
             setLocationData((prev) => ({
                 ...prev,
                 wards: data,
                 loadingWards: false,
-            }))
+            }));
 
             if (data.length > 0) {
-                handleChange("customer_Ward", data[0].id)
+                handleChange("customer_Ward", data[0].id);
             }
         } catch (error) {
-            console.error("Lỗi khi lấy phường/xã:", error)
-            setLocationData((prev) => ({...prev, loadingWards: false}))
+            console.error("Lỗi khi lấy phường/xã:", error);
+            setLocationData((prev) => ({ ...prev, loadingWards: false }));
         }
-    }
+    };
 
     return (
         <Form layout='vertical'>
-            {!customerData?.id && (
+            {!customerData?.customer_ID && (
                 <Form.Item
                     label='Căn cước công dân'
-                    rules={[{required: true, message: "Please enter customer ID"}]}
+                    rules={[
+                        { required: true, message: "Please enter customer ID" },
+                    ]}
                 >
                     <Input.OTP
                         length={12}
@@ -377,77 +450,98 @@ const CustomerForm = ({customerData, setCustomerData}) => {
                     />
                 </Form.Item>
             )}
-            <Form.Item label='Họ tên' rules={[{required: true, message: "Vui lòng nhập họ tên"}]}>
+            <Form.Item
+                label='Họ tên'
+                rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
+            >
                 <Input
                     value={customerData?.customer_Name || ""}
-                    onChange={(e) => handleChange("customer_Name", e.target.value)}
+                    onChange={(e) =>
+                        handleChange("customer_Name", e.target.value)
+                    }
                 />
             </Form.Item>
             <Form.Item
                 label='Số điện thoại'
-                rules={[{required: true, message: "Vui lòng nhập số điện thoại"}]}
+                rules={[
+                    { required: true, message: "Vui lòng nhập số điện thoại" },
+                ]}
             >
                 <Input.OTP
                     length={10}
                     value={customerData?.customer_PhoneNumber || ""}
-                    onChange={(value) => handleChange("customer_PhoneNumber", value)}
+                    onChange={(value) =>
+                        handleChange("customer_PhoneNumber", value)
+                    }
                 />
             </Form.Item>
 
             <Form.Item label='Địa chỉ'>
-                <Space direction='vertical' style={{width: "100%"}}>
+                <Space direction='vertical' style={{ width: "100%" }}>
                     <Select
                         placeholder='Tỉnh - Thành phố'
                         value={locationData.selectedProvince}
                         loading={locationData.loadingProvinces}
                         onChange={(value) => handleProvinceChange(value)}
-                        options={locationData.provinces.map(({id, full_name}) => ({
-                            key: id,
-                            value: id,
-                            label: full_name,
-                        }))}
+                        options={locationData.provinces.map(
+                            ({ id, full_name }) => ({
+                                key: id,
+                                value: id,
+                                label: full_name,
+                            })
+                        )}
                     />
                     <Select
                         placeholder='Quận - Huyện'
                         value={locationData.selectedDistrict}
                         loading={locationData.loadingDistricts}
                         onChange={(value) => handleDistrictChange(value)}
-                        options={locationData.districts.map(({id, full_name}) => ({
-                            key: id,
-                            value: id,
-                            label: full_name,
-                        }))}
+                        options={locationData.districts.map(
+                            ({ id, full_name }) => ({
+                                key: id,
+                                value: id,
+                                label: full_name,
+                            })
+                        )}
                     />
                     <Select
                         placeholder='Phường - Xã'
                         value={
-                            locationData.wards.some((w) => w.id === customerData?.customer_Ward)
+                            locationData.wards.some(
+                                (w) => w.id === customerData?.customer_Ward
+                            )
                                 ? customerData.customer_Ward
                                 : null
                         }
                         loading={locationData.loadingWards}
-                        onChange={(value) => handleChange("customer_Ward", value)}
-                        options={locationData.wards.map(({id, full_name}) => ({
-                            key: id,
-                            value: id,
-                            label: full_name,
-                        }))}
+                        onChange={(value) =>
+                            handleChange("customer_Ward", value)
+                        }
+                        options={locationData.wards.map(
+                            ({ id, full_name }) => ({
+                                key: id,
+                                value: id,
+                                label: full_name,
+                            })
+                        )}
                     />
                     <Input
                         placeholder='Số nhà - Tên đường'
                         value={customerData?.customer_Address || ""}
-                        onChange={(e) => handleChange("customer_Address", e.target.value)}
+                        onChange={(e) =>
+                            handleChange("customer_Address", e.target.value)
+                        }
                     />
                 </Space>
             </Form.Item>
 
             <Form.Item
                 label='Ngày sinh'
-                rules={[{required: true, message: "Vui lòng nhập ngày sinh"}]}
+                rules={[{ required: true, message: "Vui lòng nhập ngày sinh" }]}
             >
                 <DatePicker
                     format='DD/MM/YYYY'
-                    style={{width: "100%"}}
+                    style={{ width: "100%" }}
                     value={
                         customerData?.customer_Date
                             ? dayjs(customerData.customer_Date, "YYYY-MM-DD")
@@ -467,7 +561,7 @@ const CustomerForm = ({customerData, setCustomerData}) => {
                 </Select>
             </Form.Item>
         </Form>
-    )
-}
+    );
+};
 
-export {columnsTable, SearchBar, NewUsersCard}
+export { columnsTable, SearchBar, NewUsersCard, actionsCard };

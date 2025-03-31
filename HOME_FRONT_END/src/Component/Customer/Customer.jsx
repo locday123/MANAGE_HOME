@@ -1,29 +1,39 @@
-import {Card, Col, Grid, Row, Segmented, Table, Tag} from "antd"
-import {useEffect, useState} from "react"
-const {useBreakpoint} = Grid
-import {AppstoreOutlined, BarsOutlined} from "@ant-design/icons"
-import {SearchBar, columnsTable, NewUsersCard} from "../Customer/CustomerExtend"
-import {getAllCustomer} from "../../Service/Customer/CustomerSerive"
+import { Card, Col, Grid, Row, Segmented, Table, Tag } from "antd";
+import { useEffect, useState } from "react";
+
+import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
+import {
+    SearchBar,
+    columnsTable,
+    NewUsersCard,
+    actionsCard,
+} from "../Customer/CustomerExtend";
+import { getAllCustomer } from "../../Service/Customer/CustomerSerive";
 
 function Customer() {
-    const [data, setData] = useState([])
-    const [searchText, setSearchText] = useState("")
-    const [isGridView, setIsGridView] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [customerData, setCustomerData] = useState({})
+    const [data, setData] = useState([]);
+    const [hoveredCard, setHoveredCard] = useState(null);
+    const [searchText, setSearchText] = useState("");
+    const [isGridView, setIsGridView] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [customerData, setCustomerData] = useState({});
 
     const filteredData = data.filter((item) => {
-        const filterName = item.customer_Name.toLowerCase().includes(searchText.toLowerCase())
-        const filterID = item.customer_ID.toString().includes(searchText)
-        const filterPhoneNumber = item.customer_PhoneNumber.toString().includes(searchText)
-        return filterName || filterID || filterPhoneNumber
-    }) // Tìm kiếm Customer
+        const filterName = item.customer_Name
+            .toLowerCase()
+            .includes(searchText.toLowerCase());
+        const filterID = item.customer_ID.toString().includes(searchText);
+        const filterPhoneNumber = item.customer_PhoneNumber
+            .toString()
+            .includes(searchText);
+        return filterName || filterID || filterPhoneNumber;
+    }); // Tìm kiếm Customer
 
     useEffect(() => {
         getAllCustomer().then((value) => {
-            setData(value)
-        })
-    }, [])
+            setData(value);
+        });
+    }, []);
     return (
         <>
             <NewUsersCard data={data} />
@@ -43,19 +53,19 @@ function Customer() {
                     <Segmented
                         onChange={(value) => setIsGridView(value === "Grid")}
                         options={[
-                            {value: "List", icon: <BarsOutlined />},
-                            {value: "Grid", icon: <AppstoreOutlined />},
+                            { value: "List", icon: <BarsOutlined /> },
+                            { value: "Grid", icon: <AppstoreOutlined /> },
                         ]}
-                        style={{marginRight: "16px"}}
+                        style={{ marginRight: "16px" }}
                     />
                 }
                 style={{
                     boxShadow: "rgba(0, 0, 0, 0.03) 0px 0px 5px 5px",
                 }}
             >
-                <div style={{maxHeight: "36.1rem", overflowY: "auto"}}>
+                <div style={{ maxHeight: "36.1rem", overflowY: "auto" }}>
                     {isGridView ? (
-                        <div style={{padding: "16px"}}>
+                        <div style={{ padding: "16px" }}>
                             <Row gutter={[16, 16]}>
                                 {filteredData.map((customer) => (
                                     <Col
@@ -67,42 +77,27 @@ function Customer() {
                                         xxl={6}
                                         key={customer.customer_ID}
                                     >
-                                        <div
-                                            style={{
-                                                border: "1px solid #ddd",
-                                                padding: "16px",
-                                                borderRadius: "8px",
-                                                backgroundColor: "#fff",
-                                                boxShadow: "rgba(0, 0, 0, 0.03) 0px 0px 5px 5px",
-                                            }}
-                                        >
-                                            <p>
-                                                <strong>ID:</strong> {customer.customer_ID}
-                                            </p>
-                                            <p>
-                                                <strong>Tên:</strong> {customer.customer_Name}
-                                            </p>
-                                            <p>
-                                                <strong>Điện thoại:</strong>{" "}
-                                                <Tag color='success'>
-                                                    {customer.customer_PhoneNumber}
-                                                </Tag>
-                                            </p>
-                                            <p>
-                                                <strong>Địa chỉ:</strong>{" "}
-                                                {customer.customer_Address}
-                                            </p>
-                                            <p>
-                                                <strong>Ngày sinh:</strong>{" "}
-                                                {new Date(
-                                                    customer.customer_Date
-                                                ).toLocaleDateString("vi-VN")}
-                                            </p>
-                                            <p>
-                                                <strong>Trạng thái:</strong>{" "}
-                                                {customer.customer_Status}
-                                            </p>
-                                        </div>
+                                        <Card
+                                            hoverable
+                                            onMouseEnter={() =>
+                                                setHoveredCard(
+                                                    customer.customer_ID
+                                                )
+                                            } // Lưu ID của card đang hover
+                                            onMouseLeave={() =>
+                                                setHoveredCard(null)
+                                            } // Reset khi rời chuột
+                                            onClick={() =>
+                                                setCustomerData(customer)
+                                            }
+                                            title={customer.customer_Name}
+                                            extra={
+                                                hoveredCard ===
+                                                customer.customer_ID
+                                                    ? actionsCard(setVisible)
+                                                    : null
+                                            } // Chỉ hiển thị actions cho card đang hover
+                                        ></Card>
                                     </Col>
                                 ))}
                             </Row>
@@ -114,7 +109,7 @@ function Customer() {
                             pagination={false} // Ẩn pagination mặc định
                             onRow={(record) => ({
                                 onClick: () => {
-                                    setCustomerData(record) // Gán dữ liệu vào form
+                                    setCustomerData(record); // Gán dữ liệu vào form
                                 },
                             })}
                         />
@@ -122,6 +117,6 @@ function Customer() {
                 </div>
             </Card>
         </>
-    )
+    );
 }
-export default Customer
+export default Customer;
