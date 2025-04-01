@@ -1,12 +1,17 @@
-import {Col, Input, Row, Tag, Button} from "antd"
-import {AppstoreAddOutlined} from "@ant-design/icons"
+import { Col, Input, Row, Tag, Button, Dropdown, Space } from "antd";
+import {
+    AppstoreAddOutlined,
+    DeleteTwoTone,
+    EditTwoTone,
+    MoreOutlined,
+} from "@ant-design/icons";
 const columnsTable = [
     {
         key: "home_ID",
         title: "ID",
         dataIndex: "home_ID",
         align: "center",
-        width: "6rem",
+
         render: (value) => <Tag>{value}</Tag>,
     },
     {
@@ -27,7 +32,6 @@ const columnsTable = [
         title: "CCCD Chủ nhà",
         dataIndex: "home_HostID",
         align: "center",
-        width: "8rem",
     },
     {
         key: "home_HostName",
@@ -39,14 +43,13 @@ const columnsTable = [
         title: "Số điện thoại",
         dataIndex: "home_HostPhoneNumber",
         align: "center",
-        width: "8rem",
     },
     {
         key: "contract",
         title: "Hợp đồng đến",
         dataIndex: "contract",
         align: "center",
-        width: "12rem",
+
         render: (_, value) =>
             new Date(value.home_ContractFrom).toLocaleDateString("vi") +
             " - " +
@@ -58,20 +61,48 @@ const columnsTable = [
         title: "Tình trạng",
         dataIndex: "home_Status",
         align: "center",
-        width: "7rem",
     },
     {
-        key: "created_at",
-        title: "Ngày tạo",
+        key: "action",
+        title: "Thao tác",
         dataIndex: "created_at",
         align: "center",
-        render: (value) => new Date(value).toLocaleDateString("vi"),
+        width: "8rem",
+        render: () => <ActionMenu />,
     },
-]
+];
+const ActionMenu = () => {
+    const items = [
+        {
+            label: (
+                <Space>
+                    <EditTwoTone />
+                    Chỉnh sửa
+                </Space>
+            ),
+            key: "0",
+        },
+        {
+            label: (
+                <Space>
+                    <DeleteTwoTone />
+                    Xóa
+                </Space>
+            ),
+            key: "2",
+        },
+    ];
 
-const FormFilter = ({searchText, onChange}) => {
     return (
-        <Row gutter={[24, 24]} style={{rowGap: "10px"}}>
+        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+        </Dropdown>
+    );
+};
+
+const FormFilter = ({ searchText, onChange }) => {
+    return (
+        <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
             <Col xxl={4} xl={6} lg={8}>
                 <Input
                     allowClear
@@ -84,10 +115,13 @@ const FormFilter = ({searchText, onChange}) => {
                 />
             </Col>
             <Col>
-                <Button icon={<AppstoreAddOutlined style={{fontSize: "22px"}} />} type='primary' />
+                <Button
+                    icon={<AppstoreAddOutlined style={{ fontSize: "22px" }} />}
+                    type='primary'
+                />
             </Col>
         </Row>
-    )
-}
+    );
+};
 
-export {columnsTable, FormFilter}
+export { columnsTable, FormFilter };
