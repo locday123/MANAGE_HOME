@@ -1,6 +1,6 @@
 import {client} from "../Service"
 
-let linkApi = "https://mocki.io/v1/49442560-67fa-4af0-83cb-301e2467000f"
+let linkApi = "https://67e41d1e2ae442db76d31ae4.mockapi.io/api/homes"
 
 const getAllHome = async () => {
     try {

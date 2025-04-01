@@ -77,7 +77,7 @@ const publicRoutes = [
         path: "/homes",
         label: "Danh sách nhà",
         parent: "building-management",
-        component: Dashboards,
+        component: Home,
         icon: <ShopOutlined />,
     },
     {

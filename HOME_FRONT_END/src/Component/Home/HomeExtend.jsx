@@ -1,4 +1,5 @@
-import {Col, Input, Row, Tag} from "antd"
+import {Col, Input, Row, Tag, Button} from "antd"
+import {AppstoreAddOutlined} from "@ant-design/icons"
 const columnsTable = [
     {
         key: "home_ID",
@@ -46,21 +47,25 @@ const columnsTable = [
         dataIndex: "contract",
         align: "center",
         width: "12rem",
-        render: (_, value) => value.home_ContractFrom + " - " + value.home_ContractTo,
+        render: (_, value) =>
+            new Date(value.home_ContractFrom).toLocaleDateString("vi") +
+            " - " +
+            new Date(value.home_ContractTo).toLocaleDateString("vi"),
     },
 
     {
-        key: "home_Condition",
+        key: "home_Status",
         title: "Tình trạng",
-        dataIndex: "home_Condition",
+        dataIndex: "home_Status",
         align: "center",
         width: "7rem",
     },
     {
-        key: "date_Add",
-        title: "Ngày",
-        dataIndex: "date_Add",
+        key: "created_at",
+        title: "Ngày tạo",
+        dataIndex: "created_at",
         align: "center",
+        render: (value) => new Date(value).toLocaleDateString("vi"),
     },
 ]
 
@@ -77,6 +82,9 @@ const FormFilter = ({searchText, onChange}) => {
                     }}
                     placeholder='Tìm kiếm: ID | Địa chỉ'
                 />
+            </Col>
+            <Col>
+                <Button icon={<AppstoreAddOutlined style={{fontSize: "22px"}} />} type='primary' />
             </Col>
         </Row>
     )

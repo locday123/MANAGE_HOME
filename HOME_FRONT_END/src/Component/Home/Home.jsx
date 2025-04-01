@@ -1,6 +1,6 @@
-import {Button, Card, Col, Collapse, Row, Table} from "antd"
+import {Button, Card, Col, Collapse, Row, Segmented, Table} from "antd"
 import {useEffect, useState} from "react"
-import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons"
+import {AppstoreOutlined, BarsOutlined} from "@ant-design/icons"
 
 import {getAllHome} from "../../Service/Home//HomeSerivce"
 import {columnsTable, FormFilter} from "./HomeExtend"
@@ -9,7 +9,7 @@ import {getAllFloor, searchHomeInFloor} from "../../Service/FLOOR/FloorService"
 function Home() {
     const [home, setHome] = useState([])
     const [searchText, setSearchText] = useState("")
-    const [isGridView, setIsGridView] = useState(false)
+    const [isGridView, setIsGridView] = useState("List")
     const filteredData = home.filter(
         (item) =>
             item.home_ID.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -27,9 +27,14 @@ function Home() {
         <Card
             title={<FormFilter searchText={searchText} onChange={handleSearchChange} />}
             extra={
-                <Button onClick={() => setIsGridView(!isGridView)} style={{marginBottom: 20}}>
-                    {isGridView ? <UnorderedListOutlined /> : <AppstoreOutlined />} Toggle View
-                </Button>
+                <Segmented
+                    onChange={(value) => setIsGridView(value === "List")}
+                    options={[
+                        {value: "List", icon: <BarsOutlined />},
+                        {value: "Grid", icon: <AppstoreOutlined />},
+                    ]}
+                    style={{marginRight: "16px"}}
+                />
             }
         >
             {isGridView ? (
