@@ -1,29 +1,16 @@
-import {
-    Card,
-    Checkbox,
-    Col,
-    Dropdown,
-    Menu,
-    Row,
-    Segmented,
-    Space,
-    Table,
-} from "antd";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
+import {Card, Checkbox, Col, Dropdown, Menu, Row, Segmented, Space, Table} from "antd"
+import {useEffect, useMemo, useRef, useState} from "react"
+import {AppstoreOutlined, BarsOutlined} from "@ant-design/icons"
 
-import { getAllHome } from "../../Service/Home//HomeSerivce";
-import { columnsTable, FormFilter } from "./HomeExtend";
-import {
-    getAllFloor,
-    searchHomeInFloor,
-} from "../../Service/FLOOR/FloorService";
+import {getAllHome} from "../../Service/Home//HomeSerivce"
+import {columnsTable, FormFilter} from "./HomeExtend"
+import {getAllFloor, searchHomeInFloor} from "../../Service/FLOOR/FloorService"
 
 function Home() {
-    const [home, setHome] = useState([]);
-    const [searchText, setSearchText] = useState("");
-    const [isGridView, setIsGridView] = useState("List");
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [home, setHome] = useState([])
+    const [searchText, setSearchText] = useState("")
+    const [isGridView, setIsGridView] = useState("List")
+    const [dropdownOpen, setDropdownOpen] = useState(false)
 
     const [selectedValues, setSelectedValues] = useState([
         "home_ID",
@@ -32,41 +19,37 @@ function Home() {
         "contract",
         "home_Status",
         "action",
-    ]);
-    const prevSelectedValues = useRef(selectedValues); // Giữ giá trị trước của selectedValues
+    ])
 
-    const filteredData = home.filter(
-        (item) =>
-            item.home_ID.toLowerCase().includes(searchText.toLowerCase()) ||
-            item.home_Address.toLowerCase().includes(searchText.toLowerCase())
-    );
-    const allSelected = selectedValues.length === columnsTable.length;
+    const filteredData = home
+        ? home.filter(
+              (item) =>
+                  item.home_ID?.toLowerCase().includes(searchText.toLowerCase()) ||
+                  item.home_Address?.toLowerCase().includes(searchText.toLowerCase())
+          )
+        : []
+    const allSelected = selectedValues.length === columnsTable.length
     const handleSelectAll = (event) => {
-        event.stopPropagation(); // Ngăn dropdown bị đóng khi click
+        event.stopPropagation() // Ngăn dropdown bị đóng khi click
         if (allSelected) {
-            setSelectedValues([]); // Bỏ chọn tất cả
+            setSelectedValues([]) // Bỏ chọn tất cả
         } else {
-            setSelectedValues(columnsTable.map(({ key }) => key)); // Chọn tất cả
+            setSelectedValues(columnsTable.map(({key}) => key)) // Chọn tất cả
         }
-    };
+    }
     const handleCheckboxChange = (key, event) => {
-        event.stopPropagation(); // Ngăn dropdown bị đóng khi click
+        event.stopPropagation() // Ngăn dropdown bị đóng khi click
         setSelectedValues((prev) =>
-            prev.includes(key)
-                ? prev.filter((item) => item !== key)
-                : [...prev, key]
-        );
-        setDropdownOpen(true); // Giữ dropdown mở
-    };
+            prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+        )
+        setDropdownOpen(true) // Giữ dropdown mở
+    }
 
     const items = useMemo(() => {
-        return columnsTable.map(({ key, title }) => ({
+        return columnsTable.map(({key, title}) => ({
             key: key,
             label: (
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{ padding: "0px 10px" }}
-                >
+                <div onClick={(e) => e.stopPropagation()} style={{padding: "0px 10px"}}>
                     <Checkbox
                         checked={selectedValues.includes(key)}
                         onChange={(event) => handleCheckboxChange(key, event)}
@@ -75,31 +58,26 @@ function Home() {
                     </Checkbox>
                 </div>
             ),
-        }));
-    }, [columnsTable, selectedValues]);
-    const menu = <Menu items={items} />;
+        }))
+    }, [columnsTable, selectedValues])
+    const menu = <Menu items={items} />
     const newColumns = columnsTable.map((item) =>
         Object.assign(Object.assign({}, item), {
             hidden: !selectedValues.includes(item.key),
         })
-    );
+    )
 
     const handleSearchChange = (e) => {
-        setSearchText(e.target.value);
-    };
+        setSearchText(e.target.value)
+    }
     useEffect(() => {
         getAllHome().then((value) => {
-            setHome(value);
-        });
-    }, [home]);
+            setHome(value)
+        })
+    }, [home])
     return (
         <Card
-            title={
-                <FormFilter
-                    searchText={searchText}
-                    onChange={handleSearchChange}
-                />
-            }
+            title={<FormFilter searchText={searchText} onChange={handleSearchChange} />}
             extra={
                 <Space size={"large"}>
                     <Space
@@ -120,7 +98,7 @@ function Home() {
                             overlay={menu}
                             trigger={["click"]}
                             placement={"bottom"}
-                            arrow={{ pointAtCenter: true }}
+                            arrow={{pointAtCenter: true}}
                         >
                             <span>Hiển thị {selectedValues.length}</span>
                         </Dropdown>
@@ -129,10 +107,10 @@ function Home() {
                     <Segmented
                         onChange={(value) => setIsGridView(value === "List")}
                         options={[
-                            { value: "List", icon: <BarsOutlined /> },
-                            { value: "Grid", icon: <AppstoreOutlined /> },
+                            {value: "List", icon: <BarsOutlined />},
+                            {value: "Grid", icon: <AppstoreOutlined />},
                         ]}
-                        style={{ marginRight: "16px" }}
+                        style={{marginRight: "16px"}}
                     />
                 </Space>
             }
@@ -157,8 +135,7 @@ function Home() {
                                     <b>Địa chỉ:</b> {item.home_Address}
                                 </p>
                                 <p>
-                                    <b>Giá thuê:</b>{" "}
-                                    {item.home_RentalPrice.toLocaleString()} VND
+                                    <b>Giá thuê:</b> {item.home_RentalPrice.toLocaleString()} VND
                                 </p>
                                 <p>
                                     <b>Chủ nhà:</b> {item.home_HostName}
@@ -172,6 +149,6 @@ function Home() {
                 </Row>
             )}
         </Card>
-    );
+    )
 }
-export default Home;
+export default Home
