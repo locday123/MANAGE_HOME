@@ -24,6 +24,7 @@ import {
 
 import { useNotification, notify } from "../../assets/NotificationProvider";
 import HomeModal from "./CustomerModal";
+import CustomerModal from "./CustomerModal";
 
 const handleDelete = (customerID, setData) => {
     deleteACustomer(customerID)
@@ -244,7 +245,7 @@ const SearchBar = ({
                     setCustomerData({});
                 }}
             >
-                <HomeModal
+                <CustomerModal
                     setCustomerData={setCustomerData}
                     customerData={customerData}
                 />

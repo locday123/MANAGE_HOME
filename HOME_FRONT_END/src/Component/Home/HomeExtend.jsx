@@ -3,6 +3,7 @@ import {
     AppstoreAddOutlined,
     DeleteTwoTone,
     EditTwoTone,
+    HomeTwoTone,
     MoreOutlined,
 } from "@ant-design/icons";
 import HomeModal from "./HomeModal";
@@ -27,7 +28,7 @@ const columnsTable = [
         title: "Giá thuê",
         dataIndex: "home_RentalPrice",
         align: "center",
-        width: "1rem",
+        width: "6rem",
         render: (vallue) => <Tag>{vallue.toLocaleString("vi")}</Tag>,
     },
     {
@@ -35,11 +36,13 @@ const columnsTable = [
         title: "CCCD Chủ nhà",
         dataIndex: "home_HostID",
         align: "center",
+        width: "8rem",
     },
     {
         key: "home_HostName",
         title: "Tên chủ nhà",
         dataIndex: "home_HostName",
+        width: "10rem",
     },
     {
         key: "home_HostPhoneNumber",
@@ -64,7 +67,7 @@ const columnsTable = [
         title: "Số tầng",
         dataIndex: "home_TotalFloors",
         align: "center",
-        width: "7rem",
+        width: "6rem",
     },
 
     {
@@ -79,7 +82,9 @@ const columnsTable = [
         title: "Thao tác",
         dataIndex: "created_at",
         align: "center",
-        width: "8rem",
+        width: "6rem",
+        fixed: "right",
+
         render: () => <ActionMenu />,
     },
 ];
@@ -138,11 +143,17 @@ const FormFilter = ({ searchText, onChange, setVisible, visible }) => {
                 </Col>
             </Row>
             <Modal
+                styles={{
+                    header: {
+                        marginBottom: "20px",
+                        textAlign: "center",
+                    },
+                }}
                 bodyStyle={{
                     overflowY: "scroll",
                     maxHeight: "calc(100vh - 240px)",
                 }}
-                title='THÊM NHÀ'
+                title='Tạo mới một nhà cho thuê'
                 open={visible}
                 destroyOnClose={true}
                 onCancel={() => {

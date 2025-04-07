@@ -7,7 +7,7 @@ import {
 } from "../../Service/Location/LocationSerivce";
 import dayjs from "dayjs";
 
-function HomeModal({ customerData, setCustomerData }) {
+function CustomerModal({ customerData, setCustomerData }) {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -244,4 +244,4 @@ function HomeModal({ customerData, setCustomerData }) {
     );
 }
 
-export default HomeModal;
+export default CustomerModal;

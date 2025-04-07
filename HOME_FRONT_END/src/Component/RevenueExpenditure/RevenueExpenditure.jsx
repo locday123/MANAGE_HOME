@@ -1,4 +1,4 @@
-import { Card, Table, Tag } from "antd";
+import { Card, Table } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 

@@ -86,6 +86,7 @@ function Customer() {
                         <Table
                             columns={columnsTable(setData, setVisible)}
                             dataSource={filteredData(data, searchText)}
+                            loading={data.length ? false : true}
                             pagination={false} // Ẩn pagination mặc định
                             onRow={(record) => ({
                                 onClick: () => {

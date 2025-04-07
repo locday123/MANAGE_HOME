@@ -1,7 +1,93 @@
-import { Form } from "antd";
-
+import {
+    Card,
+    DatePicker,
+    Form,
+    Input,
+    InputNumber,
+    Select,
+    Space,
+} from "antd";
+const { RangePicker } = DatePicker;
+import classnames from "classnames/bind";
+import style from "../../assets/ComponentCSS/Home/HomeModal.module.scss";
+const cx = classnames.bind(style);
 function HomeModal() {
-    return <Form></Form>;
+    return (
+        <Form layout='vertical'>
+            <Space direction='vertical'>
+                <Card title='Thông tin chủ nhà'>
+                    <Form.Item
+                        label='Căn cước công dân'
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter customer ID",
+                            },
+                        ]}
+                    >
+                        <Input.OTP length={12} />
+                    </Form.Item>
+                    <Form.Item
+                        label='Họ và tên'
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter customer ID",
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label='Số điện thoại'
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter customer ID",
+                            },
+                        ]}
+                    >
+                        <Input.OTP length={10} />
+                    </Form.Item>
+                </Card>
+                <Card title='Thông tin nhà thuê'>
+                    <Form.Item label='Giá thuê nhà'>
+                        <InputNumber
+                            style={{ width: "100%" }}
+                            defaultValue={1000}
+                            formatter={(value) =>
+                                ` ${value}`.replace(
+                                    /\B(?=(\d{3})+(?!\d))/g,
+                                    ","
+                                )
+                            }
+                        />
+                    </Form.Item>
+                    <Form.Item label='Địa chỉ'>
+                        <Space direction='vertical' style={{ width: "100%" }}>
+                            <Select placeholder='Tỉnh - Thành phố' />
+                            <Select placeholder='Quận - Huyện' />
+                            <Select placeholder='Phường - Xã' />
+                            <Input placeholder='Số nhà - Tên đường' />
+                        </Space>
+                    </Form.Item>
+                    <Form.Item label='Thời gian hợp đồng'>
+                        <RangePicker
+                            style={{ width: "100%" }}
+                            format='DD/MM/YYYY'
+                            allowClear
+                        />
+                    </Form.Item>
+                    <Form.Item label='Tình trạng'>
+                        <Select>
+                            <Option value='ACTIVE'>Active</Option>
+                            <Option value='INACTIVE'>Inactive</Option>
+                        </Select>
+                    </Form.Item>
+                </Card>
+            </Space>
+        </Form>
+    );
 }
 
 export default HomeModal;
