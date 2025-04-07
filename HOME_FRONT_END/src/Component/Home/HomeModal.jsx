@@ -25,7 +25,7 @@ function HomeModal() {
                             },
                         ]}
                     >
-                        <Input.OTP length={12} />
+                        <Input.OTP size='large' length={12} />
                     </Form.Item>
                     <Form.Item
                         label='Họ và tên'
@@ -36,7 +36,7 @@ function HomeModal() {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input size='large' />
                     </Form.Item>
                     <Form.Item
                         label='Số điện thoại'
@@ -47,12 +47,13 @@ function HomeModal() {
                             },
                         ]}
                     >
-                        <Input.OTP length={10} />
+                        <Input.OTP size='large' length={10} />
                     </Form.Item>
                 </Card>
                 <Card title='Thông tin nhà thuê'>
                     <Form.Item label='Giá thuê nhà'>
                         <InputNumber
+                            size='large'
                             style={{ width: "100%" }}
                             defaultValue={1000}
                             formatter={(value) =>
@@ -65,21 +66,28 @@ function HomeModal() {
                     </Form.Item>
                     <Form.Item label='Địa chỉ'>
                         <Space direction='vertical' style={{ width: "100%" }}>
-                            <Select placeholder='Tỉnh - Thành phố' />
-                            <Select placeholder='Quận - Huyện' />
-                            <Select placeholder='Phường - Xã' />
-                            <Input placeholder='Số nhà - Tên đường' />
+                            <Select
+                                size='large'
+                                placeholder='Tỉnh - Thành phố'
+                            />
+                            <Select size='large' placeholder='Quận - Huyện' />
+                            <Select size='large' placeholder='Phường - Xã' />
+                            <Input
+                                size='large'
+                                placeholder='Số nhà - Tên đường'
+                            />
                         </Space>
                     </Form.Item>
                     <Form.Item label='Thời gian hợp đồng'>
                         <RangePicker
+                            size='large'
                             style={{ width: "100%" }}
                             format='DD/MM/YYYY'
                             allowClear
                         />
                     </Form.Item>
                     <Form.Item label='Tình trạng'>
-                        <Select>
+                        <Select size='large'>
                             <Option value='ACTIVE'>Active</Option>
                             <Option value='INACTIVE'>Inactive</Option>
                         </Select>

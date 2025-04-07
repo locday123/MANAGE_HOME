@@ -143,17 +143,32 @@ const FormFilter = ({ searchText, onChange, setVisible, visible }) => {
                 </Col>
             </Row>
             <Modal
+                style={{ top: "1.3rem" }}
                 styles={{
                     header: {
-                        marginBottom: "20px",
-                        textAlign: "center",
+                        padding: "15px 0px",
+                        boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.03)",
                     },
                 }}
                 bodyStyle={{
                     overflowY: "scroll",
-                    maxHeight: "calc(100vh - 240px)",
+                    maxHeight: "calc(100vh - 11.5rem)",
+                    padding: "10px 20px 10px 10px",
                 }}
-                title='Tạo mới một nhà cho thuê'
+                width={{
+                    xs: "90%",
+                    sm: "80%",
+                    md: "70%",
+                    lg: "60%",
+                    xl: "50%",
+                    xxl: "40%",
+                }}
+                title={
+                    <Space style={{ fontSize: "20px" }}>
+                        <HomeTwoTone />
+                        <span>TẠO MỚI NHÀ CHO THUÊ</span>
+                    </Space>
+                }
                 open={visible}
                 destroyOnClose={true}
                 onCancel={() => {

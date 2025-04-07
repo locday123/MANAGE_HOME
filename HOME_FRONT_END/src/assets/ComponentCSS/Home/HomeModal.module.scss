@@ -1,6 +1,3 @@
-.box-title {
-    text-transform: uppercase;
-    background-color: blue;
-    width: 10rem;
-    position: relative;
+:global(.ant-modal-close) {
+    margin: 15px 0 !important;
 }
