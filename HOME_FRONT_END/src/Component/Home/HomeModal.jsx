@@ -1,13 +1,26 @@
-import {Card, DatePicker, Form, Input, InputNumber, Select, Space} from "antd"
-const {RangePicker} = DatePicker
-import classnames from "classnames/bind"
-import style from "../../assets/ComponentCSS/Home/HomeModal.module.scss"
-import AddressForm from "../Extend/Address/AddressForm"
-import {useEffect, useState} from "react"
-import {createAddressHandlers} from "../Extend/Address/useAddressHandler"
-import {getProvinces} from "../../Service/Location/LocationSerivce"
-const cx = classnames.bind(style)
-function HomeModal({homeData, setHomeData}) {
+import {
+    Card,
+    DatePicker,
+    Form,
+    Input,
+    InputNumber,
+    Select,
+    Space,
+} from "antd";
+const { RangePicker } = DatePicker;
+import classnames from "classnames/bind";
+import style from "../../assets/ComponentCSS/Home/HomeModal.module.scss";
+import AddressForm from "../Extend/Address/AddressForm";
+import { useEffect, useState } from "react";
+import { createAddressHandlers } from "../Extend/Address/useAddressHandler";
+import {
+    getDistricts,
+    getProvinces,
+    getWards,
+} from "../../Service/Location/LocationSerivce";
+import dayjs from "dayjs";
+const cx = classnames.bind(style);
+function HomeModal({ homeData, setHomeData }) {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -18,14 +31,13 @@ function HomeModal({homeData, setHomeData}) {
         loadingProvinces: true,
         loadingDistricts: false,
         loadingWards: false,
-    })
+    });
     const handleChange = (key, value) => {
-        setHomeData((prev) => ({...prev, [key]: value}))
-    }
-    const {handleProvinceChange, handleDistrictChange} = createAddressHandlers(
-        setLocationData,
-        handleChange
-    )
+        setHomeData((prev) => ({ ...prev, [key]: value }));
+    };
+    const { handleProvinceChange, handleDistrictChange } =
+        createAddressHandlers(setLocationData, handleChange);
+
     useEffect(() => {
         getProvinces()
             .then((res) => {
@@ -33,25 +45,73 @@ function HomeModal({homeData, setHomeData}) {
                     ...prev,
                     provinces: res.data,
                     loadingProvinces: false,
-                }))
+                }));
             })
-            .catch(() => setLocationData((prev) => ({...prev, loadingProvinces: false})))
-    }, [])
+            .catch(() =>
+                setLocationData((prev) => ({
+                    ...prev,
+                    loadingProvinces: false,
+                }))
+            );
+    }, []);
+    useEffect(() => {
+        const init = async () => {
+            // Bước 1: Load tỉnh
+            if (homeData?.home_Province) {
+                setLocationData((prev) => ({
+                    ...prev,
+                    selectedProvince: homeData.home_Province,
+                    loadingDistricts: true,
+                    loadingWards: true,
+                    districts: [],
+                    wards: [],
+                }));
+                handleChange("home_Province", homeData.home_Province);
+
+                const resDistricts = await getDistricts(homeData.home_Province);
+
+                setLocationData((prev) => ({
+                    ...prev,
+                    districts: resDistricts.data,
+                    loadingDistricts: false,
+                }));
+            }
+
+            // Bước 2: Load quận
+            if (homeData?.home_District) {
+                setLocationData((prev) => ({
+                    ...prev,
+                    selectedDistrict: homeData.home_District,
+                    loadingWards: true,
+                    wards: [],
+                }));
+                handleChange("home_District", homeData.home_District);
+
+                const resWards = await getWards(homeData.home_District);
+
+                setLocationData((prev) => ({
+                    ...prev,
+                    wards: resWards.data,
+                    loadingWards: false,
+                }));
+            }
+
+            // Bước 3: Gán lại ward nếu có
+            if (homeData?.home_Ward) {
+                handleChange("home_Ward", homeData.home_Ward);
+                setLocationData((prev) => ({
+                    ...prev,
+                    selectedWard: homeData.home_Ward,
+                }));
+            }
+        };
+
+        init();
+    }, [homeData?.home_Province, homeData?.home_District, homeData?.home_Ward]);
     return (
         <Form layout='vertical'>
             <Space direction='vertical'>
                 <Card title='Thông tin chủ nhà'>
-                    <Form.Item
-                        label='Căn cước công dân'
-                        rules={[
-                            {
-                                required: true,
-                                message: "Vui lòng nhập CCCD",
-                            },
-                        ]}
-                    >
-                        <Input.OTP size='large' length={12} />
-                    </Form.Item>
                     <Form.Item
                         label='Họ và tên'
                         rules={[
@@ -61,8 +121,27 @@ function HomeModal({homeData, setHomeData}) {
                             },
                         ]}
                     >
-                        <Input size='large' />
+                        <Input
+                            size='large'
+                            value={homeData?.home_HostName || ""}
+                        />
                     </Form.Item>
+                    <Form.Item
+                        label='Căn cước công dân'
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng nhập CCCD",
+                            },
+                        ]}
+                    >
+                        <Input.OTP
+                            size='large'
+                            length={12}
+                            value={homeData?.home_HostID || ""}
+                        />
+                    </Form.Item>
+
                     <Form.Item
                         label='Số điện thoại'
                         rules={[
@@ -73,7 +152,11 @@ function HomeModal({homeData, setHomeData}) {
                             },
                         ]}
                     >
-                        <Input.OTP size='large' length={10} />
+                        <Input.OTP
+                            size='large'
+                            length={10}
+                            value={homeData?.home_HostPhoneNumber || ""}
+                        />
                     </Form.Item>
                 </Card>
                 <Card title='Thông tin nhà thuê'>
@@ -90,9 +173,13 @@ function HomeModal({homeData, setHomeData}) {
                     <Form.Item label='Thời gian hợp đồng'>
                         <RangePicker
                             size='large'
-                            style={{width: "100%"}}
+                            style={{ width: "100%" }}
                             format='DD/MM/YYYY'
                             allowClear
+                            value={[
+                                dayjs(homeData.home_ContractFrom),
+                                dayjs(homeData.home_ContractTo),
+                            ]}
                         />
                     </Form.Item>
 
@@ -106,11 +193,17 @@ function HomeModal({homeData, setHomeData}) {
                         ]}
                     >
                         <InputNumber
+                            value={homeData?.home_RentalPrice || ""}
                             min={0}
                             placeholder='Giá thuê'
                             size='large'
-                            style={{width: "100%"}}
-                            formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                            style={{ width: "100%" }}
+                            formatter={(value) =>
+                                ` ${value}`.replace(
+                                    /\B(?=(\d{3})+(?!\d))/g,
+                                    ","
+                                )
+                            }
                         />
                     </Form.Item>
                     <Form.Item
@@ -123,22 +216,26 @@ function HomeModal({homeData, setHomeData}) {
                         ]}
                     >
                         <InputNumber
+                            value={homeData?.home_TotalFloors || ""}
                             placeholder='Số tầng'
                             min={0}
                             size='large'
-                            style={{width: "100%"}}
+                            style={{ width: "100%" }}
                         />
                     </Form.Item>
                     <Form.Item label='Tình trạng'>
-                        <Select size='large'>
-                            <Option value='ACTIVE'>Active</Option>
-                            <Option value='INACTIVE'>Inactive</Option>
+                        <Select
+                            size='large'
+                            value={homeData?.home_Status || ""}
+                        >
+                            <Option value='ACTIVE'>ACTIVE</Option>
+                            <Option value='INACTIVE'>INACTIVE</Option>
                         </Select>
                     </Form.Item>
                 </Card>
             </Space>
         </Form>
-    )
+    );
 }
 
-export default HomeModal
+export default HomeModal;

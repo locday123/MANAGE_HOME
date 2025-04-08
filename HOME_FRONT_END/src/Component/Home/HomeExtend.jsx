@@ -1,13 +1,13 @@
-import {Col, Input, Row, Tag, Button, Dropdown, Space, Modal} from "antd"
+import { Col, Input, Row, Tag, Button, Dropdown, Space, Modal } from "antd";
 import {
     AppstoreAddOutlined,
     DeleteTwoTone,
     EditTwoTone,
     HomeTwoTone,
     MoreOutlined,
-} from "@ant-design/icons"
-import HomeModal from "./HomeModal"
-const columnsTable = [
+} from "@ant-design/icons";
+import HomeModal from "./HomeModal";
+const columnsTable = (setVisible) => [
     {
         key: "home_ID",
         title: "ID",
@@ -85,14 +85,14 @@ const columnsTable = [
         width: "6rem",
         fixed: "right",
 
-        render: () => <ActionMenu />,
+        render: () => <ActionMenu setVisible={setVisible} />,
     },
-]
-const ActionMenu = () => {
+];
+const ActionMenu = ({ setVisible }) => {
     const items = [
         {
             label: (
-                <Space>
+                <Space onClick={() => setVisible(true)}>
                     <EditTwoTone />
                     Chỉnh sửa
                 </Space>
@@ -108,19 +108,26 @@ const ActionMenu = () => {
             ),
             key: "2",
         },
-    ]
+    ];
 
     return (
-        <Dropdown menu={{items}} trigger={["click"]} placement='bottomLeft'>
-            <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
+        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
         </Dropdown>
-    )
-}
+    );
+};
 
-const FormFilter = ({searchText, onChange, setVisible, visible, homeData, setHomeData}) => {
+const FormFilter = ({
+    searchText,
+    onChange,
+    setVisible,
+    visible,
+    homeData,
+    setHomeData,
+}) => {
     return (
         <>
-            <Row gutter={[24, 24]} style={{rowGap: "10px"}}>
+            <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
                 <Col xxl={4} xl={6} lg={8}>
                     <Input
                         allowClear
@@ -134,19 +141,22 @@ const FormFilter = ({searchText, onChange, setVisible, visible, homeData, setHom
                 </Col>
                 <Col>
                     <Button
-                        icon={<AppstoreAddOutlined style={{fontSize: "22px"}} />}
+                        icon={
+                            <AppstoreAddOutlined style={{ fontSize: "22px" }} />
+                        }
                         type='primary'
                         onClick={() => setVisible(true)}
                     />
                 </Col>
             </Row>
             <Modal
-                style={{top: "1.3rem"}}
+                style={{ top: "1.3rem" }}
                 styles={{
                     header: {
                         padding: "15px 0px",
                         boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.03)",
                     },
+
                     body: {
                         overflowY: "scroll",
                         maxHeight: "calc(100vh - 11.5rem)",
@@ -162,28 +172,28 @@ const FormFilter = ({searchText, onChange, setVisible, visible, homeData, setHom
                     xxl: "40%",
                 }}
                 title={
-                    <Space style={{fontSize: "20px"}}>
+                    <Space style={{ fontSize: "20px" }}>
                         <HomeTwoTone />
                         <span>TẠO MỚI NHÀ CHO THUÊ</span>
                     </Space>
                 }
                 open={visible}
-                destroyOnClose={true}
                 onCancel={() => {
-                    setVisible(false)
+                    setVisible(false);
+                    setHomeData({});
                 }}
             >
                 <HomeModal homeData={homeData} setHomeData={setHomeData} />
             </Modal>
         </>
-    )
-}
+    );
+};
 
 const actionsCard = () => (
     <Space size={"middle"}>
         <EditTwoTone key='edit' />
         <DeleteTwoTone key='delete' />
     </Space>
-)
+);
 
-export {columnsTable, FormFilter, actionsCard}
+export { columnsTable, FormFilter, actionsCard };
