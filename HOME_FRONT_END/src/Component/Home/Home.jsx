@@ -1,27 +1,18 @@
-import {
-    Card,
-    Checkbox,
-    Col,
-    Dropdown,
-    Menu,
-    Row,
-    Segmented,
-    Space,
-    Table,
-} from "antd";
-import { useEffect, useMemo, useState } from "react";
-import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
+import {Card, Checkbox, Col, Dropdown, Row, Segmented, Space, Table} from "antd"
+import {useEffect, useMemo, useState} from "react"
+import {AppstoreOutlined, BarsOutlined} from "@ant-design/icons"
 
-import { getAllHome } from "../../Service/Home//HomeSerivce";
-import { columnsTable, FormFilter, actionsCard } from "./HomeExtend";
+import {getAllHome} from "../../Service/Home//HomeSerivce"
+import {columnsTable, FormFilter, actionsCard} from "./HomeExtend"
 
 function Home() {
-    const [home, setHome] = useState([]);
-    const [searchText, setSearchText] = useState("");
-    const [visible, setVisible] = useState(false);
-    const [isGridView, setIsGridView] = useState("List");
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [hoveredCard, setHoveredCard] = useState(null);
+    const [home, setHome] = useState([])
+    const [searchText, setSearchText] = useState("")
+    const [visible, setVisible] = useState(false)
+    const [isGridView, setIsGridView] = useState("List")
+    const [dropdownOpen, setDropdownOpen] = useState(false)
+    const [hoveredCard, setHoveredCard] = useState(null)
+    const [homeData, setHomeData] = useState([])
 
     const [selectedValues, setSelectedValues] = useState([
         "home_ID",
@@ -31,40 +22,35 @@ function Home() {
         "home_Status",
         "action",
         "home_TotalFloors",
-    ]);
+    ])
 
     const filteredData = home.filter(
         (item) =>
             item.home_ID.toLowerCase().includes(searchText.toLowerCase()) ||
             item.home_Address.toLowerCase().includes(searchText.toLowerCase())
-    );
-    const allSelected = selectedValues.length === columnsTable.length;
+    )
+    const allSelected = selectedValues.length === columnsTable.length
     const handleSelectAll = (event) => {
-        event.stopPropagation(); // Ngăn dropdown bị đóng khi click
+        event.stopPropagation() // Ngăn dropdown bị đóng khi click
         if (allSelected) {
-            setSelectedValues([]); // Bỏ chọn tất cả
+            setSelectedValues([]) // Bỏ chọn tất cả
         } else {
-            setSelectedValues(columnsTable.map(({ key }) => key)); // Chọn tất cả
+            setSelectedValues(columnsTable.map(({key}) => key)) // Chọn tất cả
         }
-    };
+    }
     const handleCheckboxChange = (key, event) => {
-        event.stopPropagation(); // Ngăn dropdown bị đóng khi click
+        event.stopPropagation() // Ngăn dropdown bị đóng khi click
         setSelectedValues((prev) =>
-            prev.includes(key)
-                ? prev.filter((item) => item !== key)
-                : [...prev, key]
-        );
-        setDropdownOpen(true); // Giữ dropdown mở
-    };
+            prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+        )
+        setDropdownOpen(true) // Giữ dropdown mở
+    }
 
     const items = useMemo(() => {
-        return columnsTable.map(({ key, title }) => ({
+        return columnsTable.map(({key, title}) => ({
             key: key,
             label: (
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{ padding: "0px 10px" }}
-                >
+                <div onClick={(e) => e.stopPropagation()} style={{padding: "0px 10px"}}>
                     <Checkbox
                         checked={selectedValues.includes(key)}
                         onChange={(event) => handleCheckboxChange(key, event)}
@@ -73,23 +59,25 @@ function Home() {
                     </Checkbox>
                 </div>
             ),
-        }));
-    }, [columnsTable, selectedValues]);
-    const menu = <Menu items={items} />;
+        }))
+    }, [columnsTable, selectedValues])
+    const menu = {
+        items,
+    }
     const newColumns = columnsTable.map((item) =>
         Object.assign(Object.assign({}, item), {
             hidden: !selectedValues.includes(item.key),
         })
-    );
+    )
 
     const handleSearchChange = (e) => {
-        setSearchText(e.target.value);
-    };
+        setSearchText(e.target.value)
+    }
     useEffect(() => {
         getAllHome().then((value) => {
-            setHome(value);
-        });
-    }, []);
+            setHome(value)
+        })
+    }, [])
     return (
         <Card
             title={
@@ -98,6 +86,8 @@ function Home() {
                     onChange={handleSearchChange}
                     setVisible={setVisible}
                     visible={visible}
+                    homeData={homeData}
+                    setHomeData={setHomeData}
                 />
             }
             extra={
@@ -118,10 +108,10 @@ function Home() {
                             <Dropdown
                                 open={dropdownOpen} // Kiểm soát trạng thái dropdown
                                 onOpenChange={setDropdownOpen} // Cập nhật trạng thái khi click ngoài
-                                overlay={menu}
+                                menu={menu}
                                 trigger={["click"]}
                                 placement={"bottom"}
-                                arrow={{ pointAtCenter: true }}
+                                arrow={{pointAtCenter: true}}
                             >
                                 <span>Hiển thị {selectedValues.length}</span>
                             </Dropdown>
@@ -131,10 +121,10 @@ function Home() {
                     <Segmented
                         onChange={(value) => setIsGridView(value === "List")}
                         options={[
-                            { value: "List", icon: <BarsOutlined /> },
-                            { value: "Grid", icon: <AppstoreOutlined /> },
+                            {value: "List", icon: <BarsOutlined />},
+                            {value: "Grid", icon: <AppstoreOutlined />},
                         ]}
-                        style={{ marginRight: "16px" }}
+                        style={{marginRight: "16px"}}
                     />
                 </Space>
             }
@@ -156,23 +146,17 @@ function Home() {
                     {filteredData.map((item) => (
                         <Col xs={24} sm={12} md={8} lg={6} key={item.home_ID}>
                             <Card
-                                onMouseEnter={() =>
-                                    setHoveredCard(item.home_ID)
-                                }
+                                onMouseEnter={() => setHoveredCard(item.home_ID)}
                                 onMouseLeave={() => setHoveredCard(null)} // Reset khi rời chuột
                                 hoverable
                                 title={item.home_ID}
-                                extra={
-                                    hoveredCard === item?.home_ID &&
-                                    actionsCard()
-                                }
+                                extra={hoveredCard === item?.home_ID && actionsCard()}
                             >
                                 <p>
                                     <b>Địa chỉ:</b> {item.home_Address}
                                 </p>
                                 <p>
-                                    <b>Giá thuê:</b>{" "}
-                                    {item.home_RentalPrice.toLocaleString()} VND
+                                    <b>Giá thuê:</b> {item.home_RentalPrice.toLocaleString()} VND
                                 </p>
                                 <p>
                                     <b>Chủ nhà:</b> {item.home_HostName}
@@ -186,6 +170,6 @@ function Home() {
                 </Row>
             )}
         </Card>
-    );
+    )
 }
-export default Home;
+export default Home

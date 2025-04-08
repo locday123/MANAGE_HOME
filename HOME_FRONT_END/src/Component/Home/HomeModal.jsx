@@ -1,17 +1,42 @@
-import {
-    Card,
-    DatePicker,
-    Form,
-    Input,
-    InputNumber,
-    Select,
-    Space,
-} from "antd";
-const { RangePicker } = DatePicker;
-import classnames from "classnames/bind";
-import style from "../../assets/ComponentCSS/Home/HomeModal.module.scss";
-const cx = classnames.bind(style);
-function HomeModal() {
+import {Card, DatePicker, Form, Input, InputNumber, Select, Space} from "antd"
+const {RangePicker} = DatePicker
+import classnames from "classnames/bind"
+import style from "../../assets/ComponentCSS/Home/HomeModal.module.scss"
+import AddressForm from "../Extend/Address/AddressForm"
+import {useEffect, useState} from "react"
+import {createAddressHandlers} from "../Extend/Address/useAddressHandler"
+import {getProvinces} from "../../Service/Location/LocationSerivce"
+const cx = classnames.bind(style)
+function HomeModal({homeData, setHomeData}) {
+    const [locationData, setLocationData] = useState({
+        provinces: [],
+        districts: [],
+        wards: [],
+        selectedProvince: homeData?.home_Province || null,
+        selectedDistrict: homeData?.home_District || null,
+        selectedWard: homeData?.home_Ward || null,
+        loadingProvinces: true,
+        loadingDistricts: false,
+        loadingWards: false,
+    })
+    const handleChange = (key, value) => {
+        setHomeData((prev) => ({...prev, [key]: value}))
+    }
+    const {handleProvinceChange, handleDistrictChange} = createAddressHandlers(
+        setLocationData,
+        handleChange
+    )
+    useEffect(() => {
+        getProvinces()
+            .then((res) => {
+                setLocationData((prev) => ({
+                    ...prev,
+                    provinces: res.data,
+                    loadingProvinces: false,
+                }))
+            })
+            .catch(() => setLocationData((prev) => ({...prev, loadingProvinces: false})))
+    }, [])
     return (
         <Form layout='vertical'>
             <Space direction='vertical'>
@@ -21,7 +46,7 @@ function HomeModal() {
                         rules={[
                             {
                                 required: true,
-                                message: "Please enter customer ID",
+                                message: "Vui lòng nhập CCCD",
                             },
                         ]}
                     >
@@ -32,7 +57,7 @@ function HomeModal() {
                         rules={[
                             {
                                 required: true,
-                                message: "Please enter customer ID",
+                                message: "Vui lòng nhập họ và tên",
                             },
                         ]}
                     >
@@ -43,7 +68,8 @@ function HomeModal() {
                         rules={[
                             {
                                 required: true,
-                                message: "Please enter customer ID",
+                                message: "Vui lòng nhập số điện thoại",
+                                pattern: "^(0[3|5|7|8|9])[0-9]{8}$",
                             },
                         ]}
                     >
@@ -51,39 +77,56 @@ function HomeModal() {
                     </Form.Item>
                 </Card>
                 <Card title='Thông tin nhà thuê'>
-                    <Form.Item label='Giá thuê nhà'>
-                        <InputNumber
-                            size='large'
-                            style={{ width: "100%" }}
-                            defaultValue={1000}
-                            formatter={(value) =>
-                                ` ${value}`.replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ","
-                                )
-                            }
-                        />
-                    </Form.Item>
                     <Form.Item label='Địa chỉ'>
-                        <Space direction='vertical' style={{ width: "100%" }}>
-                            <Select
-                                size='large'
-                                placeholder='Tỉnh - Thành phố'
-                            />
-                            <Select size='large' placeholder='Quận - Huyện' />
-                            <Select size='large' placeholder='Phường - Xã' />
-                            <Input
-                                size='large'
-                                placeholder='Số nhà - Tên đường'
-                            />
-                        </Space>
+                        <AddressForm
+                            locationData={locationData}
+                            data={homeData}
+                            handleProvinceChange={handleProvinceChange}
+                            handleDistrictChange={handleDistrictChange}
+                            handleChange={handleChange}
+                            prefix='home_'
+                        />
                     </Form.Item>
                     <Form.Item label='Thời gian hợp đồng'>
                         <RangePicker
                             size='large'
-                            style={{ width: "100%" }}
+                            style={{width: "100%"}}
                             format='DD/MM/YYYY'
                             allowClear
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        label='Giá thuê'
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng thêm giá thuê",
+                            },
+                        ]}
+                    >
+                        <InputNumber
+                            min={0}
+                            placeholder='Giá thuê'
+                            size='large'
+                            style={{width: "100%"}}
+                            formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label='Số tầng'
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng thêm tầng",
+                            },
+                        ]}
+                    >
+                        <InputNumber
+                            placeholder='Số tầng'
+                            min={0}
+                            size='large'
+                            style={{width: "100%"}}
                         />
                     </Form.Item>
                     <Form.Item label='Tình trạng'>
@@ -95,7 +138,7 @@ function HomeModal() {
                 </Card>
             </Space>
         </Form>
-    );
+    )
 }
 
-export default HomeModal;
+export default HomeModal

@@ -1,13 +1,12 @@
-import { DatePicker, Form, Input, Select, Space } from "antd";
-import { useEffect, useState } from "react";
-import {
-    getDistricts,
-    getProvinces,
-    getWards,
-} from "../../Service/Location/LocationSerivce";
-import dayjs from "dayjs";
+import {DatePicker, Form, Input, Select} from "antd"
 
-function CustomerModal({ customerData, setCustomerData }) {
+import dayjs from "dayjs"
+import AddressForm from "../Extend/Address/AddressForm"
+import {createAddressHandlers} from "../Extend/Address/useAddressHandler"
+import {useEffect, useState} from "react"
+import {getDistricts, getProvinces, getWards} from "../../Service/Location/LocationSerivce"
+
+function CustomerModal({customerData, setCustomerData}) {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -18,210 +17,139 @@ function CustomerModal({ customerData, setCustomerData }) {
         loadingProvinces: true,
         loadingDistricts: false,
         loadingWards: false,
-    });
+    })
+    const handleChange = (key, value) => {
+        setCustomerData((prev) => ({...prev, [key]: value}))
+    }
+    const {handleProvinceChange, handleDistrictChange} = createAddressHandlers(
+        setLocationData,
+        handleChange
+    )
 
     useEffect(() => {
         getProvinces()
-            .then((value) => {
+            .then((res) => {
                 setLocationData((prev) => ({
                     ...prev,
-                    provinces: value.data,
+                    provinces: res.data,
                     loadingProvinces: false,
-                }));
+                }))
             })
-            .catch(() =>
-                setLocationData((prev) => ({
-                    ...prev,
-                    loadingProvinces: false,
-                }))
-            );
-    }, []);
+            .catch(() => setLocationData((prev) => ({...prev, loadingProvinces: false})))
+    }, [])
 
     useEffect(() => {
-        if (customerData?.customer_Province) {
-            handleProvinceChange(customerData.customer_Province, false);
-        }
-    }, [customerData?.customer_Province]);
-
-    useEffect(() => {
-        if (customerData?.customer_District) {
-            handleDistrictChange(customerData.customer_District, false);
-        }
-    }, [customerData?.customer_District]);
-
-    const handleChange = (key, value) => {
-        setCustomerData((prev) => ({ ...prev, [key]: value }));
-    };
-
-    const handleProvinceChange = (provinceId, reset = true) => {
-        setLocationData((prev) => ({
-            ...prev,
-            selectedProvince: provinceId,
-            selectedDistrict: reset ? null : prev.selectedDistrict,
-            selectedWard: reset ? null : prev.selectedWard,
-            districts: reset ? [] : prev.districts,
-            wards: reset ? [] : prev.wards,
-            loadingDistricts: true,
-        }));
-        handleChange("customer_Province", provinceId);
-        if (reset) {
-            handleChange("customer_District", null);
-            handleChange("customer_Ward", null);
-        }
-
-        getDistricts(provinceId)
-            .then((value) =>
+        const init = async () => {
+            // Bước 1: Load tỉnh
+            if (customerData?.customer_Province) {
                 setLocationData((prev) => ({
                     ...prev,
-                    districts: value.data,
-                    loadingDistricts: false,
+                    selectedProvince: customerData.customer_Province,
+                    loadingDistricts: true,
+                    loadingWards: true,
+                    districts: [],
+                    wards: [],
                 }))
-            )
-            .catch(() =>
+                handleChange("customer_Province", customerData.customer_Province)
+
+                const resDistricts = await getDistricts(customerData.customer_Province)
+
                 setLocationData((prev) => ({
                     ...prev,
+                    districts: resDistricts.data,
                     loadingDistricts: false,
                 }))
-            );
-    };
-
-    const handleDistrictChange = async (districtId) => {
-        setLocationData((prev) => ({
-            ...prev,
-            selectedDistrict: districtId,
-            selectedWard: null,
-            wards: [],
-            loadingWards: true,
-        }));
-
-        handleChange("customer_District", districtId);
-        handleChange("customer_Ward", null);
-
-        try {
-            const { data } = await getWards(districtId);
-            setLocationData((prev) => ({
-                ...prev,
-                wards: data,
-                loadingWards: false,
-            }));
-
-            if (data.length > 0) {
-                handleChange("customer_Ward", data[0].id);
             }
-        } catch (error) {
-            console.error("Lỗi khi lấy phường/xã:", error);
-            setLocationData((prev) => ({ ...prev, loadingWards: false }));
+
+            // Bước 2: Load quận
+            if (customerData?.customer_District) {
+                setLocationData((prev) => ({
+                    ...prev,
+                    selectedDistrict: customerData.customer_District,
+                    loadingWards: true,
+                    wards: [],
+                }))
+                handleChange("customer_District", customerData.customer_District)
+
+                const resWards = await getWards(customerData.customer_District)
+
+                setLocationData((prev) => ({
+                    ...prev,
+                    wards: resWards.data,
+                    loadingWards: false,
+                }))
+            }
+
+            // Bước 3: Gán lại ward nếu có
+            if (customerData?.customer_Ward) {
+                handleChange("customer_Ward", customerData.customer_Ward)
+                setLocationData((prev) => ({
+                    ...prev,
+                    selectedWard: customerData.customer_Ward,
+                }))
+            }
         }
-    };
+
+        init()
+    }, [
+        customerData?.customer_Province,
+        customerData?.customer_District,
+        customerData?.customer_Ward,
+    ])
 
     return (
         <Form layout='vertical'>
             {!customerData?.customer_ID && (
                 <Form.Item
                     label='Căn cước công dân'
-                    rules={[
-                        { required: true, message: "Please enter customer ID" },
-                    ]}
+                    rules={[{required: true, message: "Please enter customer ID"}]}
                 >
                     <Input.OTP
+                        size='large'
                         length={12}
                         value={customerData?.customer_ID || ""}
                         onChange={(value) => handleChange("customer_ID", value)}
                     />
                 </Form.Item>
             )}
-            <Form.Item
-                label='Họ tên'
-                rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-            >
+            <Form.Item label='Họ tên' rules={[{required: true, message: "Vui lòng nhập họ tên"}]}>
                 <Input
+                    size='large'
                     value={customerData?.customer_Name || ""}
-                    onChange={(e) =>
-                        handleChange("customer_Name", e.target.value)
-                    }
+                    onChange={(e) => handleChange("customer_Name", e.target.value)}
                 />
             </Form.Item>
             <Form.Item
                 label='Số điện thoại'
-                rules={[
-                    { required: true, message: "Vui lòng nhập số điện thoại" },
-                ]}
+                rules={[{required: true, message: "Vui lòng nhập số điện thoại"}]}
             >
                 <Input.OTP
+                    size='large'
                     length={10}
                     value={customerData?.customer_PhoneNumber || ""}
-                    onChange={(value) =>
-                        handleChange("customer_PhoneNumber", value)
-                    }
+                    onChange={(value) => handleChange("customer_PhoneNumber", value)}
                 />
             </Form.Item>
 
             <Form.Item label='Địa chỉ'>
-                <Space direction='vertical' style={{ width: "100%" }}>
-                    <Select
-                        placeholder='Tỉnh - Thành phố'
-                        value={locationData.selectedProvince}
-                        loading={locationData.loadingProvinces}
-                        onChange={(value) => handleProvinceChange(value)}
-                        options={locationData.provinces.map(
-                            ({ id, full_name }) => ({
-                                key: id,
-                                value: id,
-                                label: full_name,
-                            })
-                        )}
-                    />
-                    <Select
-                        placeholder='Quận - Huyện'
-                        value={locationData.selectedDistrict}
-                        loading={locationData.loadingDistricts}
-                        onChange={(value) => handleDistrictChange(value)}
-                        options={locationData.districts.map(
-                            ({ id, full_name }) => ({
-                                key: id,
-                                value: id,
-                                label: full_name,
-                            })
-                        )}
-                    />
-                    <Select
-                        placeholder='Phường - Xã'
-                        value={
-                            locationData.wards.some(
-                                (w) => w.id === customerData?.customer_Ward
-                            )
-                                ? customerData.customer_Ward
-                                : null
-                        }
-                        loading={locationData.loadingWards}
-                        onChange={(value) =>
-                            handleChange("customer_Ward", value)
-                        }
-                        options={locationData.wards.map(
-                            ({ id, full_name }) => ({
-                                key: id,
-                                value: id,
-                                label: full_name,
-                            })
-                        )}
-                    />
-                    <Input
-                        placeholder='Số nhà - Tên đường'
-                        value={customerData?.customer_Address || ""}
-                        onChange={(e) =>
-                            handleChange("customer_Address", e.target.value)
-                        }
-                    />
-                </Space>
+                <AddressForm
+                    locationData={locationData}
+                    data={customerData}
+                    handleProvinceChange={handleProvinceChange}
+                    handleDistrictChange={handleDistrictChange}
+                    handleChange={handleChange}
+                    prefix='customer_'
+                />
             </Form.Item>
 
             <Form.Item
                 label='Ngày sinh'
-                rules={[{ required: true, message: "Vui lòng nhập ngày sinh" }]}
+                rules={[{required: true, message: "Vui lòng nhập ngày sinh"}]}
             >
                 <DatePicker
+                    size='large'
                     format='DD/MM/YYYY'
-                    style={{ width: "100%" }}
+                    style={{width: "100%"}}
                     value={
                         customerData?.customer_Date
                             ? dayjs(customerData.customer_Date, "YYYY-MM-DD")
@@ -233,6 +161,7 @@ function CustomerModal({ customerData, setCustomerData }) {
 
             <Form.Item label='Tình trạng'>
                 <Select
+                    size='large'
                     value={customerData?.customer_Status || "ACTIVE"}
                     onChange={(value) => handleChange("customer_Status", value)}
                 >
@@ -241,7 +170,7 @@ function CustomerModal({ customerData, setCustomerData }) {
                 </Select>
             </Form.Item>
         </Form>
-    );
+    )
 }
 
-export default CustomerModal;
+export default CustomerModal
