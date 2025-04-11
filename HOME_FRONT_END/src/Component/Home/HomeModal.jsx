@@ -124,6 +124,9 @@ function HomeModal({ homeData, setHomeData }) {
                         <Input
                             size='large'
                             value={homeData?.home_HostName || ""}
+                            onChange={(e) =>
+                                handleChange("home_HostName", e.target.value)
+                            }
                         />
                     </Form.Item>
                     <Form.Item
@@ -139,6 +142,9 @@ function HomeModal({ homeData, setHomeData }) {
                             size='large'
                             length={12}
                             value={homeData?.home_HostID || ""}
+                            onChange={(value) =>
+                                handleChange("home_HostID", value)
+                            }
                         />
                     </Form.Item>
 
@@ -156,6 +162,9 @@ function HomeModal({ homeData, setHomeData }) {
                             size='large'
                             length={10}
                             value={homeData?.home_HostPhoneNumber || ""}
+                            onChange={(value) =>
+                                handleChange("home_HostPhoneNumber", value)
+                            }
                         />
                     </Form.Item>
                 </Card>
@@ -180,6 +189,23 @@ function HomeModal({ homeData, setHomeData }) {
                                 dayjs(homeData.home_ContractFrom),
                                 dayjs(homeData.home_ContractTo),
                             ]}
+                            onChange={(dates, dateStrings) => {
+                                if (dates) {
+                                    // Cập nhật home_ContractFrom và home_ContractTo trong homeData
+                                    handleChange(
+                                        "home_ContractFrom",
+                                        dateStrings[0]
+                                    ); // hoặc dates[0] nếu muốn lưu đối tượng dayjs
+                                    handleChange(
+                                        "home_ContractTo",
+                                        dateStrings[1]
+                                    ); // hoặc dates[1]
+                                } else {
+                                    // Xử lý khi clear (đặt lại giá trị mặc định)
+                                    handleChange("home_ContractFrom", "");
+                                    handleChange("home_ContractTo", "");
+                                }
+                            }}
                         />
                     </Form.Item>
 
@@ -204,6 +230,9 @@ function HomeModal({ homeData, setHomeData }) {
                                     ","
                                 )
                             }
+                            onChange={(value) =>
+                                handleChange("home_RentalPrice", value)
+                            }
                         />
                     </Form.Item>
                     <Form.Item
@@ -221,12 +250,18 @@ function HomeModal({ homeData, setHomeData }) {
                             min={0}
                             size='large'
                             style={{ width: "100%" }}
+                            onChange={(value) =>
+                                handleChange("home_TotalFloors", value)
+                            }
                         />
                     </Form.Item>
                     <Form.Item label='Tình trạng'>
                         <Select
                             size='large'
                             value={homeData?.home_Status || ""}
+                            onChange={(value) =>
+                                handleChange("home_Status", value)
+                            }
                         >
                             <Option value='ACTIVE'>ACTIVE</Option>
                             <Option value='INACTIVE'>INACTIVE</Option>

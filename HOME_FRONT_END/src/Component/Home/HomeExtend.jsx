@@ -3,10 +3,14 @@ import {
     AppstoreAddOutlined,
     DeleteTwoTone,
     EditTwoTone,
-    HomeTwoTone,
     MoreOutlined,
+    HomeTwoTone,
+    SaveOutlined,
+    PlusOutlined,
 } from "@ant-design/icons";
 import HomeModal from "./HomeModal";
+import { addHome, updateHome } from "../../Service/Home/HomeSerivce";
+import { useNotification, notify } from "../../assets/NotificationProvider";
 const columnsTable = (setVisible) => [
     {
         key: "home_ID",
@@ -119,12 +123,59 @@ const ActionMenu = ({ setVisible }) => {
 
 const FormFilter = ({
     searchText,
+    setHome,
     onChange,
     setVisible,
     visible,
     homeData,
     setHomeData,
 }) => {
+    const { openNotification } = useNotification();
+    const handleOk = () => {
+        if (homeData?.id) {
+            updateHome(homeData.id, homeData)
+                .then(() => {
+                    setVisible(false);
+                    setHome((prevData) =>
+                        prevData.map((item) =>
+                            item.id === homeData.id
+                                ? { ...item, ...homeData }
+                                : item
+                        )
+                    );
+                    openNotification(
+                        "success",
+                        "Tin nhắn hệ thống",
+                        "Cập nhật nhà cho thuê thành công !"
+                    );
+                })
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi cập nhật"
+                    )
+                );
+        } else {
+            addHome(homeData)
+                .then(() => {
+                    setVisible(false);
+                    setHome((prevData) => [...prevData, homeData]);
+                    openNotification(
+                        "success",
+                        "Tin nhắn hệ thống",
+                        "Thêm mới nhà cho thuê thành công !"
+                    );
+                })
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi thêm mới"
+                    )
+                );
+        }
+    };
     return (
         <>
             <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
@@ -153,8 +204,12 @@ const FormFilter = ({
                 style={{ top: "1.3rem" }}
                 styles={{
                     header: {
-                        padding: "15px 0px",
-                        boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.03)",
+                        padding: "16px 24px",
+                        borderBottom: "1px solid #f0f0f0",
+                        background: "#fafafa",
+                        borderRadius: "8px 8px 0 0",
+                        marginBottom: "0",
+                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
                     },
 
                     body: {
@@ -172,16 +227,94 @@ const FormFilter = ({
                     xxl: "40%",
                 }}
                 title={
-                    <Space style={{ fontSize: "20px" }}>
-                        <HomeTwoTone />
-                        <span>TẠO MỚI NHÀ CHO THUÊ</span>
-                    </Space>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px",
+                            fontWeight: "600",
+                            fontSize: "18px",
+                            color: "#1d1d1d",
+                            flex: 1, // Thêm dòng này để title chiếm hết không gian còn lại
+                            paddingRight: "40px", // Tăng khoảng cách để không đè lên nút đóng
+                        }}
+                    >
+                        <HomeTwoTone
+                            twoToneColor='#1890ff'
+                            style={{ fontSize: "24px" }}
+                        />
+                        <span>
+                            {!homeData?.home_ID
+                                ? "TẠO MỚI NHÀ CHO THUÊ"
+                                : "CẬP NHẬT NHÀ CHO THUÊ"}
+                        </span>
+                    </div>
                 }
                 open={visible}
                 onCancel={() => {
                     setVisible(false);
                     setHomeData({});
                 }}
+                closable={false}
+                footer={
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            padding: "16px 24px",
+                            borderTop: "1px solid #f0f0f0",
+                        }}
+                    >
+                        {/* Phần bên trái (nếu cần thêm nội dung) */}
+                        <div>
+                            {/* Có thể thêm text hướng dẫn hoặc icon tại đây */}
+                        </div>
+
+                        {/* Nhóm nút hành động */}
+                        <Space size='middle'>
+                            <Button
+                                key='cancel'
+                                size='large'
+                                style={{
+                                    minWidth: "120px",
+                                    height: "40px",
+                                    borderRadius: "4px",
+                                }}
+                                onClick={() => {
+                                    setVisible(false);
+                                    setHomeData({});
+                                }}
+                            >
+                                Hủy bỏ
+                            </Button>
+                            <Button
+                                key='submit'
+                                type='primary'
+                                size='large'
+                                style={{
+                                    minWidth: "120px",
+                                    height: "40px",
+                                    borderRadius: "4px",
+                                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                }}
+                                onClick={handleOk}
+                            >
+                                {!homeData?.home_ID ? (
+                                    <Space>
+                                        <PlusOutlined />
+                                        Tạo mới
+                                    </Space>
+                                ) : (
+                                    <Space>
+                                        <SaveOutlined />
+                                        Lưu thay đổi
+                                    </Space>
+                                )}
+                            </Button>
+                        </Space>
+                    </div>
+                }
             >
                 <HomeModal homeData={homeData} setHomeData={setHomeData} />
             </Modal>
