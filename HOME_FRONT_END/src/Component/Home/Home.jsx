@@ -93,6 +93,7 @@ function Home() {
             setHome(value);
         });
     }, []);
+
     return (
         <Card
             title={
@@ -103,6 +104,7 @@ function Home() {
                     visible={visible}
                     homeData={homeData}
                     setHomeData={setHomeData}
+                    setHome={setHome}
                 />
             }
             extra={

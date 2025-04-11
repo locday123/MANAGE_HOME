@@ -1,30 +1,53 @@
-import {Input, Tag, Col, Row, Button, Modal, Dropdown, Space, Avatar} from "antd"
+import {
+    Input,
+    Tag,
+    Col,
+    Row,
+    Button,
+    Modal,
+    Dropdown,
+    Space,
+    Avatar,
+} from "antd";
 import {
     UserAddOutlined,
     UserOutlined,
-    EditTwoTone,
     MoreOutlined,
     DeleteTwoTone,
-} from "@ant-design/icons"
-import {addCustomer, deleteACustomer, updatedCustomer} from "../../Service/Customer/CustomerService"
+    EditTwoTone,
+    CloseOutlined,
+    PlusOutlined,
+    EditOutlined,
+} from "@ant-design/icons";
+import {
+    addCustomer,
+    deleteACustomer,
+    updatedCustomer,
+} from "../../Service/Customer/CustomerService";
 
-import {useNotification, notify} from "../../assets/NotificationProvider"
-import CustomerModal from "./CustomerModal"
+import { useNotification, notify } from "../../assets/NotificationProvider";
+import CustomerModal from "./CustomerModal";
 
 const handleDelete = (customerID, setData) => {
     deleteACustomer(customerID)
         .then(() => {
             setData((prevData) =>
-                prevData.filter((customer) => customer.customer_ID !== customerID)
-            )
-            notify("success", "Xóa thành công", `Đã xóa mục có ID: ${customerID}`)
+                prevData.filter(
+                    (customer) => customer.customer_ID !== customerID
+                )
+            );
+            notify(
+                "success",
+                "Xóa thành công",
+                `Đã xóa mục có ID: ${customerID}`
+            );
         })
         .catch((error) => {
-            console.log(error)
-        })
-}
+            console.log(error);
+        });
+};
 
-const ActionMenu = ({rowData, onDelete, setData, setVisible}) => {
+const ActionMenu = ({ rowData, onDelete, setData, setVisible }) => {
     const items = [
         {
             label: (
@@ -37,27 +60,31 @@ const ActionMenu = ({rowData, onDelete, setData, setVisible}) => {
         },
         {
             label: (
-                <Space onClick={() => onDelete(rowData.customer_ID || rowData.id, setData)}>
+                <Space
+                    onClick={() =>
+                        onDelete(rowData.customer_ID || rowData.id, setData)
+                    }
+                >
                     <DeleteTwoTone />
                     Xóa
                 </Space>
             ),
             key: "2",
         },
-    ]
+    ];
 
     return (
-        <Dropdown menu={{items}} trigger={["click"]} placement='bottomLeft'>
-            <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
+        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
         </Dropdown>
-    )
-}
+    );
+};
 const actionsCard = (setVisible) => (
     <Space size={"middle"}>
         <EditTwoTone key='edit' onClick={() => setVisible(true)} />
         <DeleteTwoTone key='delete' />
     </Space>
-)
+);
 
 const columnsTable = (setData, setVisible) => [
     {
@@ -125,7 +152,7 @@ const columnsTable = (setData, setVisible) => [
             />
         ),
     },
-]
+];
 
 const SearchBar = ({
     searchText,
@@ -136,38 +163,56 @@ const SearchBar = ({
     customerData,
     setCustomerData,
 }) => {
-    const {openNotification} = useNotification()
+    const { openNotification } = useNotification();
 
     const handleSearch = (e) => {
-        setSearchText(e.target.value)
-    }
+        setSearchText(e.target.value);
+    };
     const handleOk = () => {
         if (customerData?.id) {
             updatedCustomer(customerData.id, customerData)
                 .then(() => {
-                    setVisible(false)
+                    setVisible(false);
                     setData((prevData) =>
                         prevData.map((item) =>
-                            item.id === customerData.id ? {...item, ...customerData} : item
+                            item.id === customerData.id
+                                ? { ...item, ...customerData }
+                                : item
                         )
-                    )
+                    );
                     openNotification(
                         "success",
                         "Tin nhắn hệ thống",
                         "Cập nhật khách hàng thành công!"
-                    )
+                    );
                 })
-                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi cập nhật"))
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi cập nhật"
+                    )
+                );
         } else {
             addCustomer(customerData)
                 .then(() => {
-                    setVisible(false)
-                    setData((prevData) => [...prevData, customerData])
-                    openNotification("success", "Tin nhắn hệ thống", "Thêm khách hàng thành công")
+                    setVisible(false);
+                    setData((prevData) => [...prevData, customerData]);
+                    openNotification(
+                        "success",
+                        "Tin nhắn hệ thống",
+                        "Thêm khách hàng thành công"
+                    );
                 })
-                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi thêm mới"))
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi thêm mới"
+                    )
+                );
         }
-    }
+    };
 
     return (
         <>
@@ -177,30 +222,36 @@ const SearchBar = ({
                         value={searchText}
                         placeholder='Tên khách hàng | ID (CCCD) | Số điện thoại'
                         onChange={handleSearch}
-                        style={{width: "100%"}}
+                        style={{ width: "100%" }}
                     />
                 </Col>
                 <Col span={1}>
                     <Button
-                        icon={<UserAddOutlined style={{fontSize: "22px"}} />}
+                        icon={<UserAddOutlined style={{ fontSize: "22px" }} />}
                         type='primary'
                         onClick={() => setVisible(true)}
                     />
                 </Col>
             </Row>
             <Modal
-                style={{top: "1.3rem"}}
+                style={{ top: "1.3rem" }}
                 styles={{
                     header: {
-                        padding: "15px 0px",
-                        boxShadow: "0 4px 2px -2px rgba(0, 0, 0, 0.03)",
+                        padding: "16px 24px",
+                        borderBottom: "1px solid #f0f0f0",
+                        background: "#fafafa",
+                        borderRadius: "8px 8px 0 0",
+                        marginBottom: "0",
+                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
                     },
+
                     body: {
-                        overflowY: "scroll",
+                        overflowY: "auto",
                         maxHeight: "calc(100vh - 11.5rem)",
-                        padding: "10px 20px 10px 10px",
+                        padding: "24px",
                     },
                 }}
+                closable={false}
                 width={{
                     xs: "90%",
                     sm: "80%",
@@ -210,36 +261,80 @@ const SearchBar = ({
                     xxl: "40%",
                 }}
                 title={
-                    <Space style={{fontSize: "20px"}}>
-                        <UserOutlined />
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px",
+                            fontWeight: "600",
+                            fontSize: "18px",
+                            color: "#1d1d1d",
+                            flex: 1, // Thêm dòng này để title chiếm hết không gian còn lại
+                            paddingRight: "40px", // Tăng khoảng cách để không đè lên nút đóng
+                        }}
+                    >
+                        <UserOutlined style={{ fontSize: "22px" }} />
                         <span>
                             {!customerData?.customer_ID
                                 ? "THÊM KHÁCH THUÊ NHÀ"
                                 : "CẬP NHẬT THÔNG TIN KHÁCH THUÊ NHÀ"}
                         </span>
-                    </Space>
+                    </div>
                 }
                 open={visible}
                 onOk={handleOk}
                 onCancel={() => {
-                    setVisible(false)
-                    setCustomerData({})
+                    setVisible(false);
+                    setCustomerData({});
                 }}
+                footer={[
+                    <Button
+                        key='cancel'
+                        icon={<CloseOutlined />}
+                        onClick={() => {
+                            setVisible(false);
+                            setHomeData({});
+                        }}
+                    >
+                        Hủy bỏ
+                    </Button>,
+                    <Button
+                        key='submit'
+                        type='primary'
+                        icon={
+                            !customerData?.customer_ID ? (
+                                <PlusOutlined />
+                            ) : (
+                                <EditOutlined />
+                            )
+                        }
+                        onClick={handleOk}
+                    >
+                        {!customerData?.customer_ID ? "Tạo mới" : "Cập nhật"}
+                    </Button>,
+                ]}
             >
-                <CustomerModal setCustomerData={setCustomerData} customerData={customerData} />
+                <CustomerModal
+                    setCustomerData={setCustomerData}
+                    customerData={customerData}
+                />
             </Modal>
         </>
-    )
-} // Form tìm kiếm + button thêm khách hàng
+    );
+}; // Form tìm kiếm + button thêm khách hàng
 
 const filteredData = (data, searchText) => {
     const filterValue = data.filter((item) => {
-        const filterName = item.customer_Name.toLowerCase().includes(searchText.toLowerCase())
-        const filterID = item.customer_ID.toString().includes(searchText)
-        const filterPhoneNumber = item.customer_PhoneNumber.toString().includes(searchText)
-        return filterName || filterID || filterPhoneNumber
-    })
-    return filterValue
-} // Tìm kiếm Customer
+        const filterName = item.customer_Name
+            .toLowerCase()
+            .includes(searchText.toLowerCase());
+        const filterID = item.customer_ID.toString().includes(searchText);
+        const filterPhoneNumber = item.customer_PhoneNumber
+            .toString()
+            .includes(searchText);
+        return filterName || filterID || filterPhoneNumber;
+    });
+    return filterValue;
+}; // Tìm kiếm Customer
 
-export {columnsTable, SearchBar, actionsCard, filteredData}
+export { columnsTable, SearchBar, actionsCard, filteredData };
