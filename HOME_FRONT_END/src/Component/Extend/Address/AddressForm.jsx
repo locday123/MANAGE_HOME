@@ -1,5 +1,5 @@
-import { Input, Select, Space } from "antd";
-import { debounce } from "lodash";
+import {Input, Select, Space} from "antd"
+
 function AddressForm({
     locationData,
     data,
@@ -8,19 +8,18 @@ function AddressForm({
     handleChange,
     prefix,
 }) {
-    const getField = (field) => data?.[`${prefix}${field}`] ?? "";
-    const setField = (field, value) => handleChange(`${prefix}${field}`, value);
-    const debouncedHandleDistrictChange = debounce(handleDistrictChange, 300);
+    const getField = (field) => data?.[`${prefix}${field}`] ?? ""
+    const setField = (field, value) => handleChange(`${prefix}${field}`, value)
 
     return (
-        <Space direction='vertical' style={{ width: "100%" }}>
+        <Space direction='vertical' style={{width: "100%"}}>
             <Select
                 size='large'
                 placeholder='Tỉnh - Thành phố'
                 value={locationData.selectedProvince}
                 loading={locationData.loadingProvinces}
                 onChange={(value) => handleProvinceChange(setField, value)}
-                options={locationData.provinces.map(({ id, full_name }) => ({
+                options={locationData.provinces.map(({id, full_name}) => ({
                     key: id,
                     value: id,
                     label: full_name,
@@ -31,10 +30,8 @@ function AddressForm({
                 placeholder='Quận - Huyện'
                 value={locationData.selectedDistrict}
                 loading={locationData.loadingDistricts}
-                onChange={(value) =>
-                    debouncedHandleDistrictChange(setField, value)
-                }
-                options={locationData.districts.map(({ id, full_name }) => ({
+                onChange={(value) => handleDistrictChange(setField, value)}
+                options={locationData.districts.map(({id, full_name}) => ({
                     key: id,
                     value: id,
                     label: full_name,
@@ -46,7 +43,7 @@ function AddressForm({
                 value={getField("Ward").toString() || null}
                 loading={locationData.loadingWards}
                 onChange={(value) => setField("Ward", value)}
-                options={locationData.wards.map(({ id, full_name }) => ({
+                options={locationData.wards.map(({id, full_name}) => ({
                     key: id,
                     value: id,
                     label: full_name,
@@ -59,7 +56,7 @@ function AddressForm({
                 onChange={(e) => setField("Address", e.target.value)}
             />
         </Space>
-    );
+    )
 }
 
-export default AddressForm;
+export default AddressForm

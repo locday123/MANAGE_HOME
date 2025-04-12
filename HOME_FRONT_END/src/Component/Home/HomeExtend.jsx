@@ -1,16 +1,15 @@
-import { Col, Input, Row, Tag, Button, Dropdown, Space, Modal } from "antd";
+import {Col, Input, Row, Tag, Button, Dropdown, Space, Modal} from "antd"
 import {
     AppstoreAddOutlined,
     DeleteTwoTone,
     EditTwoTone,
     MoreOutlined,
     HomeTwoTone,
-    SaveOutlined,
-    PlusOutlined,
-} from "@ant-design/icons";
-import HomeModal from "./HomeModal";
-import { addHome, updateHome } from "../../Service/Home/HomeSerivce";
-import { useNotification, notify } from "../../assets/NotificationProvider";
+} from "@ant-design/icons"
+import HomeModal from "./HomeModal"
+import {addHome, updateHome} from "../../Service/Home/HomeSerivce"
+import {useNotification, notify} from "../../assets/NotificationProvider"
+import CustomModal from "../Extend/Modal/CustomModal"
 const columnsTable = (setVisible) => [
     {
         key: "home_ID",
@@ -91,8 +90,8 @@ const columnsTable = (setVisible) => [
 
         render: () => <ActionMenu setVisible={setVisible} />,
     },
-];
-const ActionMenu = ({ setVisible }) => {
+]
+const ActionMenu = ({setVisible}) => {
     const items = [
         {
             label: (
@@ -112,14 +111,14 @@ const ActionMenu = ({ setVisible }) => {
             ),
             key: "2",
         },
-    ];
+    ]
 
     return (
-        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
-            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+        <Dropdown menu={{items}} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
         </Dropdown>
-    );
-};
+    )
+}
 
 const FormFilter = ({
     searchText,
@@ -130,55 +129,41 @@ const FormFilter = ({
     homeData,
     setHomeData,
 }) => {
-    const { openNotification } = useNotification();
+    const {openNotification} = useNotification()
     const handleOk = () => {
         if (homeData?.id) {
             updateHome(homeData.id, homeData)
                 .then(() => {
-                    setVisible(false);
+                    setVisible(false)
                     setHome((prevData) =>
                         prevData.map((item) =>
-                            item.id === homeData.id
-                                ? { ...item, ...homeData }
-                                : item
+                            item.id === homeData.id ? {...item, ...homeData} : item
                         )
-                    );
+                    )
                     openNotification(
                         "success",
                         "Tin nhắn hệ thống",
                         "Cập nhật nhà cho thuê thành công !"
-                    );
-                })
-                .catch(() =>
-                    openNotification(
-                        "error",
-                        "Tin nhắn hệ thống",
-                        "Lỗi khi cập nhật"
                     )
-                );
+                })
+                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi cập nhật"))
         } else {
             addHome(homeData)
                 .then(() => {
-                    setVisible(false);
-                    setHome((prevData) => [...prevData, homeData]);
+                    setVisible(false)
+                    setHome((prevData) => [...prevData, homeData])
                     openNotification(
                         "success",
                         "Tin nhắn hệ thống",
                         "Thêm mới nhà cho thuê thành công !"
-                    );
-                })
-                .catch(() =>
-                    openNotification(
-                        "error",
-                        "Tin nhắn hệ thống",
-                        "Lỗi khi thêm mới"
                     )
-                );
+                })
+                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi thêm mới"))
         }
-    };
+    }
     return (
         <>
-            <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
+            <Row gutter={[24, 24]} style={{rowGap: "10px"}}>
                 <Col xxl={4} xl={6} lg={8}>
                     <Input
                         allowClear
@@ -192,141 +177,33 @@ const FormFilter = ({
                 </Col>
                 <Col>
                     <Button
-                        icon={
-                            <AppstoreAddOutlined style={{ fontSize: "22px" }} />
-                        }
+                        icon={<AppstoreAddOutlined style={{fontSize: "22px"}} />}
                         type='primary'
                         onClick={() => setVisible(true)}
                     />
                 </Col>
             </Row>
-            <Modal
-                style={{ top: "1.3rem" }}
-                styles={{
-                    header: {
-                        padding: "16px 24px",
-                        borderBottom: "1px solid #f0f0f0",
-                        background: "#fafafa",
-                        borderRadius: "8px 8px 0 0",
-                        marginBottom: "0",
-                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-                    },
-
-                    body: {
-                        overflowY: "scroll",
-                        maxHeight: "calc(100vh - 11.5rem)",
-                        padding: "10px 20px 10px 10px",
-                    },
-                }}
-                width={{
-                    xs: "90%",
-                    sm: "80%",
-                    md: "70%",
-                    lg: "60%",
-                    xl: "50%",
-                    xxl: "40%",
-                }}
-                title={
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "12px",
-                            fontWeight: "600",
-                            fontSize: "18px",
-                            color: "#1d1d1d",
-                            flex: 1, // Thêm dòng này để title chiếm hết không gian còn lại
-                            paddingRight: "40px", // Tăng khoảng cách để không đè lên nút đóng
-                        }}
-                    >
-                        <HomeTwoTone
-                            twoToneColor='#1890ff'
-                            style={{ fontSize: "24px" }}
-                        />
-                        <span>
-                            {!homeData?.home_ID
-                                ? "TẠO MỚI NHÀ CHO THUÊ"
-                                : "CẬP NHẬT NHÀ CHO THUÊ"}
-                        </span>
-                    </div>
-                }
-                open={visible}
-                onCancel={() => {
-                    setVisible(false);
-                    setHomeData({});
-                }}
-                closable={false}
-                footer={
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            padding: "16px 24px",
-                            borderTop: "1px solid #f0f0f0",
-                        }}
-                    >
-                        {/* Phần bên trái (nếu cần thêm nội dung) */}
-                        <div>
-                            {/* Có thể thêm text hướng dẫn hoặc icon tại đây */}
-                        </div>
-
-                        {/* Nhóm nút hành động */}
-                        <Space size='middle'>
-                            <Button
-                                key='cancel'
-                                size='large'
-                                style={{
-                                    minWidth: "120px",
-                                    height: "40px",
-                                    borderRadius: "4px",
-                                }}
-                                onClick={() => {
-                                    setVisible(false);
-                                    setHomeData({});
-                                }}
-                            >
-                                Hủy bỏ
-                            </Button>
-                            <Button
-                                key='submit'
-                                type='primary'
-                                size='large'
-                                style={{
-                                    minWidth: "120px",
-                                    height: "40px",
-                                    borderRadius: "4px",
-                                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                }}
-                                onClick={handleOk}
-                            >
-                                {!homeData?.home_ID ? (
-                                    <Space>
-                                        <PlusOutlined />
-                                        Tạo mới
-                                    </Space>
-                                ) : (
-                                    <Space>
-                                        <SaveOutlined />
-                                        Lưu thay đổi
-                                    </Space>
-                                )}
-                            </Button>
-                        </Space>
-                    </div>
-                }
+            <CustomModal
+                visible={visible}
+                setVisible={setVisible}
+                data={homeData}
+                setData={setHomeData}
+                handleOk={handleOk}
+                entityName='NHÀ CHO THUÊ'
+                titleIcon={<HomeTwoTone twoToneColor='#1890ff' style={{fontSize: "24px"}} />}
+                idField='home_ID'
             >
                 <HomeModal homeData={homeData} setHomeData={setHomeData} />
-            </Modal>
+            </CustomModal>
         </>
-    );
-};
+    )
+}
 
 const actionsCard = () => (
     <Space size={"middle"}>
         <EditTwoTone key='edit' />
         <DeleteTwoTone key='delete' />
     </Space>
-);
+)
 
-export { columnsTable, FormFilter, actionsCard };
+export {columnsTable, FormFilter, actionsCard}
