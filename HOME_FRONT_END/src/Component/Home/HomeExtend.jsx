@@ -7,10 +7,14 @@ import {
     HomeTwoTone,
 } from "@ant-design/icons";
 import HomeModal from "./HomeModal";
-import { addHome, updateHome } from "../../Service/Home/HomeSerivce";
+import {
+    addHome,
+    updateHome,
+    deleteHome,
+} from "../../Service/Home/HomeSerivce";
 import { useNotification, notify } from "../../assets/NotificationProvider";
 import CustomModal from "../Extend/Modal/CustomModal";
-const columnsTable = (setVisible) => [
+const columnsTable = (setVisible, setHome) => [
     {
         key: "home_ID",
         title: "ID",
@@ -90,10 +94,30 @@ const columnsTable = (setVisible) => [
         width: "6rem",
         fixed: "right",
 
-        render: () => <ActionMenu setVisible={setVisible} />,
+        render: (_, rowData) => (
+            <ActionMenu
+                onDelete={handleDelete}
+                rowData={rowData}
+                setVisible={setVisible}
+                setHome={setHome}
+            />
+        ),
     },
 ];
-const ActionMenu = ({ setVisible }) => {
+
+const handleDelete = (home_ID, setHome) => {
+    deleteHome(home_ID)
+        .then(() => {
+            setHome((prevData) =>
+                prevData.filter((home) => home.home_ID !== home_ID)
+            );
+            notify("success", "Xóa thành công", `Đã xóa mục có ID: ${home_ID}`);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+const ActionMenu = ({ rowData, onDelete, setVisible, setHome }) => {
     const items = [
         {
             label: (
@@ -106,7 +130,7 @@ const ActionMenu = ({ setVisible }) => {
         },
         {
             label: (
-                <Space>
+                <Space onClick={() => onDelete(rowData.home_ID, setHome)}>
                     <DeleteTwoTone />
                     Xóa
                 </Space>

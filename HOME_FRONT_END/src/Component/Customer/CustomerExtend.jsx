@@ -29,7 +29,7 @@ import CustomModal from "../Extend/Modal/CustomModal";
 const handleDelete = (customerID, setCustomer) => {
     deleteACustomer(customerID)
         .then(() => {
-            setData((prevData) =>
+            setCustomer((prevData) =>
                 prevData.filter(
                     (customer) => customer.customer_ID !== customerID
                 )
@@ -58,7 +58,9 @@ const ActionMenu = ({ rowData, onDelete, setCustomer, setVisible }) => {
         },
         {
             label: (
-                <Space onClick={() => onDelete(rowData.customer_ID, setData)}>
+                <Space
+                    onClick={() => onDelete(rowData.customer_ID, setCustomer)}
+                >
                     <DeleteTwoTone />
                     Xóa
                 </Space>

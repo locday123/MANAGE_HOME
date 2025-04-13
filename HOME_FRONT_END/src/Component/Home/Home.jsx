@@ -84,7 +84,7 @@ function Home() {
     const menu = {
         items,
     };
-    const newColumns = columnsTable(setVisible).map((item) =>
+    const newColumns = columnsTable(setVisible, setHome).map((item) =>
         Object.assign(Object.assign({}, item), {
             hidden: !selectedValues.includes(item.key),
         })
