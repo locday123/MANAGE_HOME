@@ -1,4 +1,4 @@
-import {Card, Col, Row, Segmented, Table, Tag} from "antd"
+import {Col, Row, Segmented, Table} from "antd"
 import {useEffect, useState} from "react"
 
 import {AppstoreOutlined, BarsOutlined} from "@ant-design/icons"

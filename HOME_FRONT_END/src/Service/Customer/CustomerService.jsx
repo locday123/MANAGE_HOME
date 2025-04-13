@@ -1,5 +1,5 @@
 import {client} from "../Service"
-let linkApi = `${import.meta.env.VITE_API_URL}/customers`
+let linkApi = `${import.meta.env.VITE_REACT_API}/customers`
 
 const getAllCustomer = async () => {
     try {
@@ -38,14 +38,4 @@ const deleteACustomer = async (userID) => {
     }
 }
 
-const checkCustomerExists = async (customerID) => {
-    try {
-        const res = await client.get(`${linkApi}/check-id/${customerID}`)
-        return res.data
-    } catch (err) {
-        console.error("Check CCCD failed:", err)
-        return {exists: false}
-    }
-}
-
-export {getAllCustomer, addCustomer, deleteACustomer, updatedCustomer, checkCustomerExists}
+export {getAllCustomer, addCustomer, deleteACustomer, updatedCustomer}
