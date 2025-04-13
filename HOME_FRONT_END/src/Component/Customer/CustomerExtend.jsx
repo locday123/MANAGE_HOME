@@ -26,7 +26,7 @@ import { useNotification, notify } from "../../assets/NotificationProvider";
 import CustomerModal from "./CustomerModal";
 import CustomModal from "../Extend/Modal/CustomModal";
 
-const handleDelete = (customerID, setData) => {
+const handleDelete = (customerID, setCustomer) => {
     deleteACustomer(customerID)
         .then(() => {
             setData((prevData) =>
@@ -45,7 +45,7 @@ const handleDelete = (customerID, setData) => {
         });
 };
 
-const ActionMenu = ({ rowData, onDelete, setData, setVisible }) => {
+const ActionMenu = ({ rowData, onDelete, setCustomer, setVisible }) => {
     const items = [
         {
             label: (
@@ -80,13 +80,13 @@ const actionsCard = (setVisible) => (
     </Space>
 );
 
-const columnsTable = (setData, setVisible) => [
+const columnsTable = (setCustomer, setVisible) => [
     {
         key: "customer_ID",
         title: "CCCD | ID",
         dataIndex: "customer_ID",
         align: "center",
-        width: "1rem",
+        width: "6rem",
         render: (value) => <Tag>{value}</Tag>,
     },
     {
@@ -149,7 +149,7 @@ const columnsTable = (setData, setVisible) => [
             <ActionMenu
                 rowData={rowData}
                 onDelete={handleDelete}
-                setData={setData}
+                setCustomer={setCustomer}
                 setVisible={setVisible}
             />
         ),
@@ -159,7 +159,7 @@ const columnsTable = (setData, setVisible) => [
 const SearchBar = ({
     searchText,
     setSearchText,
-    setData,
+    setCustomer,
     visible,
     setVisible,
     customerData,
@@ -179,7 +179,7 @@ const SearchBar = ({
                     setCustomerData({});
                     setVisible(false);
                     setIsEdit(false);
-                    setData((prevData) =>
+                    setCustomer((prevData) =>
                         prevData.map((item) =>
                             item.customer_ID === customerData.customer_ID
                                 ? { ...item, ...customerData }
@@ -206,7 +206,7 @@ const SearchBar = ({
                     setCustomerData({});
                     setVisible(false);
                     setIsEdit(false);
-                    setData((prevData) => {
+                    setCustomer((prevData) => {
                         const newCustomer = {
                             ...customerData,
                             created_at: new Date().toISOString().split("T")[0], // Format: yyyy-mm-dd

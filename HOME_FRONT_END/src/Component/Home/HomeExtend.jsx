@@ -1,15 +1,15 @@
-import {Col, Input, Row, Tag, Button, Dropdown, Space, Modal} from "antd"
+import { Col, Input, Row, Tag, Button, Dropdown, Space, Modal } from "antd";
 import {
     AppstoreAddOutlined,
     DeleteTwoTone,
     EditTwoTone,
     MoreOutlined,
     HomeTwoTone,
-} from "@ant-design/icons"
-import HomeModal from "./HomeModal"
-import {addHome, updateHome} from "../../Service/Home/HomeSerivce"
-import {useNotification, notify} from "../../assets/NotificationProvider"
-import CustomModal from "../Extend/Modal/CustomModal"
+} from "@ant-design/icons";
+import HomeModal from "./HomeModal";
+import { addHome, updateHome } from "../../Service/Home/HomeSerivce";
+import { useNotification, notify } from "../../assets/NotificationProvider";
+import CustomModal from "../Extend/Modal/CustomModal";
 const columnsTable = (setVisible) => [
     {
         key: "home_ID",
@@ -32,7 +32,9 @@ const columnsTable = (setVisible) => [
         dataIndex: "home_RentalPrice",
         align: "center",
         width: "6rem",
-        render: (vallue) => <Tag>{vallue.toLocaleString("vi")}</Tag>,
+        render: (value) => (
+            <Tag>{value != null ? value.toLocaleString("vi") : "0"}</Tag>
+        ),
     },
     {
         key: "home_HostID",
@@ -90,8 +92,8 @@ const columnsTable = (setVisible) => [
 
         render: () => <ActionMenu setVisible={setVisible} />,
     },
-]
-const ActionMenu = ({setVisible}) => {
+];
+const ActionMenu = ({ setVisible }) => {
     const items = [
         {
             label: (
@@ -111,14 +113,14 @@ const ActionMenu = ({setVisible}) => {
             ),
             key: "2",
         },
-    ]
+    ];
 
     return (
-        <Dropdown menu={{items}} trigger={["click"]} placement='bottomLeft'>
-            <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
+        <Dropdown menu={{ items }} trigger={["click"]} placement='bottomLeft'>
+            <MoreOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
         </Dropdown>
-    )
-}
+    );
+};
 
 const FormFilter = ({
     searchText,
@@ -128,42 +130,63 @@ const FormFilter = ({
     visible,
     homeData,
     setHomeData,
+    isEdit,
+    setIsEdit,
 }) => {
-    const {openNotification} = useNotification()
+    const { openNotification } = useNotification();
     const handleOk = () => {
-        if (homeData?.id) {
-            updateHome(homeData.id, homeData)
+        if (isEdit) {
+            updateHome(homeData.home_ID, homeData)
                 .then(() => {
-                    setVisible(false)
+                    setHomeData({});
+                    setIsEdit(false);
+                    setVisible(false);
+
                     setHome((prevData) =>
                         prevData.map((item) =>
-                            item.id === homeData.id ? {...item, ...homeData} : item
+                            item.home_ID === homeData.home_ID
+                                ? { ...item, ...homeData }
+                                : item
                         )
-                    )
+                    );
                     openNotification(
                         "success",
                         "Tin nhắn hệ thống",
                         "Cập nhật nhà cho thuê thành công !"
-                    )
+                    );
                 })
-                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi cập nhật"))
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi cập nhật"
+                    )
+                );
         } else {
             addHome(homeData)
-                .then(() => {
-                    setVisible(false)
-                    setHome((prevData) => [...prevData, homeData])
+                .then((newHome) => {
+                    setHomeData({});
+                    setIsEdit(false);
+                    setVisible(false);
+                    setHome((prevData) => [...prevData, newHome]);
                     openNotification(
                         "success",
                         "Tin nhắn hệ thống",
                         "Thêm mới nhà cho thuê thành công !"
-                    )
+                    );
                 })
-                .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi thêm mới"))
+                .catch(() =>
+                    openNotification(
+                        "error",
+                        "Tin nhắn hệ thống",
+                        "Lỗi khi thêm mới"
+                    )
+                );
         }
-    }
+    };
     return (
         <>
-            <Row gutter={[24, 24]} style={{rowGap: "10px"}}>
+            <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
                 <Col xxl={4} xl={6} lg={8}>
                     <Input
                         allowClear
@@ -177,9 +200,14 @@ const FormFilter = ({
                 </Col>
                 <Col>
                     <Button
-                        icon={<AppstoreAddOutlined style={{fontSize: "22px"}} />}
+                        icon={
+                            <AppstoreAddOutlined style={{ fontSize: "22px" }} />
+                        }
                         type='primary'
-                        onClick={() => setVisible(true)}
+                        onClick={() => {
+                            setVisible(true);
+                            setIsEdit(false);
+                        }}
                     />
                 </Col>
             </Row>
@@ -190,20 +218,30 @@ const FormFilter = ({
                 setData={setHomeData}
                 handleOk={handleOk}
                 entityName='NHÀ CHO THUÊ'
-                titleIcon={<HomeTwoTone twoToneColor='#1890ff' style={{fontSize: "24px"}} />}
+                isEdit={isEdit}
+                titleIcon={
+                    <HomeTwoTone
+                        twoToneColor='#1890ff'
+                        style={{ fontSize: "24px" }}
+                    />
+                }
                 idField='home_ID'
             >
-                <HomeModal homeData={homeData} setHomeData={setHomeData} />
+                <HomeModal
+                    isEdit={isEdit}
+                    homeData={homeData}
+                    setHomeData={setHomeData}
+                />
             </CustomModal>
         </>
-    )
-}
+    );
+};
 
 const actionsCard = () => (
     <Space size={"middle"}>
         <EditTwoTone key='edit' />
         <DeleteTwoTone key='delete' />
     </Space>
-)
+);
 
-export {columnsTable, FormFilter, actionsCard}
+export { columnsTable, FormFilter, actionsCard };

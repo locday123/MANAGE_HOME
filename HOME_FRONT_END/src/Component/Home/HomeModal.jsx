@@ -20,7 +20,7 @@ import {
 } from "../../Service/Location/LocationSerivce";
 import dayjs from "dayjs";
 const cx = classnames.bind(style);
-function HomeModal({ homeData, setHomeData }) {
+function HomeModal({ isEdit, homeData, setHomeData }) {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -186,20 +186,24 @@ function HomeModal({ homeData, setHomeData }) {
                             format='DD/MM/YYYY'
                             allowClear
                             value={[
-                                dayjs(homeData.home_ContractFrom),
-                                dayjs(homeData.home_ContractTo),
+                                homeData.home_ContractFrom
+                                    ? dayjs(homeData.home_ContractFrom)
+                                    : null,
+                                homeData.home_ContractTo
+                                    ? dayjs(homeData.home_ContractTo)
+                                    : null,
                             ]}
                             onChange={(dates, dateStrings) => {
                                 if (dates) {
                                     // Cập nhật home_ContractFrom và home_ContractTo trong homeData
                                     handleChange(
                                         "home_ContractFrom",
-                                        dateStrings[0]
-                                    ); // hoặc dates[0] nếu muốn lưu đối tượng dayjs
+                                        dates[0] ? dates[0] : ""
+                                    );
                                     handleChange(
                                         "home_ContractTo",
-                                        dateStrings[1]
-                                    ); // hoặc dates[1]
+                                        dates[1] ? dates[1] : ""
+                                    );
                                 } else {
                                     // Xử lý khi clear (đặt lại giá trị mặc định)
                                     handleChange("home_ContractFrom", "");
