@@ -1,4 +1,4 @@
-import Customer from "../Model/Customer.js"
+import Customer from "../Model/CustomerModel.js"
 
 // Lấy tất cả khách hàng
 const getAllCustomers = async (req, res) => {

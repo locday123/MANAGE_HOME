@@ -82,6 +82,14 @@ const columnsTable = (setData, setVisible) => [
         ),
     },
     {
+        key: "customer_Sex",
+        title: "Giới tính",
+        dataIndex: "customer_Sex",
+        align: "center",
+        width: "2rem",
+        render: (value) => (value ? "Nam" : "Nữ"),
+    },
+    {
         key: "customer_PhoneNumber",
         title: "Số điện thoại",
         dataIndex: "customer_PhoneNumber",
