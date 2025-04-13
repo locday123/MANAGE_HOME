@@ -5,7 +5,6 @@ import {
     deleteCustomer,
     updateCustomer,
 } from "../Controller/customerController.js"
-import Customer from "../Model/Customer.js"
 
 const router = express.Router()
 
