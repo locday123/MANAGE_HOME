@@ -6,7 +6,7 @@ import {createAddressHandlers} from "../Extend/Address/useAddressHandler"
 import {useEffect, useState} from "react"
 import {getDistricts, getProvinces, getWards} from "../../Service/Location/LocationSerivce"
 
-function CustomerModal({customerData, setCustomerData}) {
+function CustomerModal({isEdit, customerData, setCustomerData}) {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -99,19 +99,19 @@ function CustomerModal({customerData, setCustomerData}) {
 
     return (
         <Form layout='vertical'>
-            {!customerData?.customer_ID && (
-                <Form.Item
-                    label='Căn cước công dân'
-                    rules={[{required: true, message: "Please enter customer ID"}]}
-                >
-                    <Input.OTP
-                        size='large'
-                        length={12}
-                        value={customerData?.customer_ID || ""}
-                        onChange={(value) => handleChange("customer_ID", value)}
-                    />
-                </Form.Item>
-            )}
+            <Form.Item
+                label='Căn cước công dân'
+                rules={[{required: true, message: "Vui lòng nhập CCCD"}]}
+            >
+                <Input.OTP
+                    size='large'
+                    length={12}
+                    value={customerData?.customer_ID || ""}
+                    onChange={(value) => handleChange("customer_ID", value)}
+                    disabled={isEdit}
+                    // Khi thêm mới, chỉ cho nhập, không khóa
+                />
+            </Form.Item>
             <Form.Item label='Họ tên' rules={[{required: true, message: "Vui lòng nhập họ tên"}]}>
                 <Input
                     size='large'
@@ -119,6 +119,21 @@ function CustomerModal({customerData, setCustomerData}) {
                     onChange={(e) => handleChange("customer_Name", e.target.value)}
                 />
             </Form.Item>
+            <Form.Item
+                label='Giới tính'
+                rules={[{required: true, message: "Vui lòng chọn giới tính"}]}
+            >
+                <Select
+                    size='large'
+                    value={customerData?.customer_Sex}
+                    onChange={(value) => handleChange("customer_Sex", value)}
+                    placeholder='Chọn giới tính'
+                >
+                    <Select.Option value={true}>Nam</Select.Option>
+                    <Select.Option value={false}>Nữ</Select.Option>
+                </Select>
+            </Form.Item>
+
             <Form.Item
                 label='Số điện thoại'
                 rules={[{required: true, message: "Vui lòng nhập số điện thoại"}]}

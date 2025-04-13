@@ -6,6 +6,7 @@ import {SearchBar, columnsTable, filteredData} from "../Customer/CustomerExtend"
 import {getAllCustomer} from "../../Service/Customer/CustomerService"
 import CustomerStatistics from "./CustomerStatistics"
 import CustomerGirdView from "./CustomerGirdView"
+import CustomCard from "../Extend/Card/CustomCard"
 
 function Customer() {
     const [data, setData] = useState([])
@@ -14,7 +15,8 @@ function Customer() {
     const [isGridView, setIsGridView] = useState(false)
     const [visible, setVisible] = useState(false)
     const [customerData, setCustomerData] = useState({})
-
+    const [isEdit, setIsEdit] = useState(false)
+    console.log(customerData)
     useEffect(() => {
         getAllCustomer().then((value) => {
             setData(value)
@@ -23,7 +25,7 @@ function Customer() {
     return (
         <>
             <CustomerStatistics data={data} />
-            <Card
+            <CustomCard
                 title={
                     <SearchBar
                         searchText={searchText}
@@ -33,6 +35,8 @@ function Customer() {
                         setVisible={setVisible}
                         customerData={customerData}
                         setCustomerData={setCustomerData}
+                        isEdit={isEdit}
+                        setIsEdit={setIsEdit}
                     />
                 }
                 extra={
@@ -45,9 +49,6 @@ function Customer() {
                         style={{marginRight: "16px"}}
                     />
                 }
-                style={{
-                    boxShadow: "rgba(0, 0, 0, 0.03) 0px 0px 5px 5px",
-                }}
             >
                 <div style={{maxHeight: "36.1rem", overflowY: "auto"}}>
                     {isGridView ? (
@@ -78,17 +79,18 @@ function Customer() {
                         <Table
                             columns={columnsTable(setData, setVisible)}
                             dataSource={filteredData(data, searchText)}
-                            loading={data.length ? false : true}
+                            loading={!Array.isArray(data) || data.length === 0}
                             pagination={false} // Ẩn pagination mặc định
                             onRow={(record) => ({
                                 onClick: () => {
                                     setCustomerData(record) // Gán dữ liệu vào form
+                                    setIsEdit(true)
                                 },
                             })}
                         />
                     )}
                 </div>
-            </Card>
+            </CustomCard>
         </>
     )
 }

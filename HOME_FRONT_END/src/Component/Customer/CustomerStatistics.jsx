@@ -1,8 +1,8 @@
-import { Card, Col, Flex, Row, Statistic } from "antd";
-import { UserOutlined, AntDesignOutlined } from "@ant-design/icons";
-function CustomerStatistics({ data }) {
+import {Card, Col, Flex, Row, Statistic} from "antd"
+import {UserOutlined, AntDesignOutlined} from "@ant-design/icons"
+function CustomerStatistics({data}) {
     return (
-        <Row gutter={16} style={{ marginBottom: "16px" }}>
+        <Row gutter={16} style={{marginBottom: "16px"}}>
             <Col span={8}>
                 <Card
                     style={{
@@ -12,18 +12,19 @@ function CustomerStatistics({ data }) {
                     <Flex justify='space-between'>
                         <Statistic
                             title='Khách hàng'
-                            value={data.length}
-                            prefix={
-                                <UserOutlined style={{ fontSize: "17px" }} />
-                            }
+                            loading={!Array.isArray(data) || data.length === 0}
+                            prefix={<UserOutlined style={{fontSize: "17px"}} />}
+                            value={Array.isArray(data) && data.length}
                         />
                         <Statistic
                             title='Hoạt động'
+                            loading={!Array.isArray(data) || data.length === 0}
                             value={
-                                data.filter(
-                                    (customer) =>
-                                        customer.customer_Status === "ACTIVE"
-                                ).length
+                                Array.isArray(data)
+                                    ? data.filter(
+                                          (customer) => customer.customer_Status === "ACTIVE"
+                                      ).length
+                                    : 0
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -37,11 +38,13 @@ function CustomerStatistics({ data }) {
                         />
                         <Statistic
                             title='Rời đi'
+                            loading={!Array.isArray(data) || data.length === 0}
                             value={
-                                data.filter(
-                                    (customer) =>
-                                        customer.customer_Status === "INACTIVE"
-                                ).length
+                                Array.isArray(data)
+                                    ? data.filter(
+                                          (customer) => customer.customer_Status === "INACTIVE"
+                                      ).length
+                                    : 0
                             }
                             prefix={
                                 <AntDesignOutlined
@@ -57,7 +60,7 @@ function CustomerStatistics({ data }) {
                 </Card>
             </Col>
         </Row>
-    );
+    )
 } // Thẻ card thống kê
 
-export default CustomerStatistics;
+export default CustomerStatistics

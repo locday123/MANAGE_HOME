@@ -1,6 +1,5 @@
 import {client} from "../Service"
-;``
-let linkApi = "https://67e41d1e2ae442db76d31ae4.mockapi.io/api/customer/"
+let linkApi = `${import.meta.env.VITE_API_URL}/customers`
 
 const getAllCustomer = async () => {
     try {
@@ -13,8 +12,8 @@ const getAllCustomer = async () => {
 
 const addCustomer = async (customer) => {
     try {
-        const reponse = await client.post(`${linkApi}`, customer)
-        return reponse.data
+        const response = await client.post(`${linkApi}`, customer)
+        return response.data
     } catch (error) {
         console.log(error)
     }
@@ -22,8 +21,8 @@ const addCustomer = async (customer) => {
 
 const updatedCustomer = async (customerID, customerData) => {
     try {
-        const reponse = await client.put(`${linkApi}/${customerID}`, customerData)
-        return reponse.data
+        const response = await client.put(`${linkApi}/${customerID}`, customerData)
+        return response.data
     } catch (error) {
         console.log(error)
     }
@@ -31,12 +30,22 @@ const updatedCustomer = async (customerID, customerData) => {
 
 const deleteACustomer = async (userID) => {
     try {
-        let urlUser = linkApi + userID
-        const response = await client.delete(urlUser, userID)
+        let urlUser = `${linkApi}/${userID}`
+        const response = await client.delete(urlUser)
         return await response.data
     } catch (err) {
         console.log(err)
     }
 }
 
-export {getAllCustomer, addCustomer, deleteACustomer, updatedCustomer}
+const checkCustomerExists = async (customerID) => {
+    try {
+        const res = await client.get(`${linkApi}/check-id/${customerID}`)
+        return res.data
+    } catch (err) {
+        console.error("Check CCCD failed:", err)
+        return {exists: false}
+    }
+}
+
+export {getAllCustomer, addCustomer, deleteACustomer, updatedCustomer, checkCustomerExists}

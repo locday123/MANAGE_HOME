@@ -8,18 +8,15 @@ const cx = classNames.bind(styles)
 const CustomModal = ({
     visible,
     setVisible,
-    data,
     setData,
     handleOk,
     children,
     entityName = "DỮ LIỆU", // 👈 mặc định nếu không truyền
-    idField,
     titleText = null,
     titleIcon = null,
+    isEdit,
 }) => {
-    const isEditing = !!data?.[idField]
-    const titleContent =
-        titleText ?? (isEditing ? `CẬP NHẬT ${entityName}` : `TẠO MỚI ${entityName}`)
+    const titleContent = titleText ?? (isEdit ? `CẬP NHẬT ${entityName}` : `TẠO MỚI ${entityName}`)
 
     const iconComponent = titleIcon ?? (
         <HomeTwoTone twoToneColor='#1890ff' style={{fontSize: "24px"}} />
@@ -76,7 +73,7 @@ const CustomModal = ({
                             className={cx("submitButton")}
                             onClick={handleOk}
                         >
-                            {isEditing ? (
+                            {isEdit ? (
                                 <Space>
                                     <SaveOutlined />
                                     Lưu thay đổi

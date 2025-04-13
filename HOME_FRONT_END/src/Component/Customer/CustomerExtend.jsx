@@ -38,7 +38,7 @@ const ActionMenu = ({rowData, onDelete, setData, setVisible}) => {
         },
         {
             label: (
-                <Space onClick={() => onDelete(rowData.customer_ID || rowData.id, setData)}>
+                <Space onClick={() => onDelete(rowData.customer_ID, setData)}>
                     <DeleteTwoTone />
                     Xóa
                 </Space>
@@ -136,6 +136,8 @@ const SearchBar = ({
     setVisible,
     customerData,
     setCustomerData,
+    isEdit,
+    setIsEdit,
 }) => {
     const {openNotification} = useNotification()
 
@@ -143,15 +145,20 @@ const SearchBar = ({
         setSearchText(e.target.value)
     }
     const handleOk = () => {
-        if (customerData?.id) {
-            updatedCustomer(customerData.id, customerData)
+        if (isEdit) {
+            updatedCustomer(customerData.customer_ID, customerData)
                 .then(() => {
+                    setCustomerData({})
                     setVisible(false)
+                    setIsEdit(false)
                     setData((prevData) =>
                         prevData.map((item) =>
-                            item.id === customerData.id ? {...item, ...customerData} : item
+                            item.customer_ID === customerData.customer_ID
+                                ? {...item, ...customerData}
+                                : item
                         )
                     )
+
                     openNotification(
                         "success",
                         "Tin nhắn hệ thống",
@@ -162,8 +169,22 @@ const SearchBar = ({
         } else {
             addCustomer(customerData)
                 .then(() => {
+                    setCustomerData({})
                     setVisible(false)
-                    setData((prevData) => [...prevData, customerData])
+                    setIsEdit(false)
+                    setData((prevData) => {
+                        const newCustomer = {
+                            ...customerData,
+                            created_at: new Date().toISOString().split("T")[0], // Format: yyyy-mm-dd
+                        }
+
+                        if (Array.isArray(prevData)) {
+                            return [...prevData, newCustomer]
+                        }
+
+                        return [newCustomer]
+                    })
+
                     openNotification("success", "Tin nhắn hệ thống", "Thêm khách hàng thành công")
                 })
                 .catch(() => openNotification("error", "Tin nhắn hệ thống", "Lỗi khi thêm mới"))
@@ -185,7 +206,9 @@ const SearchBar = ({
                     <Button
                         icon={<UserAddOutlined style={{fontSize: "22px"}} />}
                         type='primary'
-                        onClick={() => setVisible(true)}
+                        onClick={() => {
+                            setVisible(true), setIsEdit(false)
+                        }}
                     />
                 </Col>
             </Row>
@@ -199,21 +222,29 @@ const SearchBar = ({
                 entityName='KHÁCH THUÊ NHÀ'
                 titleIcon={<UserOutlined style={{fontSize: "24px"}} />}
                 idField='customer_ID'
+                isEdit={isEdit}
             >
-                <CustomerModal setCustomerData={setCustomerData} customerData={customerData} />
+                <CustomerModal
+                    isEdit={isEdit}
+                    setCustomerData={setCustomerData}
+                    customerData={customerData}
+                />
             </CustomModal>
         </>
     )
 } // Form tìm kiếm + button thêm khách hàng
 
 const filteredData = (data, searchText) => {
+    if (!Array.isArray(data)) return []
+
     const filterValue = data.filter((item) => {
-        const filterName = item.customer_Name.toLowerCase().includes(searchText.toLowerCase())
-        const filterID = item.customer_ID.toString().includes(searchText)
-        const filterPhoneNumber = item.customer_PhoneNumber.toString().includes(searchText)
+        const filterName = item.customer_Name?.toLowerCase().includes(searchText.toLowerCase())
+        const filterID = item.customer_ID?.toString().includes(searchText)
+        const filterPhoneNumber = item.customer_PhoneNumber?.toString().includes(searchText)
         return filterName || filterID || filterPhoneNumber
     })
+
     return filterValue
-} // Tìm kiếm Customer
+}
 
 export {columnsTable, SearchBar, actionsCard, filteredData}
