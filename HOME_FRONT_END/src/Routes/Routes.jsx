@@ -28,6 +28,7 @@ import {
     WalletOutlined,
     BuildTwoTone,
 } from "@ant-design/icons"
+import Floor from "../Component/Floor/Floor"
 
 const publicRoutes = [
     {key: "customer-management", label: "Khách hàng & hợp đồng", icon: <UserOutlined />},
@@ -85,7 +86,7 @@ const publicRoutes = [
         path: "/floors",
         label: "Tầng",
         parent: "building-management",
-        component: Dashboards,
+        component: Floor,
         icon: <ApartmentOutlined />,
     },
     {

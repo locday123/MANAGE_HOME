@@ -1,20 +1,72 @@
-import { client } from "../Service";
+import {client} from "../Service"
+let linkApi = `${import.meta.env.VITE_REACT_API}/floors`
 
-let linkApi = "https://mocki.io/v1/e6dfbfbc-780b-4598-a63e-dcee5bb73201";
-
-const getAllFloor = async () => {
+const getAllFloors = async () => {
     try {
-        const response = await client.get(linkApi);
-        return await response.data;
+        const response = await client.get(`${linkApi}`)
+        return response.data
     } catch (err) {
-        console.log(err);
+        console.error("Lỗi khi gọi API getAllFloors:", err)
+        return {
+            status: err?.response?.status || 500,
+            data: null,
+            error: err,
+        }
     }
-};
+}
 
-const searchHomeInFloor = (floor, value) => {
-    return floor.filter((element) => {
-        return element.home_ID === value;
-    });
-};
+// Get floors by home_ID
+const getFloorsByHome = async (homeID) => {
+    try {
+        const response = await client.get(`${linkApi}/${homeID}`)
+        return response.data
+    } catch (error) {
+        console.error("❌ Lỗi khi gọi API getFloorsByHome:", error)
+        return {
+            status: error?.response?.status || 500,
+            data: null,
+            error,
+        }
+    }
+}
 
-export { getAllFloor, searchHomeInFloor };
+const addFloor = async (floorData) => {
+    try {
+        const response = await client.post(`${linkApi}`, floorData)
+        return response.data
+    } catch (error) {
+        console.error("❌ Lỗi khi thêm tầng:", error)
+    }
+}
+
+const updateFloor = async (floorID, updatedData) => {
+    try {
+        const response = await client.put(`${linkApi}/${floorID}`, updatedData)
+        return response.data
+    } catch (error) {
+        console.error("❌ Lỗi khi cập nhật tầng:", error)
+    }
+}
+
+const deleteFloor = async (floorID) => {
+    try {
+        const response = await client.delete(`${linkApi}/${floorID}`)
+        return response.data
+    } catch (error) {
+        console.error("❌ Lỗi khi xóa tầng:", error)
+    }
+}
+
+// Tạo nhiều tầng cho home (gọi thủ công)
+const createFloorsForHome = async (homeID, totalFloors) => {
+    try {
+        const response = await client.post(`${linkApi}/create/${homeID}`, {
+            totalFloors,
+        })
+        return response.data
+    } catch (error) {
+        console.error("❌ Lỗi khi tạo nhiều tầng cho nhà:", error)
+    }
+}
+
+export {getAllFloors, getFloorsByHome, addFloor, updateFloor, deleteFloor, createFloorsForHome}

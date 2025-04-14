@@ -1,6 +1,6 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../Connect/Connect.js";
-import { nanoid } from "nanoid";
+import {DataTypes} from "sequelize"
+import sequelize from "../Connect/Connect.js"
+import {nanoid} from "nanoid"
 
 const Home = sequelize.define(
     "Home",
@@ -66,8 +66,8 @@ const Home = sequelize.define(
     {
         tableName: "HOME",
         timestamps: false,
-        indexes: [{ name: "idx_home_Address", fields: ["home_Address"] }],
+        indexes: [{name: "idx_home_Address", fields: ["home_Address"]}],
     }
-);
+)
 
-export default Home;
+export default Home
