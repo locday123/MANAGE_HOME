@@ -1,9 +1,6 @@
-import { Button, Col, Input, Row, Select, Tag } from "antd";
-import {
-    createFloorsForHome,
-    getFloorsByHome,
-} from "../../Service/Floor/FloorService";
-import { useState } from "react";
+import {Button, Col, Input, Row, Select, Tag} from "antd"
+import {createFloorsForHome, getFloorsByHome} from "../../Service/Floor/FloorService"
+import {useState} from "react"
 
 const columnsTable = [
     {
@@ -21,8 +18,6 @@ const columnsTable = [
         dataIndex: "home_ID",
         align: "center",
         width: "5rem",
-
-        render: (value) => <Tag>{value}</Tag>,
     },
     {
         key: "floor_Name",
@@ -39,8 +34,6 @@ const columnsTable = [
         dataIndex: "floor_TotalRooms",
         align: "center",
         width: "5rem",
-
-        render: (value) => <Tag>{value}</Tag>,
     },
     {
         key: "created_at",
@@ -49,65 +42,83 @@ const columnsTable = [
         align: "center",
         width: "5rem",
 
-        render: (value) => <Tag>{value}</Tag>,
+        render: (value) => new Date(value).toLocaleDateString("vi-VN"),
     },
-];
-const FormFilter = ({
-    searchText,
-    data = [],
-    valueCreate,
-    setValueCreate,
-    setFloors,
-}) => {
-    const [message, setMessage] = useState("");
+]
+const FormFilter = ({data = [], valueCreate, setValueCreate, setFloors}) => {
+    const [message, setMessage] = useState("")
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false) // Thêm state để kiểm tra trạng thái button
 
     const handleCreateFloors = async (valueCreate) => {
-        const result = await createFloorsForHome(
-            valueCreate.home_ID,
-            valueCreate.home_TotalFloors
-        );
+        const {home_ID, home_TotalFloors} = valueCreate
 
-        if (result?.data) {
-            setMessage(`✅ Tạo ${result.data.length} tầng thành công.`);
-        } else {
-            setMessage(result.error || "❌ Không thể tạo tầng.");
+        try {
+            // B1: Lấy danh sách tầng đã có
+            const existingFloors = await getFloorsByHome(home_ID)
+
+            const currentFloorCount = existingFloors?.length || 0
+            // B2: Tính số tầng còn lại
+            const remainingFloors = home_TotalFloors - currentFloorCount
+
+            if (remainingFloors <= 0) {
+                setMessage("❌ Nhà này đã đủ số tầng, không thể tạo thêm.")
+                setIsButtonDisabled(true) // Disable button khi đủ tầng
+                return
+            }
+
+            // B3: Gọi API tạo tầng
+            const result = await createFloorsForHome(home_ID, remainingFloors)
+
+            if (result?.data) {
+                setMessage(`✅ Tạo ${result.data.length} tầng thành công.`)
+            } else {
+                setMessage(result.error || "❌ Không thể tạo tầng.")
+            }
+        } catch (err) {
+            console.error("Lỗi tạo tầng:", err)
+            setMessage("❌ Lỗi máy chủ khi tạo tầng.")
         }
-    };
+    }
+
     const handleChangeHome = async (home_ID) => {
         try {
-            const result = await getFloorsByHome(home_ID);
-            setFloors(result || []); // nếu API trả về { data: [...] }
+            const result = await getFloorsByHome(home_ID)
+            setFloors(result || []) // nếu API trả về { data: [...] }
+
+            // Kiểm tra số tầng đã có và disable button nếu đủ tầng
+            const home = data.find((h) => h.home_ID === home_ID)
+            if (home) {
+                const currentFloorCount = result?.length || 0
+                const remainingFloors = home.home_TotalFloors - currentFloorCount
+                setIsButtonDisabled(remainingFloors <= 0) // Disable button nếu đủ tầng
+            }
         } catch (error) {
-            console.error("Lỗi khi lấy danh sách tầng:", error);
+            console.error("Lỗi khi lấy danh sách tầng:", error)
         }
-    };
+    }
+
     return (
         <>
-            <Row gutter={[24, 24]} style={{ rowGap: "10px" }}>
-                <Col xxl={4} xl={6} lg={8}>
-                    <Input
-                        allowClear
-                        value={searchText}
-                        style={{
-                            width: "100%",
-                        }}
-                        placeholder='Tìm kiếm: ID | Địa chỉ'
-                    />
-                </Col>
+            <Row gutter={[24, 24]} style={{rowGap: "10px"}}>
                 <Col>
                     <Select
+                        showSearch
+                        filterOption={(input, option) =>
+                            (option?.label ?? "").toLowerCase().includes(input.toLowerCase()) ||
+                            (option?.value ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
                         placeholder='Quận - Huyện'
                         onChange={(value, option) => {
-                            handleChangeHome(value);
+                            handleChangeHome(value)
                             setValueCreate({
                                 home_ID: value,
                                 home_TotalFloors: option.totalFloors,
-                            });
+                            })
                         }}
                         options={data.map((home) => ({
                             key: home.home_ID,
                             value: home.home_ID,
-                            label: home.home_ID,
+                            label: home.home_Address,
                             totalFloors: home.home_TotalFloors,
                         }))}
                     />
@@ -115,13 +126,14 @@ const FormFilter = ({
                 <Col>
                     <Button
                         type='primary'
+                        disabled={isButtonDisabled} // Disable button nếu đủ tầng
                         children='Tự động tạo tầng'
                         onClick={() => handleCreateFloors(valueCreate)}
                     />
                 </Col>
             </Row>
         </>
-    );
-};
+    )
+}
 
-export { FormFilter, columnsTable };
+export {FormFilter, columnsTable}

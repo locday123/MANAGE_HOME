@@ -17,7 +17,7 @@ const Home = sequelize.define(
         home_District: {
             type: DataTypes.STRING(10),
         },
-        customer_Ward: {
+        home_Ward: {
             type: DataTypes.STRING(10),
         },
         home_Address: {
