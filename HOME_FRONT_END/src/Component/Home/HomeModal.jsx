@@ -1,14 +1,26 @@
-import {Card, DatePicker, Form, Input, InputNumber, Select, Space} from "antd"
-const {RangePicker} = DatePicker
-import classnames from "classnames/bind"
-import style from "../../assets/ComponentCSS/Home/HomeModal.module.scss"
-import AddressForm from "../Extend/Address/AddressForm"
-import {useEffect, useState} from "react"
-import {createAddressHandlers} from "../Extend/Address/useAddressHandler"
-import {getDistricts, getProvinces, getWards} from "../../Service/Location/LocationSerivce"
-import dayjs from "dayjs"
-const cx = classnames.bind(style)
-function HomeModal({isEdit, homeData, setHomeData}) {
+import {
+    Card,
+    DatePicker,
+    Form,
+    Input,
+    InputNumber,
+    Select,
+    Space,
+} from "antd";
+const { RangePicker } = DatePicker;
+import classnames from "classnames/bind";
+import style from "../../assets/ComponentCSS/Home/HomeModal.module.scss";
+import AddressForm from "../Extend/Address/AddressForm";
+import { useEffect, useState } from "react";
+import { createAddressHandlers } from "../Extend/Address/useAddressHandler";
+import {
+    getDistricts,
+    getProvinces,
+    getWards,
+} from "../../Service/Location/LocationSerivce";
+import dayjs from "dayjs";
+const cx = classnames.bind(style);
+function HomeModal({ isEdit, homeData, setHomeData }) {
     const [locationData, setLocationData] = useState({
         provinces: [],
         districts: [],
@@ -19,14 +31,12 @@ function HomeModal({isEdit, homeData, setHomeData}) {
         loadingProvinces: true,
         loadingDistricts: false,
         loadingWards: false,
-    })
+    });
     const handleChange = (key, value) => {
-        setHomeData((prev) => ({...prev, [key]: value}))
-    }
-    const {handleProvinceChange, handleDistrictChange} = createAddressHandlers(
-        setLocationData,
-        handleChange
-    )
+        setHomeData((prev) => ({ ...prev, [key]: value }));
+    };
+    const { handleProvinceChange, handleDistrictChange } =
+        createAddressHandlers(setLocationData, handleChange);
 
     useEffect(() => {
         getProvinces()
@@ -35,15 +45,15 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                     ...prev,
                     provinces: res.data,
                     loadingProvinces: false,
-                }))
+                }));
             })
             .catch(() =>
                 setLocationData((prev) => ({
                     ...prev,
                     loadingProvinces: false,
                 }))
-            )
-    }, [])
+            );
+    }, []);
     useEffect(() => {
         const init = async () => {
             // Bước 1: Load tỉnh
@@ -55,16 +65,16 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                     loadingWards: true,
                     districts: [],
                     wards: [],
-                }))
-                handleChange("home_Province", homeData.home_Province)
+                }));
+                handleChange("home_Province", homeData.home_Province);
 
-                const resDistricts = await getDistricts(homeData.home_Province)
+                const resDistricts = await getDistricts(homeData.home_Province);
 
                 setLocationData((prev) => ({
                     ...prev,
                     districts: resDistricts.data,
                     loadingDistricts: false,
-                }))
+                }));
             }
 
             // Bước 2: Load quận
@@ -74,30 +84,30 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                     selectedDistrict: homeData.home_District,
                     loadingWards: true,
                     wards: [],
-                }))
-                handleChange("home_District", homeData.home_District)
+                }));
+                handleChange("home_District", homeData.home_District);
 
-                const resWards = await getWards(homeData.home_District)
+                const resWards = await getWards(homeData.home_District);
 
                 setLocationData((prev) => ({
                     ...prev,
                     wards: resWards.data,
                     loadingWards: false,
-                }))
+                }));
             }
 
             // Bước 3: Gán lại ward nếu có
             if (homeData?.home_Ward) {
-                handleChange("home_Ward", homeData.home_Ward)
+                handleChange("home_Ward", homeData.home_Ward);
                 setLocationData((prev) => ({
                     ...prev,
                     selectedWard: homeData.home_Ward,
-                }))
+                }));
             }
-        }
+        };
 
-        init()
-    }, [homeData?.home_Province, homeData?.home_District, homeData?.home_Ward])
+        init();
+    }, [homeData?.home_Province, homeData?.home_District, homeData?.home_Ward]);
     return (
         <Form layout='vertical'>
             <Space direction='vertical'>
@@ -114,7 +124,9 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                         <Input
                             size='large'
                             value={homeData?.home_HostName || ""}
-                            onChange={(e) => handleChange("home_HostName", e.target.value)}
+                            onChange={(e) =>
+                                handleChange("home_HostName", e.target.value)
+                            }
                         />
                     </Form.Item>
                     <Form.Item
@@ -130,7 +142,9 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                             size='large'
                             length={12}
                             value={homeData?.home_HostID || ""}
-                            onChange={(value) => handleChange("home_HostID", value)}
+                            onChange={(value) =>
+                                handleChange("home_HostID", value)
+                            }
                         />
                     </Form.Item>
 
@@ -148,7 +162,9 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                             size='large'
                             length={10}
                             value={homeData?.home_HostPhoneNumber || ""}
-                            onChange={(value) => handleChange("home_HostPhoneNumber", value)}
+                            onChange={(value) =>
+                                handleChange("home_HostPhoneNumber", value)
+                            }
                         />
                     </Form.Item>
                 </Card>
@@ -166,24 +182,32 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                     <Form.Item label='Thời gian hợp đồng'>
                         <RangePicker
                             size='large'
-                            style={{width: "100%"}}
+                            style={{ width: "100%" }}
                             format='DD/MM/YYYY'
                             allowClear
                             value={[
                                 homeData.home_ContractFrom
                                     ? dayjs(homeData.home_ContractFrom)
                                     : null,
-                                homeData.home_ContractTo ? dayjs(homeData.home_ContractTo) : null,
+                                homeData.home_ContractTo
+                                    ? dayjs(homeData.home_ContractTo)
+                                    : null,
                             ]}
                             onChange={(dates, dateStrings) => {
                                 if (dates) {
                                     // Cập nhật home_ContractFrom và home_ContractTo trong homeData
-                                    handleChange("home_ContractFrom", dates[0] ? dates[0] : "")
-                                    handleChange("home_ContractTo", dates[1] ? dates[1] : "")
+                                    handleChange(
+                                        "home_ContractFrom",
+                                        dates[0] ? dates[0] : ""
+                                    );
+                                    handleChange(
+                                        "home_ContractTo",
+                                        dates[1] ? dates[1] : ""
+                                    );
                                 } else {
                                     // Xử lý khi clear (đặt lại giá trị mặc định)
-                                    handleChange("home_ContractFrom", "")
-                                    handleChange("home_ContractTo", "")
+                                    handleChange("home_ContractFrom", "");
+                                    handleChange("home_ContractTo", "");
                                 }
                             }}
                         />
@@ -203,9 +227,16 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                             min={0}
                             placeholder='Giá thuê'
                             size='large'
-                            style={{width: "100%"}}
-                            formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                            onChange={(value) => handleChange("home_RentalPrice", value)}
+                            style={{ width: "100%" }}
+                            formatter={(value) =>
+                                ` ${value}`.replace(
+                                    /\B(?=(\d{3})+(?!\d))/g,
+                                    ","
+                                )
+                            }
+                            onChange={(value) =>
+                                handleChange("home_RentalPrice", value)
+                            }
                         />
                     </Form.Item>
                     <Form.Item
@@ -222,15 +253,19 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                             placeholder='Số tầng'
                             min={0}
                             size='large'
-                            style={{width: "100%"}}
-                            onChange={(value) => handleChange("home_TotalFloors", value)}
+                            style={{ width: "100%" }}
+                            onChange={(value) =>
+                                handleChange("home_TotalFloors", value)
+                            }
                         />
                     </Form.Item>
                     <Form.Item label='Tình trạng'>
                         <Select
                             size='large'
                             value={homeData?.home_Status || ""}
-                            onChange={(value) => handleChange("home_Status", value)}
+                            onChange={(value) =>
+                                handleChange("home_Status", value)
+                            }
                         >
                             <Option value='ACTIVE'>ACTIVE</Option>
                             <Option value='INACTIVE'>INACTIVE</Option>
@@ -239,7 +274,7 @@ function HomeModal({isEdit, homeData, setHomeData}) {
                 </Card>
             </Space>
         </Form>
-    )
+    );
 }
 
-export default HomeModal
+export default HomeModal;

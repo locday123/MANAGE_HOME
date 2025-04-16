@@ -1,4 +1,4 @@
-CREATE DATABASE MANAGE_HOME;
+homehomeCREATE DATABASE MANAGE_HOME;
 USE MANAGE_HOME;
 
 -- Bảng BANK: Lưu trữ thông tin về các ngân hàng.
@@ -54,7 +54,7 @@ CREATE TABLE HOME(
     home_ID VARCHAR(20),  -- ID nhà duy nhất.
     home_Province VARCHAR(10),
     home_District VARCHAR(10),
-    customer_Ward VARCHAR(10),
+    home_Ward VARCHAR(10),
     home_Address VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,  -- Địa chỉ khách hàng.
     home_RentalPrice BIGINT,  -- Giá thuê nhà.
     home_HostID VARCHAR(12),  -- ID chủ nhà.
