@@ -1,0 +1,44 @@
+.custom-sidebar {
+    height: 100vh;
+    position: sticky;
+    inset-inline-start: 0;
+    top: 0;
+    bottom: 0;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+    background-color: white;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+
+    &:global(.ant-layout-sider) {
+        transition: 0.1s linear;
+        border-right: 1px solid rgba(0, 0, 0, 0.12);
+        flex: 0 0 auto !important;
+        max-width: none !important;
+        min-width: 0px !important;
+        width: 17.5rem !important;
+
+
+        @media screen and (min-width: 1200px) and (max-width: 1300px) {
+            width: 15rem !important;
+        }
+    }
+
+    &:global(.ant-layout-sider-collapsed) {
+        transition: 200ms linear;
+        width: 0px !important;
+
+        &:global(.user-content) {
+            opacity: 0;
+            visibility: hidden;
+            width: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            margin-left: 0px;
+        }
+
+        @media screen and (min-width: 992px) {
+            width: 4rem !important;
+        }
+
+    }
+}

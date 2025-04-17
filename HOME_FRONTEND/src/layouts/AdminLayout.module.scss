@@ -1,0 +1,42 @@
+.app-layout {
+    min-height: 100vh;
+    position: relative;
+    background: rgb(244, 247, 254) !important;
+    overflow-x: hidden;
+
+    .app-scroll-bar {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0%;
+        height: 100%;
+        max-height: calc(-56px + 100vh);
+
+        .custom-content {
+            display: flex;
+            flex: 1 1 0%;
+            flex-direction: column;
+            padding: 20px 20px 0px;
+            min-height: auto !important;
+
+            @media screen and (min-width: 1600px) {
+                max-width: 1650px;
+                width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            @media screen and (min-width: 768px) {
+                padding: 30px 32px 0px;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+
+            max-height: calc(-71px + 100vh);
+
+        }
+    }
+
+
+}

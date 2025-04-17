@@ -1,0 +1,81 @@
+.user-info {
+    background-color: transparent;
+    padding: 7px 12px;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    transition: 0.2s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    @media screen and (min-width: 768px) {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        height: 71px;
+    }
+
+    .user-inner {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+
+        .user-avatar {
+            font-size: 24px;
+            background-color: rgb(250, 140, 22);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            -webkit-box-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            justify-content: center;
+        }
+
+
+
+        .user-content {
+            width: calc(100% - 62px);
+            margin-left: 16px;
+            transition: 0.2s;
+
+            .username-info {
+                display: flex;
+                -webkit-box-align: center;
+                align-items: center;
+                -webkit-box-pack: justify;
+                justify-content: space-between;
+
+                .username {
+                    margin-bottom: 0px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: inherit;
+                    margin-top: 0px;
+                }
+
+                .user-arrow {
+                    margin-left: 12px;
+                    width: 24px;
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    -webkit-box-pack: center;
+                    justify-content: center;
+                }
+            }
+        }
+
+        .user-designation {
+            margin-top: -2px;
+            color: inherit;
+            font-size: 14px;
+        }
+    }
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
