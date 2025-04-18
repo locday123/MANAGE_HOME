@@ -129,50 +129,62 @@ const deleteCustomer = async (req, res) => {
 }
 
 // Cập nhật khách hàng
+
 const updateCustomer = async (req, res) => {
     const {id} = req.params
-    const data = {
-        customer_ID: req.body.customer_ID,
-        customer_Name: req.body.customer_Name,
-        customer_Sex: req.body.customer_Sex,
-        customer_PhoneNumber: req.body.customer_PhoneNumber,
-        customer_Date: req.body.customer_Date,
-        customer_Status: req.body.customer_Status,
-    }
 
     try {
         const customer = await Customer.findByPk(id)
 
         if (!customer) {
-            return res.status(404).json({
-                message: "❌ Không tìm thấy khách hàng để cập nhật",
-            })
+            return res.status(404).json({message: "❌ Không tìm thấy khách hàng để cập nhật"})
         }
 
+        // Lấy dữ liệu form từ body
+        const data = {
+            customer_ID: req.body.customer_ID,
+            customer_Name: req.body.customer_Name,
+            customer_Sex:
+                req.body.customer_Sex === "true" || req.body.customer_Sex === true ? 1 : 0,
+            customer_PhoneNumber: req.body.customer_PhoneNumber,
+            customer_Date: req.body.customer_Date,
+            // Chuyển đổi customer_Status sang "ACTIVE" hoặc "INACTIVE"
+            customer_Status:
+                req.body.customer_Status === "ACTIVE" || req.body.customer_Status === true
+                    ? "ACTIVE"
+                    : "INACTIVE",
+        }
+
+        const customerID = customer.customer_ID // Dùng để tạo đường dẫn và tên file
         const frontImageFile = req.files?.frontImage?.[0]
         const backImageFile = req.files?.backImage?.[0]
 
+        // Xử lý ảnh mặt trước
         if (frontImageFile) {
             const oldFrontPath = customer.customer_FrontImage
-            data.customer_FrontImage = `/uploads/Images_CCCD/${customer.customer_ID}/${frontImageFile.filename}`
+            const imagePath = `/uploads/Images_CCCD/${customerID}/${frontImageFile.filename}`
+            data.customer_Front = imagePath
+
             if (oldFrontPath) {
-                const fullOldFront = path.join(__dirname, "..", oldFrontPath)
+                const fullOldFront = path.join(process.cwd(), "src", oldFrontPath)
                 if (fs.existsSync(fullOldFront)) fs.unlinkSync(fullOldFront)
             }
         }
 
+        // Xử lý ảnh mặt sau
         if (backImageFile) {
             const oldBackPath = customer.customer_BackImage
-            data.customer_BackImage = `/uploads/Images_CCCD/${customer.customer_ID}/${backImageFile.filename}`
+            const imagePath = `/uploads/Images_CCCD/${customerID}/${backImageFile.filename}`
+            data.customer_Back = imagePath
+
             if (oldBackPath) {
-                const fullOldBack = path.join(__dirname, "..", oldBackPath)
+                const fullOldBack = path.join(process.cwd(), "src", oldBackPath)
                 if (fs.existsSync(fullOldBack)) fs.unlinkSync(fullOldBack)
             }
         }
 
-        await Customer.update(data, {
-            where: {customer_ID: id},
-        })
+        // Cập nhật vào database
+        await Customer.update(data, {where: {customer_ID: id}})
 
         const updatedCustomer = await Customer.findByPk(id)
         res.json(updatedCustomer)

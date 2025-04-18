@@ -31,27 +31,21 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
     }, [customerData, form])
 
     const handleUploadChange = (info: any, type: "front" | "back") => {
-        if (info.file.status === "done") {
-            const url = info.file.response?.url || info.file.url // Thay đổi cho phù hợp với cấu trúc response của bạn
+        const file = info.file.originFileObj || info.file
+
+        const reader = new FileReader()
+        reader.onload = () => {
+            const imageUrl = reader.result as string
             if (type === "front") {
-                setFrontImage(url)
+                setFrontImage(imageUrl)
+                form.setFieldValue("customer_Front", file) // GÁN file thật
             } else {
-                setBackImage(url)
+                setBackImage(imageUrl)
+                form.setFieldValue("customer_Back", file) // GÁN file thật
             }
-        } else if (info.file.status === "error") {
-            console.error("File upload failed:", info.file)
-        } else if (info.file.status === "uploading" && info.file.originFileObj) {
-            const reader = new FileReader()
-            reader.onload = () => {
-                const imageUrl = reader.result as string
-                if (type === "front") {
-                    setFrontImage(imageUrl)
-                } else {
-                    setBackImage(imageUrl)
-                }
-            }
-            reader.readAsDataURL(info.file.originFileObj)
         }
+
+        if (file) reader.readAsDataURL(file)
     }
 
     const handlePreviewFile = (file: Blob | File) => {
@@ -88,8 +82,10 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
                                 listType='picture-card'
                                 showUploadList={false}
                                 beforeUpload={(file) => {
-                                    form.setFieldValue("frontImage", file)
-                                    return false // ngăn upload tự động
+                                    // Lưu tệp vào form
+
+                                    form.setFieldValue("customer_Front", file)
+                                    return false // Ngăn việc tải lên tự động
                                 }}
                                 onChange={(info) => handleUploadChange(info, "front")}
                                 previewFile={handlePreviewFile}
@@ -117,8 +113,9 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
                                 listType='picture-card'
                                 showUploadList={false}
                                 beforeUpload={(file) => {
-                                    form.setFieldValue("backImage", file)
-                                    return false // ngăn upload tự động
+                                    // Lưu tệp vào form
+                                    form.setFieldValue("customer_Back", file)
+                                    return false // Ngăn việc tải lên tự động
                                 }}
                                 onChange={(info) => handleUploadChange(info, "back")}
                                 previewFile={handlePreviewFile}

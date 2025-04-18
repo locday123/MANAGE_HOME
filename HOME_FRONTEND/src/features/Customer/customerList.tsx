@@ -52,25 +52,44 @@ function CustomerList() {
 
     const handleOk = async (form: FormInstance) => {
         const formData: Customer = form.getFieldsValue()
+        console.log(formData)
 
-        if (isEdit && selectedCustomer) {
-            try {
-                await updatedCustomer(selectedCustomer.customer_ID, formData)
+        const uploadData = new FormData() // Khởi tạo FormData để gửi kèm ảnh
+
+        // Thêm dữ liệu của form vào FormData
+        uploadData.append("customer_ID", formData.customer_ID)
+        uploadData.append("customer_Name", formData.customer_Name)
+        uploadData.append("customer_Sex", formData.customer_Sex.toString()) // Chuyển boolean thành string nếu cần
+        uploadData.append("customer_PhoneNumber", formData.customer_PhoneNumber)
+        uploadData.append("customer_Date", formData.customer_Date)
+        uploadData.append("customer_Status", formData.customer_Status.toString()) // Chuyển boolean thành string nếu cần
+        console.log(formData.customer_Front)
+
+        // Nếu có file ảnh, thêm vào FormData
+        if (formData.customer_Front) {
+            uploadData.append("frontImage", formData.customer_Front)
+        }
+        if (formData.customer_Back) {
+            uploadData.append("backImage", formData.customer_Back)
+        }
+
+        try {
+            if (isEdit && selectedCustomer) {
+                // Cập nhật khách hàng
+                await updatedCustomer(selectedCustomer.customer_ID, uploadData)
                 setCustomers((prev) =>
                     prev.map((c) => (c.customer_ID === selectedCustomer.customer_ID ? formData : c))
                 )
-            } catch (error) {
-                console.error("Lỗi khi cập nhật khách hàng:", error)
-            }
-        } else {
-            try {
-                await addCustomer(formData)
+            } else {
+                // Tạo khách hàng mới
+                await addCustomer(formData) // Lưu ý: Gửi `uploadData` thay vì `formData`
                 setCustomers((prev) => [...prev, formData])
-            } catch (error) {
-                console.error("Lỗi khi tạo khách hàng:", error)
             }
+        } catch (error) {
+            console.error("Lỗi khi xử lý khách hàng:", error)
         }
 
+        // Đóng modal và reset các trạng thái
         setModalOpen(false)
         setSelectedCustomer(null)
         setIsEdit(false)

@@ -1,6 +1,9 @@
 import multer from "multer"
 import path from "path"
 import fs from "fs"
+import {fileURLToPath} from "url"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Tạo thư mục nếu chưa có
 const createDirectoryIfNotExists = (directory) => {
@@ -20,8 +23,14 @@ const storage = multer.diskStorage({
         cb(null, uploadDir) // Đặt thư mục lưu trữ file
     },
     filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname) // Lấy phần mở rộng của file
-        cb(null, `${Date.now()}${ext}`) // Đặt tên file là timestamp + extension
+        const ext = path.extname(file.originalname) // lấy đuôi .jpg, .png,...
+        const customerId = req.params.id || req.body.customer_ID
+
+        // Phân biệt file mặt trước / mặt sau
+        const isFront = file.fieldname === "frontImage"
+        const prefix = isFront ? "front" : "back"
+
+        cb(null, `${customerId}_${prefix}${ext}`)
     },
 })
 
@@ -29,6 +38,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage,
     fileFilter: (req, file, cb) => {
+        console.log(req.file)
         const allowedTypes = ["image/jpeg", "image/png", "image/jpg"]
         if (allowedTypes.includes(file.mimetype)) {
             cb(null, true)
