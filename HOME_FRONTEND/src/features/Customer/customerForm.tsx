@@ -92,7 +92,12 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
                             >
                                 {frontImage ? (
                                     <img
-                                        src={`${apiUrl}${frontImage}`} // Hiển thị ảnh từ server
+                                        src={
+                                            typeof frontImage === "string" &&
+                                            frontImage.startsWith("data:")
+                                                ? frontImage
+                                                : `${apiUrl}${frontImage}`
+                                        }
                                         alt='Ảnh mặt trước'
                                         style={{width: "100%", height: "100%"}}
                                     />
@@ -122,7 +127,12 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
                             >
                                 {backImage ? (
                                     <img
-                                        src={`${apiUrl}${backImage}`} // Hiển thị ảnh từ server
+                                        src={
+                                            typeof backImage === "string" &&
+                                            backImage.startsWith("data:")
+                                                ? backImage
+                                                : `${apiUrl}${backImage}`
+                                        }
                                         alt='Ảnh mặt sau'
                                         style={{width: "100%", height: "100%"}}
                                     />
