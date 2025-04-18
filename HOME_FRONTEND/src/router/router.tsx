@@ -17,7 +17,7 @@ import {
     WalletOutlined,
 } from "@ant-design/icons"
 import Dashboard from "../pages/Dashboard/dashboard"
-import Customer from "../pages/Customer/customers"
+import Customer from "../pages/Customer/customers.page"
 
 type RouteItem = {
     key: string

@@ -1,3 +1,14 @@
+:global(.ant-layout-sider-collapsed) {
+    .user-content {
+        opacity: 0;
+        visibility: hidden;
+        width: 0px !important;
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-left: 0px !important;
+    }
+}
+
 .user-info {
     background-color: transparent;
     padding: 7px 12px;
@@ -31,8 +42,6 @@
             -webkit-box-pack: center;
             justify-content: center;
         }
-
-
 
         .user-content {
             width: calc(100% - 62px);

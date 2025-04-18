@@ -27,17 +27,10 @@
         transition: 200ms linear;
         width: 0px !important;
 
-        &:global(.user-content) {
-            opacity: 0;
-            visibility: hidden;
-            width: 0px;
-            padding-left: 0px;
-            padding-right: 0px;
-            margin-left: 0px;
-        }
-
         @media screen and (min-width: 992px) {
             width: 4rem !important;
+
+
         }
 
     }
