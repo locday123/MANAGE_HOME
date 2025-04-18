@@ -5,6 +5,7 @@ import type {FormInstance} from "antd/es/form"
 import type Customer from "../../types/customer.type"
 import {UploadOutlined} from "@ant-design/icons"
 
+const apiUrl = import.meta.env.VITE_REACT_URL
 const {Option} = Select
 
 type Props = {
@@ -83,7 +84,6 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
                                 showUploadList={false}
                                 beforeUpload={(file) => {
                                     // Lưu tệp vào form
-
                                     form.setFieldValue("customer_Front", file)
                                     return false // Ngăn việc tải lên tự động
                                 }}
@@ -92,7 +92,7 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
                             >
                                 {frontImage ? (
                                     <img
-                                        src={frontImage}
+                                        src={`${apiUrl}${frontImage}`} // Hiển thị ảnh từ server
                                         alt='Ảnh mặt trước'
                                         style={{width: "100%", height: "100%"}}
                                     />
@@ -122,7 +122,7 @@ export default function CustomerForm({form, isEdit = false, customerData}: Props
                             >
                                 {backImage ? (
                                     <img
-                                        src={backImage}
+                                        src={`${apiUrl}${backImage}`} // Hiển thị ảnh từ server
                                         alt='Ảnh mặt sau'
                                         style={{width: "100%", height: "100%"}}
                                     />

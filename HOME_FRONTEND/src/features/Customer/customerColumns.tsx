@@ -1,8 +1,8 @@
 import {ColumnsType} from "antd/es/table"
-import {Dropdown, Menu, MenuProps, Popconfirm, Space, Tag} from "antd"
+import {Dropdown, Image, Menu, MenuProps, Popconfirm, Space, Tag} from "antd"
 import {MoreOutlined, DeleteTwoTone, EditTwoTone} from "@ant-design/icons"
 import Customer from "../../types/customer.type"
-
+const apiUrl = import.meta.env.VITE_REACT_URL
 type GetCustomerColumnsProps = {
     onEdit: (customer: Customer) => void
     onDelete: (customer: Customer) => void
@@ -50,11 +50,29 @@ export const getCustomerColumns = ({
         title: "Ảnh mặt trước",
         dataIndex: "customer_Front",
         key: "customer_Front",
+        align: "center",
+        render: (text: string) =>
+            text ? (
+                <Image
+                    src={`${apiUrl}${text}`} // Sử dụng apiUrl để ghép với đường dẫn ảnh
+                    alt='Ảnh mặt sau'
+                    width={30}
+                />
+            ) : null, // Nếu text không có giá trị thì không render gì cả
     },
     {
         title: "Ảnh mặt sau",
         dataIndex: "customer_Back",
         key: "customer_Back",
+        align: "center",
+        render: (text: string) =>
+            text ? (
+                <Image
+                    src={`${apiUrl}${text}`} // Sử dụng apiUrl để ghép với đường dẫn ảnh
+                    alt='Ảnh mặt sau'
+                    width={30}
+                />
+            ) : null, // Nếu text không có giá trị thì không render gì cả
     },
     {
         title: "Trạng thái",
