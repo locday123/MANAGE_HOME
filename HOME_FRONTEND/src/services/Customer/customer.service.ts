@@ -21,13 +21,24 @@ const getAllCustomer = async (): Promise<ApiResponse<Customer[]>> => {
 };
 
 // Thêm khách hàng mới
-const addCustomer = async (customer: Customer): Promise<Customer | null> => {
+const addCustomer = async (
+    customerData: Customer | FormData
+): Promise<Customer | null> => {
     try {
-        const response = await service.post(`${api}`, customer);
+        const isFormData = customerData instanceof FormData;
+
+        const response = await service.post(`${api}`, customerData, {
+            headers: {
+                "Content-Type": isFormData
+                    ? "multipart/form-data"
+                    : "application/json",
+            },
+        });
+
         return response.data; // Trả về đối tượng Customer vừa được thêm
     } catch (error) {
         console.log("Lỗi khi gọi API addCustomer:", error);
-        return null; // Trả về null nếu có lỗi
+        return null;
     }
 };
 
@@ -38,30 +49,33 @@ const updatedCustomer = async (
     customerData: Partial<Customer> | FormData
 ): Promise<Customer | null> => {
     try {
-        const response = await service.put(`${api}/${customerID}`, customerData, {
-            headers: customerData instanceof FormData
-                ? { "Content-Type": "multipart/form-data" }
-                : undefined,
-        })
-        return response.data
+        const response = await service.put(
+            `${api}/${customerID}`,
+            customerData,
+            {
+                headers:
+                    customerData instanceof FormData
+                        ? { "Content-Type": "multipart/form-data" }
+                        : undefined,
+            }
+        );
+        return response.data;
     } catch (error) {
-        
-        console.error("❌ Lỗi khi gọi API updatedCustomer:", error)
-        return null
+        console.error("❌ Lỗi khi gọi API updatedCustomer:", error);
+        return null;
     }
-}
-
+};
 
 // Xóa khách hàng
-const deleteACustomer = async (userID: string): Promise<boolean> => {
+const deleteCustomer = async (userID: string): Promise<boolean> => {
     try {
         const response = await service.delete(`${api}/${userID}`);
-        
+
         // Kiểm tra nếu xóa thành công, có thể dùng `response.data` thay vì chỉ `status`
         if (response.status === 200 || response.data?.success) {
             return true; // Trả về true nếu xóa thành công
         }
-        
+
         return false; // Trả về false nếu xóa thất bại
     } catch (err) {
         console.log("Lỗi khi gọi API deleteACustomer:", err);
@@ -69,4 +83,4 @@ const deleteACustomer = async (userID: string): Promise<boolean> => {
     }
 };
 
-export { getAllCustomer, addCustomer, deleteACustomer, updatedCustomer };
+export { getAllCustomer, addCustomer, deleteCustomer, updatedCustomer };

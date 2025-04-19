@@ -1,4 +1,4 @@
-import {ReactNode} from "react"
+import { ReactNode } from "react";
 import {
     UserOutlined,
     FileTextOutlined,
@@ -15,21 +15,26 @@ import {
     CreditCardOutlined,
     ShopOutlined,
     WalletOutlined,
-} from "@ant-design/icons"
-import Dashboard from "../pages/Dashboard/dashboard"
-import Customer from "../pages/Customer/customers.page"
+} from "@ant-design/icons";
+import Dashboard from "../pages/Dashboard/dashboard.page";
+import Customer from "../pages/Customer/customers.page";
+import Home from "../pages/Home/home.page";
 
 type RouteItem = {
-    key: string
-    path?: string
-    label: string
-    parent?: string
-    component?: React.FC
-    icon?: ReactNode
-}
+    key: string;
+    path?: string;
+    label: string;
+    parent?: string;
+    component?: React.FC;
+    icon?: ReactNode;
+};
 
 const publicRoutes: RouteItem[] = [
-    {key: "customer-management", label: "Khách hàng & hợp đồng", icon: <UserOutlined />},
+    {
+        key: "customer-management",
+        label: "Khách hàng & hợp đồng",
+        icon: <UserOutlined />,
+    },
     {
         key: "/customers",
         path: "/customers",
@@ -70,13 +75,17 @@ const publicRoutes: RouteItem[] = [
         component: Dashboard,
         icon: <StarOutlined />,
     },
-    {key: "building-management", label: "Tòa nhà & phòng", icon: <HomeOutlined />},
+    {
+        key: "building-management",
+        label: "Tòa nhà & phòng",
+        icon: <HomeOutlined />,
+    },
     {
         key: "/homes",
         path: "/homes",
         label: "Danh sách nhà",
         parent: "building-management",
-        component: Dashboard,
+        component: Home,
         icon: <ShopOutlined />,
     },
     {
@@ -119,7 +128,11 @@ const publicRoutes: RouteItem[] = [
         component: Dashboard,
         icon: <SettingOutlined />,
     },
-    {key: "asset-management", label: "Tài sản & nội thất", icon: <ContainerOutlined />},
+    {
+        key: "asset-management",
+        label: "Tài sản & nội thất",
+        icon: <ContainerOutlined />,
+    },
     {
         key: "/products",
         path: "/products",
@@ -144,7 +157,11 @@ const publicRoutes: RouteItem[] = [
         component: Dashboard,
         icon: <ToolOutlined />,
     },
-    {key: "payment-management", label: "Thanh toán & công nợ", icon: <WalletOutlined />},
+    {
+        key: "payment-management",
+        label: "Thanh toán & công nợ",
+        icon: <WalletOutlined />,
+    },
     {
         key: "/payment-schedule",
         path: "/payment-schedule",
@@ -160,6 +177,6 @@ const publicRoutes: RouteItem[] = [
         parent: "payment-management",
         component: Dashboard,
     },
-]
+];
 
-export {publicRoutes}
+export { publicRoutes };

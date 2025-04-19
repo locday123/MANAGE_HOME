@@ -1,6 +1,6 @@
-import CustomerList from "../../features/Customer/customerList"
+import CustomerList from "../../features/Customer/customerList.features";
 
 function Customer() {
-    return <CustomerList />
+    return <CustomerList />;
 }
-export default Customer
+export default Customer;
