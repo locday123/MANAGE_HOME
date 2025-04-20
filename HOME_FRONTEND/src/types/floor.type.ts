@@ -1,9 +1,15 @@
+// floor.type.ts
+
+import Home from "./home.type";
+
+
 type Floor = {
-    floor_ID: string; // ID tầng, kiểu string (tối đa 20 ký tự).
-    home_ID: string; // ID nhà (liên kết với bảng HOME), kiểu string (tối đa 20 ký tự).
-    floor_Name: string; // Tên tầng, kiểu string (tối đa 10 ký tự).
-    floor_TotalRooms: number; // Tổng số phòng, kiểu số nguyên (integer).
-    created_at: string; // Thời gian tạo thông tin tầng, kiểu string (theo định dạng ISO 8601).
+    floor_ID: string;
+    floor_Name: string;
+    floor_TotalRooms: number;
+    created_at: string; // ISO string
+    home_ID: string;
+    Home: Home
 };
 
 export default Floor;

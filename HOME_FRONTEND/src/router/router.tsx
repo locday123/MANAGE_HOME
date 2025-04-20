@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react"
 import {
     UserOutlined,
     FileTextOutlined,
@@ -15,19 +15,20 @@ import {
     CreditCardOutlined,
     ShopOutlined,
     WalletOutlined,
-} from "@ant-design/icons";
-import Dashboard from "../pages/Dashboard/dashboard.page";
-import Customer from "../pages/Customer/customers.page";
-import Home from "../pages/Home/home.page";
+} from "@ant-design/icons"
+import Dashboard from "../pages/Dashboard/dashboard.page"
+import Customer from "../pages/Customer/customers.page"
+import Home from "../pages/Home/home.page"
+import Floor from "../pages/Floor/floor.page"
 
 type RouteItem = {
-    key: string;
-    path?: string;
-    label: string;
-    parent?: string;
-    component?: React.FC;
-    icon?: ReactNode;
-};
+    key: string
+    path?: string
+    label: string
+    parent?: string
+    component?: React.FC
+    icon?: ReactNode
+}
 
 const publicRoutes: RouteItem[] = [
     {
@@ -93,7 +94,7 @@ const publicRoutes: RouteItem[] = [
         path: "/floors",
         label: "Tầng",
         parent: "building-management",
-        component: Dashboard,
+        component: Floor,
         icon: <ApartmentOutlined />,
     },
     {
@@ -177,6 +178,6 @@ const publicRoutes: RouteItem[] = [
         parent: "payment-management",
         component: Dashboard,
     },
-];
+]
 
-export { publicRoutes };
+export {publicRoutes}

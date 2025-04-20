@@ -1,48 +1,46 @@
-import { Button, Card } from "antd";
-import { useState, useEffect } from "react";
-import { UserAddOutlined } from "@ant-design/icons";
-import type { FormInstance } from "antd";
-
-import CustomTable from "../../components/Table/CustomTable.components";
-import CustomModal from "../../components/Modal/CustomModal.components";
-import Customer from "../../types/customer.type";
-
-import CustomerForm from "./customerForm.features";
-import CustomerStatistics from "./customerStatistics.features";
-import getCustomerColumns from "./customerColumns.features";
-import CustomerFilter from "./customerFilter.features";
-
-import { handleDeleteCustomer, handleOkCustomer } from "./customer.handlers";
-import { filterCustomers } from "./customer.utils";
-import { getAllCustomer } from "../../services/Customer/customer.service";
+//import Thư viện
+import {Button, Card, FormInstance} from "antd"
+import {useState, useEffect} from "react"
+import {UserAddOutlined} from "@ant-design/icons"
+//import Components
+import CustomTable from "../../components/Table/CustomTable.components"
+import CustomModal from "../../components/Modal/CustomModal.components"
+//import Giao diện
+import CustomerForm from "./customerForm.features"
+import CustomerStatistics from "./customerStatistics.features"
+import getCustomerColumns from "./customerColumns.features"
+import CustomerFilter from "./customerFilter.features"
+//import Chức năng
+import {handleDeleteCustomer, handleOkCustomer} from "./customer.handlers"
+import {filterCustomers} from "./customer.utils"
+import {getAllCustomer} from "../../services/Customer/customer.service"
+import Customer from "../../types/customer.type"
 
 function CustomerList() {
-    const [customers, setCustomers] = useState<Customer[]>([]);
-    const [searchValue, setSearchValue] = useState("");
-    const [modalOpen, setModalOpen] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
-        null
-    );
+    const [customers, setCustomers] = useState<Customer[]>([])
+    const [searchValue, setSearchValue] = useState("")
+    const [modalOpen, setModalOpen] = useState(false)
+    const [isEdit, setIsEdit] = useState(false)
+    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
 
-    const filteredData = filterCustomers(customers, searchValue);
+    const filteredData = filterCustomers(customers, searchValue)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getAllCustomer();
+                const result = await getAllCustomer()
                 if (result?.data && Array.isArray(result.data)) {
-                    setCustomers(result.data);
+                    setCustomers(result.data)
                 } else {
-                    console.error("Dữ liệu không hợp lệ:", result);
+                    console.error("Dữ liệu không hợp lệ:", result)
                 }
             } catch (error) {
-                console.error("Lỗi khi gọi API:", error);
+                console.error("Lỗi khi gọi API:", error)
             }
-        };
+        }
 
-        fetchData();
-    }, []);
+        fetchData()
+    }, [])
 
     const handleOk = async (form: FormInstance) => {
         await handleOkCustomer(
@@ -53,31 +51,26 @@ function CustomerList() {
             setModalOpen,
             setSelectedCustomer,
             setIsEdit
-        );
-    };
+        )
+    }
 
     const handleDelete = async (customer: Customer) => {
-        await handleDeleteCustomer(customer, setCustomers);
-    };
+        await handleDeleteCustomer(customer, setCustomers)
+    }
 
     return (
         <>
             <CustomerStatistics customers={customers} />
             <Card
-                title={
-                    <CustomerFilter
-                        searchValue={searchValue}
-                        onSearchChange={setSearchValue}
-                    />
-                }
+                title={<CustomerFilter searchValue={searchValue} onSearchChange={setSearchValue} />}
                 extra={
                     <Button
-                        icon={<UserAddOutlined style={{ fontSize: "22px" }} />}
+                        icon={<UserAddOutlined style={{fontSize: "22px"}} />}
                         type='primary'
                         onClick={() => {
-                            setIsEdit(false);
-                            setSelectedCustomer(null);
-                            setModalOpen(true);
+                            setIsEdit(false)
+                            setSelectedCustomer(null)
+                            setModalOpen(true)
                         }}
                     />
                 }
@@ -85,15 +78,15 @@ function CustomerList() {
                 <CustomTable<Customer>
                     columns={getCustomerColumns({
                         onEdit: (customer) => {
-                            setSelectedCustomer(customer);
-                            setIsEdit(true);
-                            setModalOpen(true);
+                            setSelectedCustomer(customer)
+                            setIsEdit(true)
+                            setModalOpen(true)
                         },
                         onDelete: handleDelete, // Truyền trực tiếp handleDelete vào
                     })}
                     dataSource={filteredData}
                     pagination={false}
-                    scroll={{ x: "max-content" }}
+                    scroll={{x: "max-content"}}
                 />
             </Card>
 
@@ -105,15 +98,11 @@ function CustomerList() {
                 entityName='KHÁCH HÀNG'
             >
                 {(form) => (
-                    <CustomerForm
-                        form={form}
-                        isEdit={isEdit}
-                        customerData={selectedCustomer}
-                    />
+                    <CustomerForm form={form} isEdit={isEdit} customerData={selectedCustomer} />
                 )}
             </CustomModal>
         </>
-    );
+    )
 }
 
-export default CustomerList;
+export default CustomerList
