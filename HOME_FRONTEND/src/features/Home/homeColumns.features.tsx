@@ -1,14 +1,20 @@
-import {ColumnsType} from "antd/es/table"
-import {Dropdown, Menu, MenuProps, Popconfirm, Space, Tag} from "antd"
-import {MoreOutlined, DeleteTwoTone, EditTwoTone} from "@ant-design/icons"
-import Home from "../../types/home.type"
+import { ColumnsType } from "antd/es/table";
+import { Dropdown, Menu, MenuProps, Popconfirm, Space, Tag } from "antd";
+import { MoreOutlined, DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
+import Home from "../../types/home.type";
 
 type GetHomeColumnsProps = {
-    onEdit: (home: Home) => void
-    onDelete: (home: Home) => void
-}
+    onEdit: (home: Home) => void;
+    onDelete: (
+        home: Home,
+        setHome: React.Dispatch<React.SetStateAction<Home[]>>
+    ) => void;
+};
 
-export const getHomesColumns = ({onEdit, onDelete}: GetHomeColumnsProps): ColumnsType<Home> => [
+export const getHomesColumns = ({
+    onEdit,
+    onDelete,
+}: GetHomeColumnsProps): ColumnsType<Home> => [
     {
         title: "Mã nhà",
         dataIndex: "home_ID",
@@ -92,7 +98,8 @@ export const getHomesColumns = ({onEdit, onDelete}: GetHomeColumnsProps): Column
         dataIndex: "created_at",
         key: "created_at",
         align: "center",
-        render: (_, value) => new Date(value.home_ContractTo).toLocaleDateString("vi-VN"),
+        render: (_, value) =>
+            new Date(value.home_ContractTo).toLocaleDateString("vi-VN"),
     },
     {
         dataIndex: "action",
@@ -128,16 +135,20 @@ export const getHomesColumns = ({onEdit, onDelete}: GetHomeColumnsProps): Column
                         </Popconfirm>
                     ),
                 },
-            ]
+            ];
             return (
                 <Dropdown
-                    overlay={<Menu items={menuItems} style={{width: "100%"}} />}
+                    overlay={
+                        <Menu items={menuItems} style={{ width: "100%" }} />
+                    }
                     trigger={["click"]}
                     placement='bottomLeft'
                 >
-                    <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
+                    <MoreOutlined
+                        style={{ fontSize: "20px", cursor: "pointer" }}
+                    />
                 </Dropdown>
-            )
+            );
         },
     },
-]
+];

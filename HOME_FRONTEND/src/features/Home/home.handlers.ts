@@ -1,10 +1,10 @@
-import { FormInstance } from "antd"
-import Home from "../../types/home.type"
+import { FormInstance } from "antd";
+import Home from "../../types/home.type";
 import {
     addHome,
     deleteHome,
     updateHome,
-} from "../../services/Home/homes.service"
+} from "../../services/Home/homes.service";
 
 export const handleOkHome = async (
     form: FormInstance,
@@ -16,10 +16,11 @@ export const handleOkHome = async (
     setIsEdit: (val: boolean) => void
 ) => {
     const { home_ContractRange, ...rest } = form.getFieldsValue();
-    
+
     const formData: Home = {
         ...rest,
-        home_ContractFrom: home_ContractRange?.[0]?.format("YYYY-MM-DD") || null,
+        home_ContractFrom:
+            home_ContractRange?.[0]?.format("YYYY-MM-DD") || null,
         home_ContractTo: home_ContractRange?.[1]?.format("YYYY-MM-DD") || null,
     };
 
@@ -28,7 +29,9 @@ export const handleOkHome = async (
             await updateHome(selectedHome.home_ID, formData);
             setHomes((prev) =>
                 prev.map((h) =>
-                    h.home_ID === selectedHome.home_ID ? { ...h, ...formData } : h
+                    h.home_ID === selectedHome.home_ID
+                        ? { ...h, ...formData }
+                        : h
                 )
             );
         } else {
@@ -46,15 +49,15 @@ export const handleOkHome = async (
     setIsEdit(false);
 };
 
-
 export const handleDeleteHome = async (
     home: Home,
-    setHomes: React.Dispatch<React.SetStateAction<Home[]>>
+    setHome: React.Dispatch<React.SetStateAction<Home[]>>
 ) => {
     try {
-        await deleteHome(home.home_ID)
-        setHomes((prev) => prev.filter((h) => h.home_ID !== home.home_ID))
+        await deleteHome(home.home_ID);
+
+        setHome((prev) => prev.filter((c) => c.home_ID !== home.home_ID));
     } catch (error) {
-        console.error("Lỗi khi xóa nhà:", error)
+        console.error("Lỗi khi xóa nhà:", error);
     }
-}
+};

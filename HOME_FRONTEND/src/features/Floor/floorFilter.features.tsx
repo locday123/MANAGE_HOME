@@ -1,63 +1,56 @@
-import {Input, Row, Col, Select} from "antd"
-import Home from "../../types/home.type"
-import Floor from "../../types/floor.type"
+import { Row, Col, Select, Button } from "antd";
+import Home from "../../types/home.type";
 
 type FloorFilterProps = {
-    searchValue: string
-    onSearchChange: (value: string) => void
-    floors: Floor[] // Truyền danh sách tầng thay vì danh sách nhà
-    selectedHome: string
-    onHomeChange: (homeId: string) => void
-}
+    selectedHome: string;
+    onHomeChange: (home_ID: string, option: any) => void;
+    homes: Home[];
+    currentFloorCount: number; // Số tầng hiện tại của floor
+    maxFloor: number; // Thêm prop maxFloor
+    onAddFloor: (home_ID: string, floorCount: number) => void; // Hàm để tự động tạo tầng
+};
 
 function FloorFilter({
-    searchValue,
-    onSearchChange,
-    floors,
+    homes,
     selectedHome,
     onHomeChange,
+    currentFloorCount,
+    maxFloor,
+    onAddFloor,
 }: FloorFilterProps) {
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onSearchChange(e.target.value)
-    }
-
-    const handleHomeChange = (value: string) => {
-        onHomeChange(value)
-    }
-
-    const homeOptions = [...new Set(floors.map((floor) => floor.home_ID))]
-    const homes = homeOptions
-        .map((homeId) => {
-            const home = floors.find((floor) => floor.home_ID === homeId)?.Home
-            return home
-        })
-        .filter((home): home is Home => home !== undefined)
+    const floorNumber = maxFloor - currentFloorCount;
+    const handleAddFloor = () => {
+        if (selectedHome) {
+            // Gọi hàm onAddFloor với home_ID và số tầng
+            onAddFloor(selectedHome, floorNumber);
+        }
+    };
     return (
         <Row gutter={16}>
             <Col xxl={4}>
-                <Input
-                    placeholder='Tìm kiếm tầng...'
-                    allowClear
-                    value={searchValue}
-                    onChange={handleSearchChange}
+                <Select
+                    placeholder='Chọn nhà'
+                    style={{ width: "100%" }}
+                    value={selectedHome}
+                    onChange={onHomeChange}
+                    options={homes.map((home) => ({
+                        label: home.home_Address,
+                        value: home.home_ID,
+                        totalFloor: home.home_TotalFloors,
+                    }))}
                 />
             </Col>
             <Col xxl={4}>
-                <Select
-                    placeholder='Chọn nhà'
-                    value={selectedHome}
-                    onChange={handleHomeChange}
-                    style={{width: "100%"}}
+                <Button
+                    type='primary'
+                    disabled={floorNumber <= 0} // Disable button nếu số tầng đã đầy
+                    onClick={handleAddFloor} // Khi nhấn nút sẽ gọi hàm tạo tầng
                 >
-                    {homes.map((home) => (
-                        <Select.Option key={home.home_ID} value={home.home_ID}>
-                            {home.home_Address}
-                        </Select.Option>
-                    ))}
-                </Select>
+                    Tự động tạo tầng
+                </Button>
             </Col>
         </Row>
-    )
+    );
 }
 
-export default FloorFilter
+export default FloorFilter;

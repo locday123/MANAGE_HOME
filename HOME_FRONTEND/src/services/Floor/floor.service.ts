@@ -27,7 +27,25 @@ const getAllFloor = async (): Promise<ApiResponse<Floor[]> | undefined> => {
     }
 };
 
-
+const getFloorsByHomeID = async (
+    homeId: string
+): Promise<ApiResponse<Floor[]> | undefined> => {
+    try {
+        const response = await client.get(`${api}/${homeId}`);
+        return {
+            data: response.data, // chú ý: .data.data vì backend trả về { status, data }
+            status: response.status,
+            error: null,
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            data: [],
+            status: 500,
+            error: err,
+        };
+    }
+};
 
 const addFloor = async (floor: Floor): Promise<Floor | undefined> => {
     try {
@@ -61,4 +79,35 @@ const deleteFloor = async (
     }
 };
 
-export { getAllFloor, addFloor, updateFloor, deleteFloor };
+const createFloorsForHome = async (
+    home_ID: string,
+    totalFloors: number
+): Promise<ApiResponse<Floor[]>> => {
+    try {
+        const response = await client.post<Floor[]>(`${api}/${home_ID}`, {
+            totalFloors,
+        });
+
+        return {
+            data: response.data,
+            status: response.status,
+            error: null,
+        };
+    } catch (error: any) {
+        console.error("❌ Lỗi khi tạo tầng:", error);
+        return {
+            data: [] as Floor[],
+            status: error?.response?.status || 500,
+            error: error?.response?.data?.message || "Lỗi máy chủ",
+        };
+    }
+};
+
+export {
+    getAllFloor,
+    getFloorsByHomeID,
+    addFloor,
+    updateFloor,
+    deleteFloor,
+    createFloorsForHome,
+};

@@ -16,10 +16,10 @@ export const handleOkFloor = async (
     setIsEdit: (val: boolean) => void
 ) => {
     const { floor_Name, floor_TotalRooms, ...rest } = form.getFieldsValue();
-    
+
     const formData: Floor = {
         ...rest,
-        floor_Name: floor_Name || '',
+        floor_Name: floor_Name || "",
         floor_TotalRooms: floor_TotalRooms || 0,
     };
 
@@ -28,7 +28,9 @@ export const handleOkFloor = async (
             await updateFloor(selectedFloor.floor_ID, formData);
             setFloors((prev) =>
                 prev.map((f) =>
-                    f.floor_ID === selectedFloor.floor_ID ? { ...f, ...formData } : f
+                    f.floor_ID === selectedFloor.floor_ID
+                        ? { ...f, ...formData }
+                        : f
                 )
             );
         } else {
@@ -48,11 +50,11 @@ export const handleOkFloor = async (
 
 export const handleDeleteFloor = async (
     floor: Floor,
-    setFloors: React.Dispatch<React.SetStateAction<Floor[]>>
+    setFloor: React.Dispatch<React.SetStateAction<Floor[]>>
 ) => {
     try {
         await deleteFloor(floor.floor_ID); // Xóa tầng
-        setFloors((prev) => prev.filter((f) => f.floor_ID !== floor.floor_ID));
+        setFloor((prev) => prev.filter((f) => f.floor_ID !== floor.floor_ID));
     } catch (error) {
         console.error("Lỗi khi xóa tầng:", error);
     }

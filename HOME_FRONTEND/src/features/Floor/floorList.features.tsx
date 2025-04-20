@@ -1,88 +1,124 @@
-import {Button} from "antd"
-import CustomCard from "../../components/Card/CustomCard.components"
-import Floor from "../../types/floor.type"
-import CustomTable from "../../components/Table/CustomTable.components"
-import {getFloorsColumns} from "./floorColumns.features"
-import {filterFloors} from "./floor.utils"
-import {deleteFloor, getAllFloor} from "../../services/Floor/floor.service"
-import {useEffect, useState} from "react"
-import FloorFilter from "./floorFilter.features"
+import { useEffect, useState } from "react";
+
+import CustomCard from "../../components/Card/CustomCard.components";
+import CustomTable from "../../components/Table/CustomTable.components";
+
+import { getFloorsColumns } from "./floorColumns.features";
+import FloorFilter from "./floorFilter.features";
+
+import { handleDeleteFloor } from "./floor.handlers";
+
+import Home from "../../types/home.type";
+import Floor from "../../types/floor.type";
+
+import {
+    createFloorsForHome,
+    getFloorsByHomeID,
+} from "../../services/Floor/floor.service";
+import { getAllHome } from "../../services/Home/homes.service";
 
 function FloorList() {
-    const [floor, setFloor] = useState<Floor[]>([])
-
-    const [searchValue, setSearchValue] = useState("")
-    const [modalOpen, setModalOpen] = useState(false)
-    const [isEdit, setIsEdit] = useState(false)
-    const [selectedFloor, setselectedFloor] = useState<Floor | null>(null)
-    const [selectedHome, setSelectedHome] = useState<string>("")
-
-    const filteredData = filterFloors(floor, searchValue)
-    console.log(floor)
+    const [floor, setFloor] = useState<Floor[]>([]);
+    const [homes, setHomes] = useState<Home[]>([]);
+    const [maxFloors, setMaxFloors] = useState<number>(0);
+    const [selectedFloor, setselectedFloor] = useState<Floor | null>(null);
+    const [selectedHome, setSelectedHome] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await getAllFloor() // Gọi API lấy dữ liệu Floor
-            if (result && Array.isArray(result.data)) {
-                setFloor(result.data) // Lưu dữ liệu vào state nếu đúng định dạng
-                // Mặc định chọn nhà đầu tiên từ dữ liệu floor
-                const firstHomeId = result.data[0]?.home_ID || ""
-                setSelectedHome(firstHomeId) // Cập nhật homeID đầu tiên hoặc để trống nếu không có
-            } else {
-                console.error("Dữ liệu không hợp lệ:", result)
+            try {
+                const result = await getAllHome();
+                if (result?.data && Array.isArray(result.data)) {
+                    setHomes(result.data);
+                    const firstHomeID = result.data[0]?.home_ID;
+                    if (firstHomeID) {
+                        setSelectedHome(firstHomeID);
+                        fetchFloorsByHomeID(firstHomeID); // Gọi tầng tương ứng
+                    }
+                } else {
+                    console.error("Dữ liệu không hợp lệ:", result);
+                }
+            } catch (error) {
+                console.error("Lỗi khi gọi API:", error);
             }
-        }
+        };
 
-        fetchData()
-    }, [])
+        fetchData();
+    }, []);
 
-    const handleDelete = async (floor: Floor) => {
+    const fetchFloorsByHomeID = async (homeId: string) => {
+        if (!homeId) return;
+
         try {
-            await deleteFloor(floor.floor_ID) // Gọi API xóa tầng
-            setFloor((prev) => prev.filter((f) => f.floor_ID !== floor.floor_ID))
+            const result = await getFloorsByHomeID(homeId);
+            if (result?.data) {
+                setFloor(result.data);
+            } else {
+                setFloor([]);
+            }
         } catch (error) {
-            console.error("Lỗi khi xóa tầng:", error)
+            console.error("Lỗi khi gọi API tầng theo nhà:", error);
         }
-    }
+    };
+
+    const handleHomeChange = (home_ID: any, option: any) => {
+        setMaxFloors(option.totalFloor);
+        setSelectedHome(home_ID);
+        fetchFloorsByHomeID(home_ID); // Gọi API lấy tầng cho nhà đã chọn
+    };
+
+    const createFloorsForHomeHandler = async (
+        home_ID: string,
+        floorCount: number
+    ) => {
+        try {
+            const response = await createFloorsForHome(home_ID, floorCount);
+
+            // Kiểm tra nếu response có data và data là mảng
+            if (response && response.data) {
+                const newFloors = Array.isArray(response.data)
+                    ? response.data
+                    : [response.data]; // Nếu không phải mảng, bọc nó vào mảng
+
+                // Cập nhật state floor, thêm các tầng mới vào danh sách cũ
+                setFloor((prev) => [...prev, ...newFloors]);
+            } else {
+                // Nếu response không có data, xử lý lỗi
+                console.error("Không có dữ liệu tầng trả về");
+            }
+        } catch (error) {
+            // Xử lý lỗi nếu có vấn đề khi gọi API
+            console.error("Lỗi khi tạo tầng:", error);
+        }
+    };
 
     return (
         <CustomCard
             title={
                 <FloorFilter
-                    searchValue={searchValue}
-                    onSearchChange={setSearchValue}
-                    floors={floor}
+                    homes={homes}
                     selectedHome={selectedHome}
-                    onHomeChange={setSelectedHome}
-                />
-            }
-            extra={
-                <Button
-                    children='Thêm tầng'
-                    type='primary'
-                    onClick={() => {
-                        setIsEdit(false)
-                        setselectedFloor(null)
-                        setModalOpen(true)
-                    }}
+                    onHomeChange={handleHomeChange}
+                    currentFloorCount={floor.length}
+                    maxFloor={maxFloors}
+                    onAddFloor={createFloorsForHomeHandler}
                 />
             }
         >
             <CustomTable<Floor>
                 columns={getFloorsColumns({
                     onEdit: (floor) => {
-                        setselectedFloor(floor)
-                        setIsEdit(true)
-                        setModalOpen(true)
+                        setselectedFloor(floor);
                     },
-                    onDelete: handleDelete, // Truyền trực tiếp handleDelete vào
+                    onDelete: (floor: Floor) =>
+                        handleDeleteFloor(floor, setFloor), // Truyền trực tiếp handleDelete vào
                 })}
                 rowKey='floor_ID'
-                dataSource={filteredData}
+                dataSource={floor}
                 pagination={false}
-                scroll={{x: "max-content"}}
+                scroll={{ x: "max-content" }}
             />
         </CustomCard>
-    )
+    );
 }
-export default FloorList
+export default FloorList;
