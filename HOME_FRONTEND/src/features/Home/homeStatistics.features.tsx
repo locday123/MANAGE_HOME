@@ -1,28 +1,9 @@
 import {Row, Col} from "antd"
 import Home from "../../types/home.type"
-import dayjs from "dayjs"
+
 import CustomCard from "../../components/Card/CustomCard.components"
 import CustomStatistic from "../../components/Statistic/CustomStatistic.components"
-
-const calculateHomeStatistics = (homes: Home[]) => {
-    const totalHomes = homes.length
-    const activeHomes = homes.filter((h) => h.home_Status === "ACTIVE").length
-    const inactiveHomes = homes.filter((h) => h.home_Status === "INACTIVE").length
-
-    const today = dayjs()
-    const expiringContracts = homes.filter(
-        (h) =>
-            dayjs(h.home_ContractTo).isBefore(today.add(30, "day")) &&
-            dayjs(h.home_ContractTo).isAfter(today)
-    ).length
-
-    return {
-        totalHomes,
-        activeHomes,
-        inactiveHomes,
-        expiringContracts,
-    }
-}
+import {calculateHomeStatistics} from "./home.utils"
 
 function HomeStatistics({homes}: {homes: Home[]}) {
     const stats = calculateHomeStatistics(homes)
@@ -46,15 +27,21 @@ function HomeStatistics({homes}: {homes: Home[]}) {
                 </CustomCard>
             </Col>
 
-            {/* Hợp đồng sắp hết hạn */}
+            {/* Hợp đồng sắp hết hạn, đã hết hạn, chưa có HĐ */}
             <Col span={8}>
                 <CustomCard>
-                    <Row>
-                        <Col span={24}>
+                    <Row gutter={16}>
+                        <Col span={8}>
                             <CustomStatistic
-                                title='HĐ sắp hết hạn (≤30 ngày)'
+                                title='HĐ sắp hết hạn'
                                 value={stats.expiringContracts}
                             />
+                        </Col>
+                        <Col span={8}>
+                            <CustomStatistic title='HĐ đã hết hạn' value={stats.expiredContracts} />
+                        </Col>
+                        <Col span={8}>
+                            <CustomStatistic title='Chưa có HĐ' value={stats.noContracts} />
                         </Col>
                     </Row>
                 </CustomCard>
