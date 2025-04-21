@@ -1,46 +1,73 @@
-import {Input, Row, Col, Badge, Checkbox, Button, Dropdown, MenuProps, Space} from "antd"
-import {calculateHomeStatistics} from "./home.utils"
-import Home from "../../types/home.type"
-import {DownOutlined} from "@ant-design/icons"
+import {
+    Input,
+    Row,
+    Col,
+    Badge,
+    Checkbox,
+    Button,
+    Dropdown,
+    MenuProps,
+    Space,
+} from "antd";
+import Home from "../../types/home.type";
+import { DownOutlined } from "@ant-design/icons";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
+
+import { statsList } from "./home.utils";
 type HomeFilterProps = {
-    searchValue: string
-    onSearchChange: (value: string) => void
-    homes: Home[]
-}
+    searchValue: string;
+    onSearchChange: (value: string) => void;
+    homes: Home[];
+    onCheckbox: React.Dispatch<React.SetStateAction<string[]>>;
+};
 
-function HomeFilter({searchValue, onSearchChange, homes}: HomeFilterProps) {
+function HomeFilter({
+    searchValue,
+    onSearchChange,
+    homes,
+    onCheckbox,
+}: HomeFilterProps) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onSearchChange(e.target.value)
-    }
+        onSearchChange(e.target.value);
+    };
+    const handleCheckbox = (e: CheckboxChangeEvent) => {
+        const value = e.target.value;
+        const isChecked = e.target.checked;
 
-    const stats = calculateHomeStatistics(homes)
-    const statLabels = [
-        {key: "expiringContracts", label: "HĐ sắp hết hạn"},
-        {key: "expiredContracts", label: "HĐ đã hết hạn"},
-        {key: "noContracts", label: "Chưa có HĐ"},
-        {key: "activeHomes", label: "ACTIVE"},
-        {key: "inactiveHomes", label: "INACTIVE"},
-    ]
-    const items: MenuProps["items"] = statLabels.map(({key, label}) => ({
-        key,
-        label: (
-            <Badge count={stats[key as keyof typeof stats]} offset={[1, 10]}>
-                <Button
-                    style={{
-                        width: "10rem",
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                    }}
-                >
-                    <Checkbox>{label}</Checkbox>
-                </Button>
-            </Badge>
-        ),
-    }))
+        // Nếu checkbox được chọn, thêm vào mảng; nếu không, loại bỏ giá trị khỏi mảng
+        onCheckbox((prev) => {
+            if (isChecked) {
+                return [...prev, value];
+            } else {
+                return prev.filter((item) => item !== value);
+            }
+        });
+    };
+
+    const items: MenuProps["items"] = statsList(homes).map(
+        ({ value, label, key }) => ({
+            key,
+            label: (
+                <Badge count={value} offset={[1, 10]}>
+                    <Button
+                        style={{
+                            width: "10rem",
+                            display: "flex",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Checkbox onChange={handleCheckbox} value={key}>
+                            {label}
+                        </Checkbox>
+                    </Button>
+                </Badge>
+            ),
+        })
+    );
     const menuProps = {
         items,
-    }
+    };
     return (
         <Row gutter={16}>
             <Col xxl={4}>
@@ -52,7 +79,11 @@ function HomeFilter({searchValue, onSearchChange, homes}: HomeFilterProps) {
                 />
             </Col>
             <Col>
-                <Dropdown menu={menuProps} trigger={["click"]} placement='bottomLeft'>
+                <Dropdown
+                    menu={menuProps}
+                    trigger={["click"]}
+                    placement='bottomLeft'
+                >
                     <Button>
                         <Space>
                             Lọc nhà
@@ -62,7 +93,7 @@ function HomeFilter({searchValue, onSearchChange, homes}: HomeFilterProps) {
                 </Dropdown>
             </Col>
         </Row>
-    )
+    );
 }
 
-export default HomeFilter
+export default HomeFilter;

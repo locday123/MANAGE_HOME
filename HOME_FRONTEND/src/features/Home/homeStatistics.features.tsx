@@ -1,12 +1,12 @@
-import {Row, Col} from "antd"
-import Home from "../../types/home.type"
+import { Row, Col } from "antd";
+import Home from "../../types/home.type";
 
-import CustomCard from "../../components/Card/CustomCard.components"
-import CustomStatistic from "../../components/Statistic/CustomStatistic.components"
-import {calculateHomeStatistics} from "./home.utils"
+import CustomCard from "../../components/Card/CustomCard.components";
+import CustomStatistic from "../../components/Statistic/CustomStatistic.components";
+import { calculateHomeStatistics } from "./home.utils";
 
-function HomeStatistics({homes}: {homes: Home[]}) {
-    const stats = calculateHomeStatistics(homes)
+function HomeStatistics({ homes }: { homes: Home[] }) {
+    const stats = calculateHomeStatistics(homes);
 
     return (
         <Row gutter={16}>
@@ -15,13 +15,22 @@ function HomeStatistics({homes}: {homes: Home[]}) {
                 <CustomCard>
                     <Row gutter={16}>
                         <Col span={8}>
-                            <CustomStatistic title='Tổng số nhà' value={stats.totalHomes} />
+                            <CustomStatistic
+                                title='Tổng số nhà'
+                                value={stats.totalHomes}
+                            />
                         </Col>
                         <Col span={8}>
-                            <CustomStatistic title='ACTIVE' value={stats.activeHomes} />
+                            <CustomStatistic
+                                title='ACTIVE'
+                                value={stats.activeHomes}
+                            />
                         </Col>
                         <Col span={8}>
-                            <CustomStatistic title='INACTIVE' value={stats.inactiveHomes} />
+                            <CustomStatistic
+                                title='INACTIVE'
+                                value={stats.inactiveHomes}
+                            />
                         </Col>
                     </Row>
                 </CustomCard>
@@ -38,16 +47,22 @@ function HomeStatistics({homes}: {homes: Home[]}) {
                             />
                         </Col>
                         <Col span={8}>
-                            <CustomStatistic title='HĐ đã hết hạn' value={stats.expiredContracts} />
+                            <CustomStatistic
+                                title='HĐ đã hết hạn'
+                                value={stats.expiredContracts}
+                            />
                         </Col>
                         <Col span={8}>
-                            <CustomStatistic title='Chưa có HĐ' value={stats.noContracts} />
+                            <CustomStatistic
+                                title='Chưa có HĐ'
+                                value={stats.noContracts}
+                            />
                         </Col>
                     </Row>
                 </CustomCard>
             </Col>
         </Row>
-    )
+    );
 }
 
-export default HomeStatistics
+export default HomeStatistics;
