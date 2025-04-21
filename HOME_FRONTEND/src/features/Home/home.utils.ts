@@ -6,24 +6,30 @@ export const filterHomes = (
     searchValue: string,
     selectCheck: string[]
 ): Home[] => {
-    const value = searchValue.toLowerCase();
+    if (!Array.isArray(homes) || homes.length === 0) {
+        return [];
+    }
+
+    const value = searchValue?.toLowerCase() || "";
     const today = dayjs();
-    const hasContract = (date: any) =>
-        date && date !== "1970-01-01" && dayjs(date).isValid();
+
+    const hasContract = (date: any): boolean => {
+        return date && date !== "1970-01-01" && dayjs(date).isValid();
+    };
+
     return homes.filter((home) => {
-        // --- Lọc theo từ khóa tìm kiếm
+        // Lọc theo từ khóa tìm kiếm
         const matchSearch =
             (home.home_ID || "").toLowerCase().includes(value) ||
             (home.home_Address || "").toLowerCase().includes(value) ||
             (home.home_HostName || "").toLowerCase().includes(value) ||
             (home.home_HostPhoneNumber || "").toLowerCase().includes(value);
 
-        // Nếu không có checkbox nào được chọn, chỉ lọc theo tìm kiếm
         if (selectCheck.length === 0) {
             return matchSearch;
         }
 
-        // --- Lọc theo checkbox
+        // Lọc theo checkbox
         const matchActive =
             selectCheck.includes("activeHomes") &&
             home.home_Status === "ACTIVE";
@@ -48,79 +54,87 @@ export const filterHomes = (
             !hasContract(home.home_ContractTo);
 
         return (
-            matchSearch && // Điều kiện tìm kiếm
-            (matchActive || // Trạng thái là "ACTIVE" nếu chọn "activeHomes"
-                matchInactive || // Trạng thái là "INACTIVE" nếu chọn "inactiveHomes"
-                matchExpiring || // Có hợp đồng sắp hết hạn nếu chọn "expiringContracts"
-                matchExpired || // Có hợp đồng đã hết hạn nếu chọn "expiredContracts"
-                matchNoContract) // Không có hợp đồng nếu chọn "noContracts"
+            matchSearch &&
+            (matchActive ||
+                matchInactive ||
+                matchExpiring ||
+                matchExpired ||
+                matchNoContract)
         );
     });
 };
 
-export const calculateHomeStatistics = (homes: Home[]) => {
-    const totalHomes = homes.length;
-    const activeHomes = homes.filter((h) => h.home_Status === "ACTIVE").length;
-    const inactiveHomes = homes.filter(
-        (h) => h.home_Status === "INACTIVE"
-    ).length;
+export const calculateHomeStatistics = (
+    homes: Home[]
+): {
+    totalHomes: number;
+    activeHomes: number;
+    inactiveHomes: number;
+    expiringContracts: number;
+    expiredContracts: number;
+    noContracts: number;
+} => {
+    if (!Array.isArray(homes) || homes.length === 0) {
+        return {
+            totalHomes: 0,
+            activeHomes: 0,
+            inactiveHomes: 0,
+            expiringContracts: 0,
+            expiredContracts: 0,
+            noContracts: 0,
+        };
+    }
 
     const today = dayjs();
-
-    const hasContract = (date: any) =>
-        date && date !== "1970-01-01" && dayjs(date).isValid();
-
-    const expiringContracts = homes.filter(
-        (h) =>
-            hasContract(h.home_ContractTo) &&
-            dayjs(h.home_ContractTo).isBefore(today.add(30, "day")) &&
-            dayjs(h.home_ContractTo).isAfter(today)
-    ).length;
-
-    const expiredContracts = homes.filter(
-        (h) =>
-            hasContract(h.home_ContractTo) &&
-            dayjs(h.home_ContractTo).isBefore(today)
-    ).length;
-
-    const noContracts = homes.filter(
-        (h) => !hasContract(h.home_ContractTo)
-    ).length;
+    const hasContract = (date: any): boolean => {
+        return date && date !== "1970-01-01" && dayjs(date).isValid();
+    };
 
     return {
-        totalHomes,
-        activeHomes,
-        inactiveHomes,
-        expiringContracts,
-        expiredContracts,
-        noContracts,
+        totalHomes: homes.length,
+        activeHomes: homes.filter((h) => h.home_Status === "ACTIVE").length,
+        inactiveHomes: homes.filter((h) => h.home_Status === "INACTIVE").length,
+        expiringContracts: homes.filter(
+            (h) =>
+                hasContract(h.home_ContractTo) &&
+                dayjs(h.home_ContractTo).isAfter(today) &&
+                dayjs(h.home_ContractTo).isBefore(today.add(30, "day"))
+        ).length,
+        expiredContracts: homes.filter(
+            (h) =>
+                hasContract(h.home_ContractTo) &&
+                dayjs(h.home_ContractTo).isBefore(today)
+        ).length,
+        noContracts: homes.filter((h) => !hasContract(h.home_ContractTo))
+            .length,
     };
 };
 
-export const statsList = (homes: Home[]) => [
-    {
-        label: "Hoạt động",
-        value: calculateHomeStatistics(homes).activeHomes,
-        key: "activeHomes",
-    },
-    {
-        label: "Ngưng hoạt động",
-        value: calculateHomeStatistics(homes).inactiveHomes,
-        key: "inactiveHomes",
-    },
-    {
-        label: "Sắp hết hạn",
-        value: calculateHomeStatistics(homes).expiringContracts,
-        key: "expiringContracts",
-    },
-    {
-        label: "Đã hết hạn",
-        value: calculateHomeStatistics(homes).expiredContracts,
-        key: "expiredContracts",
-    },
-    {
-        label: "Chưa hoạt động",
-        value: calculateHomeStatistics(homes).noContracts,
-        key: "noContracts",
-    },
-];
+export const statsList = (
+    homes: Home[]
+): Array<{ label: string; value: number; key: string }> => {
+    const stats = calculateHomeStatistics(homes);
+    return [
+        { label: "Hoạt động", value: stats.activeHomes, key: "activeHomes" },
+        {
+            label: "Ngưng hoạt động",
+            value: stats.inactiveHomes,
+            key: "inactiveHomes",
+        },
+        {
+            label: "Sắp hết hạn",
+            value: stats.expiringContracts,
+            key: "expiringContracts",
+        },
+        {
+            label: "Đã hết hạn",
+            value: stats.expiredContracts,
+            key: "expiredContracts",
+        },
+        {
+            label: "Chưa hoạt động",
+            value: stats.noContracts,
+            key: "noContracts",
+        },
+    ];
+};
