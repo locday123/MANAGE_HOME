@@ -1,19 +1,18 @@
-import { ColumnsType } from "antd/es/table";
-import { Dropdown, Menu, MenuProps, Popconfirm, Space } from "antd";
-import { MoreOutlined, DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
-import Floor from "../../types/floor.type";
+import {ColumnsType} from "antd/es/table"
+import {Dropdown, Menu, MenuProps, Popconfirm, Space} from "antd"
+import {MoreOutlined, DeleteTwoTone, EditTwoTone} from "@ant-design/icons"
+import Floor from "../../types/floor.type"
 
 type GetFloorColumnsProps = {
-    onEdit: (floor: Floor) => void;
-    onDelete: (
-        floor: Floor,
-        setFloor: React.Dispatch<React.SetStateAction<Floor[]>>
-    ) => void;
-};
+    onEdit: (floor: Floor) => void
+    onDelete: (floor: Floor, setFloor: React.Dispatch<React.SetStateAction<Floor[]>>) => void
+    setFloor: React.Dispatch<React.SetStateAction<Floor[]>> // <-- thêm dòng này
+}
 
 export const getFloorsColumns = ({
     onEdit,
     onDelete,
+    setFloor,
 }: GetFloorColumnsProps): ColumnsType<Floor> => [
     {
         title: "Mã tầng",
@@ -46,8 +45,7 @@ export const getFloorsColumns = ({
         dataIndex: "created_at",
         key: "created_at",
         align: "center",
-        render: (_, value) =>
-            new Date(value.created_at).toLocaleDateString("vi-VN"),
+        render: (_, value) => new Date(value.created_at).toLocaleDateString("vi-VN"),
     },
     {
         dataIndex: "action",
@@ -71,7 +69,7 @@ export const getFloorsColumns = ({
                     label: (
                         <Popconfirm
                             title={`Bạn có chắc chắn muốn xóa tầng ${record.floor_ID}?`}
-                            onConfirm={() => onDelete(record)} // Xử lý khi nhấn "Có"
+                            onConfirm={() => onDelete(record, setFloor)} // Xử lý khi nhấn "Có"
                             onCancel={() => console.log("Xóa bị hủy")}
                             okText='Có'
                             cancelText='Không'
@@ -83,20 +81,16 @@ export const getFloorsColumns = ({
                         </Popconfirm>
                     ),
                 },
-            ];
+            ]
             return (
                 <Dropdown
-                    overlay={
-                        <Menu items={menuItems} style={{ width: "100%" }} />
-                    }
+                    overlay={<Menu items={menuItems} style={{width: "100%"}} />}
                     trigger={["click"]}
                     placement='bottomLeft'
                 >
-                    <MoreOutlined
-                        style={{ fontSize: "20px", cursor: "pointer" }}
-                    />
+                    <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
                 </Dropdown>
-            );
+            )
         },
     },
-];
+]

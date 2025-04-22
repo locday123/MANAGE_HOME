@@ -20,6 +20,7 @@ import Dashboard from "../pages/Dashboard/dashboard.page"
 import Customer from "../pages/Customer/customers.page"
 import Home from "../pages/Home/home.page"
 import Floor from "../pages/Floor/floor.page"
+import Room from "../pages/Room/room.page"
 
 type RouteItem = {
     key: string
@@ -102,7 +103,7 @@ const publicRoutes: RouteItem[] = [
         path: "/rooms",
         label: "Phòng",
         parent: "building-management",
-        component: Dashboard,
+        component: Room,
         icon: <AppstoreOutlined />,
     },
     {
