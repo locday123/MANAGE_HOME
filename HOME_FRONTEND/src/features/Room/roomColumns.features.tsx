@@ -1,48 +1,53 @@
 import { ColumnsType } from "antd/es/table";
 import { Dropdown, Menu, MenuProps, Popconfirm, Space } from "antd";
 import { MoreOutlined, DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
-import Floor from "../../types/floor.type";
+import Rooms from "../../types/room.type";
 
-type GetFloorColumnsProps = {
-    onEdit: (floor: Floor) => void;
+type GetRoomColumnsProps = {
+    onEdit: (room: Rooms) => void;
     onDelete: (
-        floor: Floor,
-        setFloor: React.Dispatch<React.SetStateAction<Floor[]>>
+        room: Rooms,
+        setRooms: React.Dispatch<React.SetStateAction<Rooms[]>>
     ) => void;
-    setFloor: React.Dispatch<React.SetStateAction<Floor[]>>; // <-- thêm dòng này
+    setRooms: React.Dispatch<React.SetStateAction<Rooms[]>>;
 };
 
-export const getFloorsColumns = ({
+const getRoomsColumns = ({
     onEdit,
     onDelete,
-    setFloor,
-}: GetFloorColumnsProps): ColumnsType<Floor> => [
+    setRooms,
+}: GetRoomColumnsProps): ColumnsType<Rooms> => [
     {
-        title: "Mã tầng",
-        dataIndex: "floor_ID",
-        key: "floor_ID",
+        title: "Mã phòng",
+        dataIndex: "room_ID",
+        key: "room_ID",
         fixed: "left",
         align: "center",
     },
     {
-        title: "Mã nhà",
-        dataIndex: "home_ID",
-        key: "home_ID",
+        title: "Mã tầng",
+        dataIndex: "floor_ID",
+        key: "floor_ID",
         align: "center",
     },
     {
-        title: "Tên tầng",
-        dataIndex: "floor_Name",
-        key: "floor_Name",
+        title: "Tên phòng",
+        dataIndex: "room_Name",
+        key: "room_Name",
         align: "left",
     },
     {
-        title: "Tổng số phòng",
-        dataIndex: "floor_TotalRooms",
-        key: "floor_TotalRooms",
+        title: "Diện tích",
+        dataIndex: "room_Area",
+        key: "room_Area",
         align: "center",
     },
-
+    {
+        title: "Trạng thái",
+        dataIndex: "room_Status",
+        key: "room_Status",
+        align: "center",
+    },
     {
         title: "Ngày tạo",
         dataIndex: "created_at",
@@ -72,8 +77,8 @@ export const getFloorsColumns = ({
                     key: "delete",
                     label: (
                         <Popconfirm
-                            title={`Bạn có chắc chắn muốn xóa tầng ${record.floor_ID}?`}
-                            onConfirm={() => onDelete(record, setFloor)} // Xử lý khi nhấn "Có"
+                            title={`Bạn có chắc chắn muốn xóa phòng ${record.room_ID}?`}
+                            onConfirm={() => onDelete(record, setRooms)}
                             onCancel={() => console.log("Xóa bị hủy")}
                             okText='Có'
                             cancelText='Không'
@@ -88,9 +93,7 @@ export const getFloorsColumns = ({
             ];
             return (
                 <Dropdown
-                    overlay={
-                        <Menu items={menuItems} style={{ width: "100%" }} />
-                    }
+                    overlay={<Menu items={menuItems} />}
                     trigger={["click"]}
                     placement='bottomLeft'
                 >
@@ -102,3 +105,5 @@ export const getFloorsColumns = ({
         },
     },
 ];
+
+export default getRoomsColumns;

@@ -42,13 +42,13 @@ function HomeStatistics({ homes }: { homes: Home[] }) {
                     <Row gutter={16}>
                         <Col span={8}>
                             <CustomStatistic
-                                title='HĐ sắp hết hạn'
+                                title='Sắp hết hạn'
                                 value={stats.expiringContracts}
                             />
                         </Col>
                         <Col span={8}>
                             <CustomStatistic
-                                title='HĐ đã hết hạn'
+                                title='Đã hết hạn'
                                 value={stats.expiredContracts}
                             />
                         </Col>

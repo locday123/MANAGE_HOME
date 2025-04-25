@@ -88,7 +88,8 @@ function HomeList() {
                             setModalOpen(true);
                         },
                         onDelete: (home: Home) =>
-                            handleDeleteHome(home, setHomes), // Gọi handleDeleteHome khi onDelete được gọi
+                            handleDeleteHome(home, setHomes),
+                        setHomes,
                     })}
                     dataSource={filteredData}
                     pagination={false}
