@@ -57,17 +57,17 @@ const updateHome = async (req, res) => {
             return res.status(404).json({message: "❌ Không tìm thấy nhà"})
         }
 
-        // Lấy toàn bộ tầng dưới dạng dữ liệu thuần (plain)
+        // Lấy toàn bộ tầng thuộc nhà
         const allFloors = await Floor.findAll({where: {home_ID: id}})
         const floorPlainList = allFloors.map((f) => f.get({plain: true}))
 
         const currentTotalFloors = floorPlainList.length
-        const expectedTotalFloors = Math.max(1, newTotalFloors) // luôn giữ lại ít nhất 1 tầng
+        const expectedTotalFloors = Math.max(1, newTotalFloors) // luôn giữ ít nhất 1 tầng
 
         // Tìm tầng trệt
         const floorGround = floorPlainList.find((f) => f.floor_Name.toLowerCase().includes("trệt"))
 
-        // Lọc ra các tầng còn lại và parse số tầng từ tên
+        // Lấy danh sách các tầng còn lại có số thứ tự
         const otherFloors = floorPlainList
             .filter((f) => f.floor_ID !== floorGround?.floor_ID)
             .map((f) => ({
@@ -75,30 +75,40 @@ const updateHome = async (req, res) => {
                 floorNumber: parseInt(f.floor_Name.replace(/[^\d]/g, ""), 10),
             }))
             .filter((f) => !isNaN(f.floorNumber))
-            .sort((a, b) => b.floorNumber - a.floorNumber) // cao → thấp
+            .sort((a, b) => b.floorNumber - a.floorNumber) // tầng cao → thấp
 
-        const numToDelete = currentTotalFloors - expectedTotalFloors
+        const numToDeactivate = currentTotalFloors - expectedTotalFloors
 
-        console.log("📌 Tổng tầng hiện tại:", currentTotalFloors)
-        console.log("📌 Tổng tầng mới:", expectedTotalFloors)
-        console.log("📌 Cần xóa:", numToDelete)
+        const floorsToDeactivate = numToDeactivate > 0 ? otherFloors.slice(0, numToDeactivate) : []
 
-        if (numToDelete > 0) {
-            const floorsToDelete = otherFloors.slice(0, numToDelete)
-            const deleteIDs = floorsToDelete.map((f) => f.floor_ID)
+        const deactivateIDs = floorsToDeactivate.map((f) => f.floor_ID)
 
-            console.log(
-                "🗑 Xóa tầng:",
-                floorsToDelete.map((f) => f.floor_Name)
-            )
-
-            if (deleteIDs.length > 0) {
-                await Floor.destroy({
+        // Cập nhật trạng thái các tầng INACTIVE
+        if (deactivateIDs.length > 0) {
+            await Floor.update(
+                {floor_Status: "INACTIVE"},
+                {
                     where: {
-                        floor_ID: {[Op.in]: deleteIDs},
+                        floor_ID: {[Op.in]: deactivateIDs},
                     },
-                })
-            }
+                }
+            )
+        }
+
+        // Cập nhật trạng thái các tầng còn lại là ACTIVE
+        const keptFloors = floorPlainList.filter((f) => !deactivateIDs.includes(f.floor_ID))
+
+        const activeIDs = keptFloors.map((f) => f.floor_ID)
+
+        if (activeIDs.length > 0) {
+            await Floor.update(
+                {floor_Status: "ACTIVE"},
+                {
+                    where: {
+                        floor_ID: {[Op.in]: activeIDs},
+                    },
+                }
+            )
         }
 
         // Cập nhật thông tin nhà

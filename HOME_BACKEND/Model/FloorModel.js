@@ -1,7 +1,7 @@
 import {DataTypes} from "sequelize"
 import sequelize from "../Connect/Connect.js"
 import {nanoid} from "nanoid"
-import Home from "../Model/HomeModel.js" // đảm bảo bạn import đúng model HOME
+import Home from "../Model/HomeModel.js" // Đảm bảo bạn import đúng model HOME
 
 const Floor = sequelize.define(
     "Floor",
@@ -32,6 +32,11 @@ const Floor = sequelize.define(
                 min: 1,
             },
         },
+        floor_Status: {
+            type: DataTypes.ENUM("ACTIVE", "INACTIVE"),
+            defaultValue: "ACTIVE",
+            allowNull: false,
+        },
         created_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
@@ -39,7 +44,7 @@ const Floor = sequelize.define(
     },
     {
         tableName: "FLOOR",
-        timestamps: false,
+        timestamps: false, // Nếu bạn cần tự động cập nhật thời gian, có thể bật timestamps: true
     }
 )
 

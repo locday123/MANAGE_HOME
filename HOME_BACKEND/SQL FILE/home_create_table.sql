@@ -72,13 +72,15 @@ CREATE TABLE HOME(
 
 -- Bảng FLOOR: Lưu trữ thông tin về các tầng trong mỗi nhà.
 -- Chứa ID của tầng và liên kết với nhà cho thuê.
-CREATE TABLE FLOOR(
+CREATE TABLE FLOOR (
     floor_ID VARCHAR(20) PRIMARY KEY,  -- ID tầng duy nhất.
     home_ID VARCHAR(20),  -- ID nhà (liên kết với bảng HOME).
     floor_Name VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,  -- Tên tầng.
-    floor_TotalRooms INT DEFAULT 1 CHECK (floor_TotalRooms >= 1),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- Thời gian tạo thông tin tầng.
-    CONSTRAINT FOREIGN_KEY_OF_FLOOR_TO_HOME FOREIGN KEY(home_ID) REFERENCES HOME(home_ID) ON DELETE CASCADE  -- Khóa ngoại liên kết với bảng HOME.
+    floor_TotalRooms INT DEFAULT 1 CHECK (floor_TotalRooms >= 1),  -- Số phòng, tối thiểu là 1.
+    floor_Status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',  -- Trạng thái tầng, chỉ nhận 2 giá trị: ACTIVE hoặc INACTIVE.
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- Thời gian tạo.
+    CONSTRAINT FOREIGN_KEY_OF_FLOOR_TO_HOME 
+        FOREIGN KEY (home_ID) REFERENCES HOME(home_ID) ON DELETE CASCADE  -- Khóa ngoại.
 );
 
 -- Bảng ROOM: Lưu trữ thông tin về phòng trong mỗi tầng.INACTIVE
