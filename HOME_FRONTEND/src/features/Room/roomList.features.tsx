@@ -1,50 +1,53 @@
-import { useEffect, useState } from "react";
-import { getAllFloor } from "../../services/Floor/floor.service";
-import Floor from "../../types/floor.type";
-import Rooms from "../../types/room.type";
-import CustomCard from "../../components/Card/CustomCard.components";
-import CustomTable from "../../components/Table/CustomTable.components";
-import getRoomsColumns from "./roomColumns.features";
-import { handleDeleteRooms } from "./rooms.handlers";
+import {useEffect, useState} from "react"
+import {getRoomsByFloorID} from "../../services/Room/room.service"
+import Rooms from "../../types/room.type"
+import CustomCard from "../../components/Card/CustomCard.components"
+import CustomTable from "../../components/Table/CustomTable.components"
+import getRoomsColumns from "./roomColumns.features"
+import {handleDeleteRooms} from "./rooms.handlers"
 
-function RoomList() {
-    const [floors, setFloors] = useState<Floor[]>([]);
-    const [rooms, setRooms] = useState<Rooms[]>([]);
-    const [selectedRooms, setSelectedRooms] = useState<Rooms | null>(null);
+type RoomListProps = {
+    floor_ID: string // truyền đúng tên floor_ID để lấy danh sách phòng
+}
+
+function RoomList({floor_ID}: RoomListProps) {
+    const [rooms, setRooms] = useState<Rooms[]>([])
+    const [selectedRoom, setSelectedRoom] = useState<Rooms | null>(null)
+
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchRooms = async () => {
             try {
-                const result = await getAllFloor();
+                if (!floor_ID) return
+                const result = await getRoomsByFloorID(floor_ID)
                 if (result?.data && Array.isArray(result.data)) {
-                    setFloors(result.data);
+                    setRooms(result.data)
                 } else {
-                    console.error("Dữ liệu không hợp lệ:", result);
+                    console.error("Dữ liệu không hợp lệ:", result)
                 }
             } catch (error) {
-                console.error("Lỗi khi gọi API:", error);
+                console.error("Lỗi khi gọi API:", error)
             }
-        };
+        }
 
-        fetchData();
-    }, []);
+        fetchRooms()
+    }, [floor_ID])
 
     return (
         <CustomCard>
             <CustomTable<Rooms>
+                showHeader={false}
                 columns={getRoomsColumns({
-                    onEdit: (rooms) => {
-                        setSelectedRooms(rooms);
-                    },
-                    onDelete: (rooms: Rooms) =>
-                        handleDeleteRooms(rooms, setRooms), // Truyền trực tiếp handleDelete vào
+                    onEdit: (room) => setSelectedRoom(room),
+                    onDelete: (room) => handleDeleteRooms(room, setRooms),
                     setRooms,
                 })}
                 rowKey='room_ID'
                 dataSource={rooms}
                 pagination={false}
-                scroll={{ x: "max-content" }}
+                scroll={{x: "max-content"}}
             />
         </CustomCard>
-    );
+    )
 }
-export default RoomList;
+
+export default RoomList

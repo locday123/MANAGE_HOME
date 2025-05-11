@@ -11,9 +11,29 @@ interface ApiResponse<T> {
 
 const getAllRoom = async (): Promise<ApiResponse<Room[]> | undefined> => {
     try {
-        const response = await client.get(api);
+        const response = await client.get(`${api}`);
         return {
             data: response.data,
+            status: response.status,
+            error: null,
+        };
+    } catch (err) {
+        console.error(err);
+        return {
+            data: [],
+            status: 500,
+            error: err,
+        };
+    }
+};
+
+const getRoomsByFloorID = async (
+    roomID: string
+): Promise<ApiResponse<Room[]> | undefined> => {
+    try {
+        const response = await client.get(`${api}/${roomID}`);
+        return {
+            data: response.data, // chú ý: .data.data vì backend trả về { status, data }
             status: response.status,
             error: null,
         };
@@ -59,4 +79,4 @@ const deleteRoom = async (
     }
 };
 
-export { getAllRoom, addRoom, updateRoom, deleteRoom };
+export { getAllRoom, addRoom, updateRoom, deleteRoom, getRoomsByFloorID };

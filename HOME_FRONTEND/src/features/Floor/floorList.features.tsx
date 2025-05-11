@@ -13,6 +13,7 @@ import Floor from "../../types/floor.type"
 
 import {createFloorsForHome, getFloorsByHomeID} from "../../services/Floor/floor.service"
 import {getAllHome} from "../../services/Home/homes.service"
+import RoomList from "../Room/roomList.features"
 
 function FloorList() {
     const [floor, setFloor] = useState<Floor[]>([])
@@ -85,22 +86,7 @@ function FloorList() {
         }
     }
 
-    const expandedRowRender = () => (
-        <CustomTable<Floor>
-            showHeader={false}
-            columns={getFloorsColumns({
-                onEdit: (floor) => {
-                    setselectedFloor(floor)
-                },
-                onDelete: (floor: Floor) => handleDeleteFloor(floor, setFloor), // Truyền trực tiếp handleDelete vào
-                setFloor,
-            })}
-            rowKey='floor_ID'
-            dataSource={floor}
-            pagination={false}
-            scroll={{x: "max-content"}}
-        />
-    )
+    const expandedRowRender = (floor_ID: string) => <RoomList floor_ID={floor_ID} />
 
     return (
         <CustomCard
@@ -124,7 +110,10 @@ function FloorList() {
                     onDelete: (floor: Floor) => handleDeleteFloor(floor, setFloor), // Truyền trực tiếp handleDelete vào
                     setFloor,
                 })}
-                expandable={{expandedRowRender, defaultExpandedRowKeys: ["0"]}}
+                expandable={{
+                    expandedRowRender: (record) => expandedRowRender(record.floor_ID),
+                    defaultExpandedRowKeys: [], // bỏ "0" vì floor_ID thường là string, không cố định là "0"
+                }}
                 rowKey='floor_ID'
                 dataSource={floor}
                 pagination={false}
