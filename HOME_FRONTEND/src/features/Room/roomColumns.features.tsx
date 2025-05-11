@@ -1,22 +1,15 @@
-import { ColumnsType } from "antd/es/table";
-import { Dropdown, Menu, MenuProps, Popconfirm, Space } from "antd";
-import { MoreOutlined, DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
-import Rooms from "../../types/room.type";
+import {ColumnsType} from "antd/es/table"
+import {Dropdown, Menu, MenuProps, Popconfirm, Space} from "antd"
+import {MoreOutlined, DeleteTwoTone, EditTwoTone} from "@ant-design/icons"
+import Rooms from "../../types/room.type"
 
 type GetRoomColumnsProps = {
-    onEdit: (room: Rooms) => void;
-    onDelete: (
-        room: Rooms,
-        setRooms: React.Dispatch<React.SetStateAction<Rooms[]>>
-    ) => void;
-    setRooms: React.Dispatch<React.SetStateAction<Rooms[]>>;
-};
+    onEdit: (room: Rooms) => void
+    onDelete: (room: Rooms, setRooms: React.Dispatch<React.SetStateAction<Rooms[]>>) => void
+    setRooms: React.Dispatch<React.SetStateAction<Rooms[]>>
+}
 
-const getRoomsColumns = ({
-    onEdit,
-    onDelete,
-    setRooms,
-}: GetRoomColumnsProps): ColumnsType<Rooms> => [
+const getRoomsColumns = ({onEdit, onDelete, setRooms}: GetRoomColumnsProps): ColumnsType<Rooms> => [
     {
         title: "Mã phòng",
         dataIndex: "room_ID",
@@ -53,8 +46,7 @@ const getRoomsColumns = ({
         dataIndex: "created_at",
         key: "created_at",
         align: "center",
-        render: (_, value) =>
-            new Date(value.created_at).toLocaleDateString("vi-VN"),
+        render: (_, value) => new Date(value.created_at).toLocaleDateString("vi-VN"),
     },
     {
         dataIndex: "action",
@@ -90,20 +82,18 @@ const getRoomsColumns = ({
                         </Popconfirm>
                     ),
                 },
-            ];
+            ]
             return (
                 <Dropdown
                     overlay={<Menu items={menuItems} />}
                     trigger={["click"]}
                     placement='bottomLeft'
                 >
-                    <MoreOutlined
-                        style={{ fontSize: "20px", cursor: "pointer" }}
-                    />
+                    <MoreOutlined style={{fontSize: "20px", cursor: "pointer"}} />
                 </Dropdown>
-            );
+            )
         },
     },
-];
+]
 
-export default getRoomsColumns;
+export default getRoomsColumns

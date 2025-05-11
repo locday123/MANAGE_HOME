@@ -35,13 +35,6 @@ export const getFloorsColumns = ({onEdit, onDelete}: GetFloorColumnsProps): Colu
     },
 
     {
-        title: "Ngày tạo",
-        dataIndex: "created_at",
-        key: "created_at",
-        align: "center",
-        render: (_, value) => new Date(value.created_at).toLocaleDateString("vi-VN"),
-    },
-    {
         dataIndex: "action",
         key: "action",
         fixed: "right",
